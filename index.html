@@ -56,13 +56,73 @@
             </form>
             <section class="popup" id="popup">
                 <p id="result">-</p>
-                <a href="https://www.redbus.id/">Pesan Sekarang?</a>
+                <p onclick="bayar()" class="pesan">Pesan Sekarang?</p>
             </section>
-            <!-- <section>
-                <form class="pembayaran">
-                    <p>bayar di sini</p>
-                </form>
-            </section> -->
+        </section>
+        <section class="pembayaranSection" id="pembayaranSection">
+            <form class="pembayaranForm" action="./confirmation.html">
+                <div class="row">
+                    <div class="col-25">
+                        <label for="nama">Masukan Nama Anda :</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="nama" name="nama" placeholder="Masukan Nama Anda" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="noTelp">Masukan Nomor Telepon :</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="noTelp" name="noTelp" placeholder="081xxxxxxxxx" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="noTelp">Masukan Alamat Email :</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="email" id="email" name="email" placeholder="your-email@domain.com" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="noTelp">Tanggal Booking :</label>
+                    </div>
+                    <div class="col-75">
+                        <p class="noEdit" id="hariIni">-</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="noTelp">Jurusan :</label>
+                    </div>
+                    <div class="col-75">
+                        <p class="noEdit" id="jurusan">-</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="noTelp">Tarif :</label>
+                    </div>
+                    <div class="col-75">
+                        <p class="noEdit" id="fixTarif">-</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="noTelp">Tanggal Keberangkatan :</label>
+                    </div>
+                    <div class="col-75">
+                        <p class="noEdit" id="fixTanggal">-</p>
+                    </div>
+                </div>
+                  
+
+                <div class="row">
+                    <input type="submit" value="Submit">
+                </div>
+            </form>
         </section>
         <section class="news index">
             <h3>--News--</h3>

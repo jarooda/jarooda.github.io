@@ -19,11 +19,12 @@ a:hover {
 
 header {
     width: 100%;
-    height: 400px;
+    height: 500px;
     background-image:
     linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(238, 238, 238, 0.4)),
     url('./img/header.jpg');
     background-size: cover;
+    background-position: center;
     cursor: default;
 }
 
@@ -36,13 +37,13 @@ header h1 {
     text-transform: uppercase;
     text-align: center;
     padding-top: 30px;
-    font-size: 60px;
+    font-size: 3em;
 }
 
 header h4 {
     text-align: center;
     padding-top: 5px;
-    font-size: 28px;
+    font-size: 2em;
     font-family: 'Pacifico', cursive;
 }
 
@@ -84,6 +85,11 @@ main {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+.pesan {
+    cursor: pointer;
+    color: #0d7377;
+}
+
 .news {
     clear: both;
     width: auto;
@@ -111,6 +117,7 @@ h3 {
 }
 
 .news article {
+    overflow: hidden;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 20px;
     clear: both;
@@ -119,6 +126,8 @@ h3 {
     text-align: justify;
     padding:15px;
     padding-bottom: 50px;
+    margin-bottom: 40px;
+    box-shadow: 1px 2px #cccccc;
 }
 
 .news article h4 {
@@ -177,3 +186,115 @@ footer {
     text-align: center;
     padding-top: 25px;
 }
+
+.confirmation {
+    margin: auto;
+    margin-bottom: 20px;
+    width: 70%;
+    text-align: left;
+    padding:15px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    border: 1px #0d7377 solid;
+    font-size: 30px;
+    text-align: center;
+    box-shadow: 1px 2px #0d7377;
+}
+
+.pembayaranSection {
+    margin: auto;
+    margin-bottom: 20px;
+    width: 70%;
+    text-align: left;
+    padding:15px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    border: 1px #0d7377 solid;
+    box-shadow: 1px 2px #0d7377;
+    display: none;
+}
+
+.pembayaranForm {
+    clear: both;
+    width: 100%;
+}
+
+ /* Style inputs, select elements and textareas */
+ input[type=text], input[type=number], input[type=email]{
+    width:100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: vertical;
+  }
+  
+  .noEdit {
+    width:100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: vertical;
+  }
+
+  /* Style the label to display next to the inputs */
+  label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+  }
+  
+  button {
+      background-color: #0d7377;
+    color: white;
+    padding: 0px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  /* Style the submit button */
+  input[type=submit] {
+    background-color: #0d7377;
+    color: white;
+    margin-top: 20px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+  }
+  
+  /* Style the container */
+  .container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+  }
+  
+  /* Floating column for labels: 25% width */
+  .col-25 {
+    float: left;
+    width: 25%;
+    margin-top: 6px;
+  }
+  
+  /* Floating column for inputs: 75% width */
+  .col-75 {
+    float: left;
+    width: 75%;
+    margin-top: 6px;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+  @media screen and (max-width: 600px) {
+    .col-25, .col-75, input[type=submit] {
+      width: 100%;
+      margin-top: 0;
+    }
+  } 

@@ -95,6 +95,7 @@ let kotaAwal = document.getElementById("kota_asal")
 let kotaTujuan = document.getElementById("kota_tujuan")
 let tanggal_berangkat = document.getElementById("tanggal")
 let popup = document.getElementById("popup")
+let pembayaranSection = document.getElementById("pembayaranSection")
 
 function check() {
     if (!tanggal_berangkat.value || tanggal_berangkat.value < today) {
@@ -104,7 +105,18 @@ function check() {
         let result = document.getElementById("result")
         result.innerHTML = `Tarif : Rp. ${bayar},- untuk tanggal ${tanggalIndo(tanggal_berangkat.value)}`
         popup.style.display = "block"
+        pembayaranSection.style.display = "none"
     }
+}
+
+function bayar() {
+    let bayar = cekTarif(kotaAwal.value, kotaTujuan.value)
+    document.getElementById("hariIni").innerHTML = tanggalIndo(today)
+    document.getElementById("jurusan").innerHTML = `${kotaAwal.value} - ${kotaTujuan.value}`
+    document.getElementById("fixTarif").innerHTML = bayar
+    document.getElementById("fixTanggal").innerHTML = tanggalIndo(tanggal_berangkat.value)
+    pembayaranSection.style.display = "block"
+    popup.style.display = "none"
 }
 
 function read1() {
@@ -134,3 +146,4 @@ function read4() {
     readmore.style.display = "inline"
     placeholder.style.display = "none"
 }
+
