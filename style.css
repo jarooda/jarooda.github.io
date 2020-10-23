@@ -1,0 +1,179 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    color: #212121;
+    background: #eeeeee;
+}
+
+a {
+    text-decoration: none;
+    color: #0d7377;
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+header {
+    width: 100%;
+    height: 400px;
+    background-image:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(238, 238, 238, 0.4)),
+    url('./img/header.jpg');
+    background-size: cover;
+    cursor: default;
+}
+
+header a {
+    text-decoration: none;
+    color: black;
+}
+
+header h1 {
+    text-transform: uppercase;
+    text-align: center;
+    padding-top: 30px;
+    font-size: 60px;
+}
+
+header h4 {
+    text-align: center;
+    padding-top: 5px;
+    font-size: 28px;
+    font-family: 'Pacifico', cursive;
+}
+
+main {
+    clear: both;
+    width: auto;
+    text-align: center;
+    padding-top: 30px;
+}
+
+.input {
+    margin: auto;
+    width: 90%;
+    text-align: center;
+    padding:15px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.input section {
+    display: inline-block;
+    padding-right: 5px;
+    margin: 0px;
+    width: auto;
+}
+
+.input section label {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.popup {
+    display: none;
+    clear: both;
+    font-weight: bold;
+    font-size: 24px;
+    padding: 10px;
+    padding-bottom: 40px;
+    text-align: center;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.news {
+    clear: both;
+    width: auto;
+    text-align: center;
+    padding-top: 30px;
+    height: auto;
+}
+
+.index {
+    border-top: #212121 1px solid;
+}
+
+.images {
+    width: auto;
+    height: 200px;
+    float: right;
+    margin: 20px;
+    box-shadow: 10px 10px #cccccc;
+}
+
+h3 {
+    padding-bottom: 20px;
+    font-size: 30px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.news article {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+    clear: both;
+    margin: auto;
+    width: 90%;
+    text-align: justify;
+    padding:15px;
+    padding-bottom: 50px;
+}
+
+.news article h4 {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-top: 15px;
+    padding-bottom: 5px;
+    font-weight: bold;
+    font-size: 23px;
+}
+
+.place-holder {
+    cursor: pointer;
+    color: #0d7377;
+}
+
+.read-more {
+    display: none;
+}
+
+span .more{
+    clear: both;
+    float: right;
+    padding-right: 65px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.about-us {
+    padding-top: 30px;
+    border-top: #212121 1px solid;
+    clear: both;
+    width: auto;
+    text-align: center;
+    padding-bottom: 50px;
+}
+
+.about-us p {
+    font-family: 'Courier New', Courier, monospace;
+    margin: auto;
+    width: 90%;
+    text-align: justify;
+    padding:15px;
+}
+
+main {
+    background: #eeeeee;
+    margin: auto;
+}
+
+footer {
+    font-family: 'Courier New', Courier, monospace;
+    clear: both;
+    background: #212121;
+    color: #eeeeee;
+    height: 40px;
+    text-align: center;
+    padding-top: 25px;
+}
