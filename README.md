@@ -1,3 +1,2 @@
-# jarooda.github.io
-
-Folder ini adalah sebuah project akhir Phase 0 saya di Hacktiv8.
+## jarooda.github.io
+This site is my personal website to showcase my portfolios.
