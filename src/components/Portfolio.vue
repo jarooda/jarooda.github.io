@@ -1,16 +1,16 @@
 <template>
-  <div class=" bg-white mb-5">
+  <div class=" bg-white mb-3">
     <div class="container mx-auto flex justify-center pt-3 pb-2 sm:pb-3">
       <h1 class=" text-4xl font-medium">My Portfolios</h1>
     </div>
-    <div class="container mx-auto flex flex-wrap justify-around">
-      <div class=" sm:w-5/12 w-screen sm:flex-shrink-0 justify-center"
+    <div class="container mx-auto grid sm:grid-cols-2 grid-cols-1 xl:gap-x-16">
+      <div class="xl:w-full w-10/12 my-3 mx-auto"
       v-for="(portfolio, idx) in portfolios"
       :key="idx">
-        <div class="flex flex-wrap justify-center px-3 py-2 ring-gray-600 ring ring-offset-4 ring-offset-gray-100 rounded-xl mx-6 my-3 sm:mx-0 bg-white">
+        <div class="flex flex-wrap justify-center px-3 py-2 border-2 hover:border-green-600 rounded-xl sm:mx-0 bg-white transition transition-none sm:duration-300 sm:ease-in-out sm:transform hover:-translate-y-3">
           <h1 class=" text-xl font-semibold text-center mb-2">{{ portfolio.name}}</h1>
           <img :src="getImgUrl(portfolio.image)" class="rounded-lg shadow-md mb-2" :alt="portfolio.name">
-          <span class="my-3 text-sm text-left">{{ portfolio.description}}</span>
+          <span class="my-3 text-sm text-center sm:text-left break">{{ portfolio.description}}</span>
           <div class="flex flex-row justify-around w-full border-b pb-2 text-center">
             <ul>
               <li class="font-semibold text-md border-b pb-2 mb-2">Backend</li>
@@ -25,9 +25,9 @@
               </li>
             </ul>
           </div>
-          <div class="flex justify-between my-3 text-m w-full">
-            <a :href="portfolio.demo" target="_blank" :title="portfolio.name" class=" text-green-600 hover:text-black">Website Demo</a>
-            <a :href="portfolio.repo" target="_blank" :title="portfolio.name" class=" text-green-600 hover:text-black">Github Repository</a>
+          <div class="flex justify-between my-3 text-m w-full pt-3">
+            <a :href="portfolio.repo" target="_blank" :title="portfolio.name" class=" text-green-600 hover:text-black">Github</a>
+            <a :href="portfolio.demo" target="_blank" :title="portfolio.name" class=" text-green-600 hover:text-black">Demo</a>
           </div>
         </div>
       </div>

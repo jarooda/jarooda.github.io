@@ -7,13 +7,23 @@ export default new Vuex.Store({
   state: {
     portfolios: [
       {
+        id: 5,
+        name: 'Simple Word Count',
+        description: 'Simple Word Count, built with frontend framework ReactJS and TailwindCSS. The features are, characters count, word count, sentences count, paragraphs count, estimated reading time, and show how many keywords appear.',
+        demo: 'https://lit-brushlands-22836.herokuapp.com/',
+        repo: 'https://github.com/jarooda/word-count',
+        image: 'word-counter',
+        backend: ['-'],
+        frontend: ['ReactJS', 'Tailwind']
+      },
+      {
         id: 4,
         name: 'Simple Ecommerce Customer Side',
-        description: 'Simple Ecommerce, built with backend framework Expressjs, Sequelize as ORM, Postgresql as database, and frontend using Vue.js and Bootstrap. The features are, logged in as customer role, filter by category, cart, simple checkout, wishlist, transaction history, and slide banners.',
+        description: 'Simple Ecommerce, built with backend framework Expressjs, Sequelize as ORM, Postgresql as database, and frontend using Vue.js and Bootstrap. The features are, login using google login, logged in as customer role, filter by category, cart, simple checkout, wishlist, transaction history, and slide banners.',
         demo: 'https://jarooda-ecommerce-customer.web.app/',
         repo: 'https://github.com/jarooda/ecommerce_client_customer',
         image: 'ecommerce',
-        backend: ['Node', 'ExpressJS', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
+        backend: ['NodeJS', 'ExpressJS', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
         frontend: ['Vue.js', 'Bootstrap']
       },
       {
@@ -23,7 +33,7 @@ export default new Vuex.Store({
         demo: 'https://jarooda-ecommerce-cms.web.app/',
         repo: 'https://github.com/jarooda/ecommerce_client_cms',
         image: 'cms',
-        backend: ['Node', 'ExpressJS', 'Postgres', 'Sequelize', 'Jest', 'JSON Web Token', 'BCryptjs'],
+        backend: ['NodeJS', 'ExpressJS', 'Postgres', 'Sequelize', 'Jest', 'JSON Web Token', 'BCryptjs'],
         frontend: ['Vue.js', 'Bootstrap']
       },
       {
@@ -33,7 +43,7 @@ export default new Vuex.Store({
         demo: 'https://jarooda-kanban-app.web.app/',
         repo: 'https://github.com/jarooda/kanban-app',
         image: 'kanban',
-        backend: ['Node', 'ExpressJS', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
+        backend: ['NodeJS', 'ExpressJS', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
         frontend: ['Vue.js', 'Parcel', 'Bootstrap']
       },
       {
@@ -43,7 +53,7 @@ export default new Vuex.Store({
         demo: 'https://jarooda-fancy-todo.web.app/',
         repo: 'https://github.com/jarooda/fancy-todo',
         image: 'fancy-todo',
-        backend: ['Node', 'ExpressJS', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
+        backend: ['NodeJS', 'ExpressJS', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
         frontend: ['Jquery', 'Bootstrap']
       }
     ]

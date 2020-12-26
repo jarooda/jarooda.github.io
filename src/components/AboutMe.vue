@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-center items-center py-4 sm:py-10 bg-gray-600">
-    <div class="flex justify-center rounded-3xl bg-white max-w-screen-md h-1/2 items-center flex-wrap sm:flex-nowrap p-5 sm:p-0 mx-5">
-      <img src="@/assets/img/jaluwibowo.jpg" class="sm:rounded-3xl rounded-full shadow-lg max-h-32 sm:max-h-72" alt="Jalu Wibowo Aji">
+  <div class="flex justify-center items-center py-4 sm:py-1 bg-gradient-to-b from-gray-600 -mb-4 sm:mb-0">
+    <div class="flex justify-center sm:rounded-3xl rounded-t-3xl bg-white max-w-screen-md h-1/2 items-center flex-wrap sm:flex-nowrap p-5 sm:p-0 mx-5 sm:shadow-md">
+      <img src="@/assets/img/jaluwibowo.jpg" class="sm:rounded-3xl sm:shadow-none shadow-lg rounded-full max-h-32 sm:max-h-72" alt="Jalu Wibowo Aji">
       <div class="pt-6 md:p-8 text-center md:text-left space-y-4">
         <blockquote>
           <p class="text-lg font-semibold">
