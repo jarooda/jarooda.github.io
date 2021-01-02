@@ -1,5 +1,5 @@
 <template>
-  <div class=" bg-wave-pattern bg-bottom bg-no-repeat">
+  <div class="bg-wave-pattern bg-bottom bg-no-repeat bg-cover">
     <div class="container mx-auto flex justify-center pt-3 pb-2 sm:pb-3">
       <h1 class=" text-4xl font-medium">My Portfolios</h1>
     </div>

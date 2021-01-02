@@ -7,53 +7,63 @@ export default new Vuex.Store({
   state: {
     portfolios: [
       {
+        id: 6,
+        name: 'Simple Todo List (React)',
+        description: 'Simple Todo List, built with backend framework Express.js, Sequelize as ORM, Postgresql as database, and frontend using React and Tailwind. The features are, create, show, edit and delete todo list, can register and login using Google Login, have an automatic weather condition by coordinate location using 3rd Party API Openweathermap, double click to change the Todo Status, search Todo, and Dark Mode.',
+        demo: 'https://jarooda-todo-react.herokuapp.com/',
+        repo: 'https://github.com/jarooda/fancy-todo-react',
+        image: 'todo-react',
+        backend: ['Node.js', 'Express.js', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
+        frontend: ['React', 'Tailwind']
+      },
+      {
         id: 5,
         name: 'Simple Word Count',
-        description: 'Simple Word Count, built with frontend framework ReactJS and TailwindCSS. The features are, characters count, word count, sentences count, paragraphs count, estimated reading time, and show how many keywords appear.',
-        demo: 'https://lit-brushlands-22836.herokuapp.com/',
+        description: 'Simple Word Count, built with frontend framework React and TailwindCSS. The features are, characters count, word count, sentences count, paragraphs count, estimated reading time, and show how many keywords appear.',
+        demo: 'https://jarooda-word-count.herokuapp.com/',
         repo: 'https://github.com/jarooda/word-count',
         image: 'word-counter',
         backend: ['-'],
-        frontend: ['ReactJS', 'Tailwind']
+        frontend: ['React', 'Tailwind']
       },
       {
         id: 4,
         name: 'Simple Ecommerce Customer Side',
-        description: 'Simple Ecommerce, built with backend framework Expressjs, Sequelize as ORM, Postgresql as database, and frontend using Vue.js and Bootstrap. The features are, login using google login, logged in as customer role, filter by category, cart, simple checkout, wishlist, transaction history, and slide banners.',
+        description: 'Simple Ecommerce, built with backend framework Express.js, Sequelize as ORM, Postgresql as database, and frontend using Vue.js and Bootstrap. The features are, login using google login, logged in as customer role, filter by category, cart, simple checkout, wishlist, transaction history, and slide banners.',
         demo: 'https://jarooda-ecommerce-customer.web.app/',
         repo: 'https://github.com/jarooda/ecommerce_client_customer',
         image: 'ecommerce',
-        backend: ['NodeJS', 'ExpressJS', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
+        backend: ['Node.js', 'Express.js', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
         frontend: ['Vue.js', 'Bootstrap']
       },
       {
         id: 3,
         name: 'Simple Ecommerce CMS',
-        description: 'Simple Ecommerce Admin Panel CMS, built with backend framework Expressjs, Sequelize as ORM, Postgresql as database, Jest for Test Driven Development, and frontend using Vue.js and Bootstrap. The features are, create, show, edit, and delete products, categories and banners, there is also dashboard to show current database such as total products, only admin role can log in, you can login using email: "admin@mail.com" and password: "admin123".',
+        description: 'Simple Ecommerce Admin Panel CMS, built with backend framework Express.js, Sequelize as ORM, Postgresql as database, Jest for Test Driven Development, and frontend using Vue.js and Bootstrap. The features are, create, show, edit, and delete products, categories and banners, there is also dashboard to show current database such as total products, only admin role can log in, you can login using email: "admin@mail.com" and password: "admin123".',
         demo: 'https://jarooda-ecommerce-cms.web.app/',
         repo: 'https://github.com/jarooda/ecommerce_client_cms',
         image: 'cms',
-        backend: ['NodeJS', 'ExpressJS', 'Postgres', 'Sequelize', 'Jest', 'JSON Web Token', 'BCryptjs'],
+        backend: ['Node.js', 'Express.js', 'Postgres', 'Sequelize', 'Jest', 'JSON Web Token', 'BCryptjs'],
         frontend: ['Vue.js', 'Bootstrap']
       },
       {
         id: 2,
         name: 'Simple Kanban Board',
-        description: 'Simple Kanban Board, built with backend framework Expressjs, Sequelize as ORM, Postgresql as database, and frontend using Vue.js and Bootstrap, and bundled using Parcel. The features are, create, edit, delete logged-in user task and show all tasks that use kanban board, can register and login using Google Login.',
+        description: 'Simple Kanban Board, built with backend framework Express.js, Sequelize as ORM, Postgresql as database, and frontend using Vue.js and Bootstrap, and bundled using Parcel. The features are, create, edit, delete logged-in user task and show all tasks that use kanban board, can register and login using Google Login.',
         demo: 'https://jarooda-kanban-app.web.app/',
         repo: 'https://github.com/jarooda/kanban-app',
         image: 'kanban',
-        backend: ['NodeJS', 'ExpressJS', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
+        backend: ['Node.js', 'Express.js', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
         frontend: ['Vue.js', 'Parcel', 'Bootstrap']
       },
       {
         id: 1,
-        name: 'Simple Todo List',
-        description: 'Simple Todo List, built with backend framework Expressjs, Sequelize as ORM, Postgresql as database, and frontend using JQuery and Bootstrap. The features are, create, show, edit and delete todo list, can register and login using Google Login, have an automatic weather condition by coordinate location using 3rd Party API Openweathermap, double click to change the Todo Status.',
+        name: 'Simple Todo List (Jquery)',
+        description: 'Simple Todo List, built with backend framework Express.js, Sequelize as ORM, Postgresql as database, and frontend using JQuery and Bootstrap. The features are, create, show, edit and delete todo list, can register and login using Google Login, have an automatic weather condition by coordinate location using 3rd Party API Openweathermap, double click to change the Todo Status.',
         demo: 'https://jarooda-fancy-todo.web.app/',
         repo: 'https://github.com/jarooda/fancy-todo',
         image: 'fancy-todo',
-        backend: ['NodeJS', 'ExpressJS', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
+        backend: ['Node.js', 'Express.js', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
         frontend: ['Jquery', 'Bootstrap']
       }
     ]

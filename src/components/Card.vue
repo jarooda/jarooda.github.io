@@ -1,9 +1,11 @@
 <template>
-  <div class="flex flex-wrap justify-center border-2 hover:border-dark-green rounded-xl sm:mx-0 bg-white transition transition-none sm:duration-300 sm:ease-in-out sm:transform hover:-translate-y-3">
-    <h1 class=" sm:text-xl text-base font-semibold text-center py-2 px-2 min-w-full cursor-pointer hover:text-dark-green" @click.prevent="showdetail">{{ portfolio.name}}</h1>
+  <div class="flex flex-wrap justify-center border-2 hover:border-dark-green rounded-xl sm:mx-0 bg-white transition transition-none sm:duration-300 sm:ease-in-out sm:transform hover:-translate-y-3 dark:bg-gray-800">
+    <h1 class=" sm:text-xl text-base font-semibold text-center py-2 px-2 min-w-full cursor-pointer icon" @click.prevent="showdetail">{{ portfolio.name}}</h1>
     <transition name="slide-fade">
       <div class="mx-3 my-2" v-if="active">
-        <img :src="getImgUrl(portfolio.image)" class="rounded-lg shadow-md mb-2" :alt="portfolio.name">
+        <div class="transform mb-5 bg-green-600 rounded-3xl transition hover:ease-out" :class="portfolio.id % 2 === 0 ? 'sm:hover:rotate-3 sm:rotate-0 rotate-3' : 'sm:hover:-rotate-3  sm:rotate-0 -rotate-3'">
+          <img :src="getImgUrl(portfolio.image)" class="rounded-3xl shadow-md mb-2 transform" :alt="portfolio.name" :class="portfolio.id % 2 === 0 ? 'sm:hover:-rotate-3 sm:rotate-0 -rotate-3' : 'sm:hover:rotate-3  sm:rotate-0 rotate-3'">
+        </div>
         <span class="my-3 text-sm text-center sm:text-left break">{{ portfolio.description}}</span>
         <div class="flex flex-row justify-around w-full border-b py-2 text-center">
           <ul class=" w-6/12">
@@ -20,8 +22,8 @@
           </ul>
         </div>
         <div class="flex justify-around my-3 text-m w-full pt-1">
-          <a :href="portfolio.repo" target="_blank" :title="portfolio.name" class=" text-dark-green hover:text-black">Github</a>
-          <a :href="portfolio.demo" target="_blank" :title="portfolio.name" class=" text-dark-green hover:text-black">Demo</a>
+          <a :href="portfolio.repo" target="_blank" :title="portfolio.name" class="link">Github</a>
+          <a :href="portfolio.demo" target="_blank" :title="portfolio.name" class="link">Demo</a>
         </div>
       </div>
     </transition>
