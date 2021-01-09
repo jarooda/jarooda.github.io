@@ -4,9 +4,12 @@
 
 @layer components {
   .icon {
-    @apply text-gray-800 hover:text-dark-green dark:text-white dark:hover:text-dark-green
+    @apply text-gray-800 hover:text-dark-green dark:text-white dark:hover:text-blue-400
   }
   .link {
-    @apply text-dark-green hover:text-black dark:hover:text-white
+    @apply text-dark-green hover:text-black dark:hover:text-white dark:text-blue-400
+  }
+  .dock {
+    min-height: 100vh;
   }
 }

@@ -1,8 +1,17 @@
 <template>
-  <div id="app" class="dark:bg-gray-900 dark:text-gray-50">
+  <div id="app" class="dock">
+    <Navbar />
     <router-view/>
   </div>
 </template>
 
-<style>
-</style>
+<script>
+
+import Navbar from '@/components/Navbar.vue'
+
+export default {
+  components: {
+    Navbar
+  }
+}
+</script>

@@ -1,40 +1,54 @@
 <template>
-  <div class="bg-white dark:bg-gray-900 shadow border-b-4 sticky top-0 border-dark-green z-50">
-    <div class="container mx-auto px-6 py-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="flex items-center">
-            <button @mousedown="darkmode" class="px-3 py-1 rounded-full border border-black dark:border-gray-50 outline-none">
-              <i :class="dark ? 'fas fa-moon mr-5 text-white' : 'fas fa-sun ml-5 text-black'"></i>
-            </button>
-          </div>
-        </div>
-        <div class="flex items-center -mx-2">
-          <a class="flex items-center mx-2" href="mailto:jaluwibowoaji@gmail.com" title="jaluwibowoaji@gmail.com">
-            <i class="fas fill-current icon text-xl sm:text-2xl fa-envelope"></i>
-          </a>
-          <a class="flex items-center mx-2" href="https://www.linkedin.com/in/jalu-wibowo-aji-25a09b180/" title="Jalu Wibowo Aji" target="_blank">
-            <i class="fab fill-current icon text-xl sm:text-2xl fa-linkedin"></i>
-          </a>
-          <a class="flex items-center mx-2" title="jarooda" href="https://github.com/jarooda" target="_blank">
-            <i class="fab fill-current icon text-xl sm:text-2xl fa-github"></i>
-          </a>
-          <a class="flex items-center mx-2" href="https://twitter.com/jaIu_" title="@jaIu_" target="_blank">
-            <i class="fab fill-current icon text-xl sm:text-2xl fa-twitter"></i>
-          </a>
+  <header class="bg-white dark:bg-gray-900 shadow border-b-4 fixed w-full top-0 border-dark-green dark:border-blue-400 z-50 sm:flex sm:justify-between">
+    <div class="flex justify-between items-center px-5 py-3">
+      <div class="flex">
+        <router-link to="/" class="text-xl font-semibold icon cursor-pointer" @click.native="isOpen = false">Jalu Wibowo Aji</router-link>
       </div>
+      <div class="sm:hidden">
+        <button @click="isOpen = !isOpen">
+          <i v-if="isOpen" class="fas fa-times text-xl"></i>
+          <i v-else class="fas fa-bars text-xl"></i>
+        </button>
       </div>
     </div>
-  </div>
+
+    <nav :class="isOpen ? 'flex' : 'hidden'" class="sm:flex items-end sm:items-center flex-col sm:flex-row px-5 mb-3 sm:mb-0">
+      <router-link to="/portfolio" class="icon font-semibold mx-2 py-2" @click.native="isOpen = false">Portfolio</router-link>
+
+      <div class="flex py-2">
+        <div v-for="(icon, id) in icons" :key=id>
+          <Icon :icon=icon />
+        </div>
+      </div>
+
+      <div class="flex py-2 px-2">
+        <div class="px-3 py-1 rounded-full border border-black dark:border-gray-50 outline-none">
+          <button @mousedown="darkmode">
+            <i :class="dark ? 'fas fa-moon ml-5 text-white' : 'fas fa-sun mr-5 text-black'" class="cursor-pointer icon"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
 </template>
 
 <script>
+import Icon from './Icon.vue'
 
 export default {
   name: 'Navbar',
+  computed: {
+    icons () {
+      return this.$store.state.icons
+    }
+  },
+  components: {
+    Icon
+  },
   data () {
     return {
-      dark: false
+      dark: false,
+      isOpen: false
     }
   },
   methods: {
@@ -48,6 +62,8 @@ export default {
         document.querySelector('html').classList.add('dark')
         localStorage.setItem('theme', 'dark')
       }
+    },
+    toggleNav () {
     }
   },
   mounted () {

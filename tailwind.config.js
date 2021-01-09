@@ -13,7 +13,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: theme => ({
-        'wave-pattern': "url('../img/wave.svg')"
+        // 'wave-pattern': "url('../img/wave.svg')"
       }),
       backgroundColor: theme => ({
         ...theme('colors'),
@@ -36,5 +36,7 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar')
+  ],
 }
