@@ -7,9 +7,5 @@ module.exports = {
       args[0].title = 'Jalu Wibowo Aji';	// ! Replace your title here
       return args;
     });
-  },
-  // ! github.io
-  publicPath: process.env.NODE_ENV === 'production'
-    ? '/jarooda.github.io/'
-    : '/'
+  }
 };

@@ -12,9 +12,6 @@ module.exports = {
   darkMode: 'class', // or 'media' or 'class'
   theme: {
     extend: {
-      backgroundImage: theme => ({
-        // 'wave-pattern': "url('../img/wave.svg')"
-      }),
       backgroundColor: theme => ({
         ...theme('colors'),
         'dark-green': '#006400'
