@@ -7,11 +7,21 @@ export default new Vuex.Store({
   state: {
     portfolios: [
       {
+        id: 8,
+        name: 'Sudokuuu',
+        description: 'Simple Sudoku Mobile Game, built with frontend library React Native and Expo. The features are play Sudoku with 3 level provided by sugoku API, each level have different timer, solve button with current sudoku board, and Leader Board sorted by fastest time clear.',
+        demo: 'https://expo.io/@jarooda/projects/jaroodasugoku',
+        repo: 'https://github.com/jarooda/sudokuuu-react-native',
+        image: 'https://i.ibb.co/0nRRLjT/sudokuuu.png',
+        backend: ['-'],
+        frontend: ['React Native', 'Expo']
+      },
+      {
         id: 7,
         name: 'Poké Team',
-        description: 'Simple Pokémon Website, built with frontend framework React and TailwindCSS. The features are find detailed Pokémon data using PokéAPI, add Pokémon to the team, search Pokémon, and dark mode.',
+        description: 'Simple Pokémon Website, built with frontend library React and TailwindCSS. The features are find detailed Pokémon data using PokéAPI, add Pokémon to the team, search Pokémon, and dark mode.',
         demo: 'https://jarooda-poke-team.herokuapp.com/',
-        repo: 'https://github.com/jarooda/',
+        repo: 'https://github.com/jarooda/poke-team',
         image: 'https://i.ibb.co/GJcc3NY/poke-team.png',
         backend: ['-'],
         frontend: ['React', 'Tailwind']
@@ -125,17 +135,17 @@ export default new Vuex.Store({
         description: 'Sales Promoter at modern market such as Gramedia'
       },
       {
-        type: 'school',
-        time: '2010 - 2013',
-        title: 'SMK Negeri 10 Semarang',
-        description: 'Rekayasa Perangkat Lunak (Computer Software Engineering)'
-      },
-      {
         type: 'job',
         time: 'Dec 2011 - Mar 2012',
         title: 'PT. PLN (Persero) Distribusi Jawa Tengah dan DIY',
         position: 'Student Intern',
         description: 'Student Intern as admin at library'
+      },
+      {
+        type: 'school',
+        time: '2010 - 2013',
+        title: 'SMK Negeri 10 Semarang',
+        description: 'Rekayasa Perangkat Lunak (Computer Software Engineering)'
       },
       {
         type: 'school',
