@@ -1,5 +1,5 @@
 <template>
-  <div class="relative max-w-screen-md m-8">
+  <div class="relative max-w-screen-md mx-5 mt-3">
     <div class="border-r-2 border-dark-green dark:border-blue-400 border absolute h-full top-0 left-2"></div>
     <ul class="list-none m-0 p-0" v-for="(timeline, idx) in timelines" :key="idx">
       <li class="mb-2">

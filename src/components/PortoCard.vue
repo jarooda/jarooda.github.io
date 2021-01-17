@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap justify-center border-t-2 border-gray-500 hover:border-dark-green dark:hover:border-blue-400 rounded-md sm:mx-0 transition duration-300 ease-in-out transform hover:-translate-y-3 hover:translate-x-1 dark:bg-gray-800 bg-gray-100 shadow-md">
+  <div class="flex flex-wrap justify-center border-t-2 border-gray-500 hover:border-dark-green dark:hover:border-blue-400 rounded-md sm:mx-0 transition duration-300 ease-in-out transform sm:hover:-translate-y-3 sm:hover:translate-x-1 dark:bg-gray-800 bg-gray-100 shadow-md">
     <h1 class=" sm:text-xl text-base font-semibold text-center py-2 px-2 min-w-full cursor-pointer icon" @click="active = !active">{{ portfolio.name}}</h1>
     <transition name="slide-fade">
       <div class="mx-3 my-2" v-if="active">

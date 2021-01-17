@@ -28,6 +28,10 @@ module.exports = {
         ...theme('colors'),
         'dark-green': '#006400'
       }),
+      fontFamily: {
+        'fira-code': ['Fira Code', 'monospace'],
+        'righteous': ['Righteous', 'cursive'],
+      }
     },
   },
   variants: {

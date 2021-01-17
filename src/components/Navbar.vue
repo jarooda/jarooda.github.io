@@ -1,8 +1,8 @@
 <template>
-  <header class="bg-white dark:bg-gray-900 shadow border-b-4 fixed w-full top-0 border-dark-green dark:border-blue-400 z-50 sm:flex sm:justify-between">
+  <header class="bg-white dark:bg-gray-900 shadow border-b-4 fixed w-full top-0 border-dark-green dark:border-blue-400 z-50 sm:flex sm:justify-between font-fira-code">
     <div class="flex justify-between items-center px-5 py-3">
       <div class="flex">
-        <router-link to="/" class="text-xl font-semibold icon cursor-pointer" @click.native="isOpen = false">Jalu Wibowo Aji</router-link>
+        <router-link to="/" class="text-2xl  icon cursor-pointer font-righteous underline" @click.native="isOpen = false">Jalu Wibowo Aji</router-link>
       </div>
       <div class="sm:hidden">
         <button @click="isOpen = !isOpen">
@@ -23,9 +23,11 @@
 
       <div class="flex py-2 px-2">
         <div class="px-3 py-1 rounded-full border border-black dark:border-gray-50 outline-none">
-          <button @mousedown="darkmode">
-            <i :class="dark ? 'fas fa-moon ml-5 text-white' : 'fas fa-sun mr-5 text-black'" class="cursor-pointer icon"></i>
-          </button>
+          <div @click="darkmode">
+            <transition name="fade">
+              <i :class="dark ? 'fas fa-moon ml-5 text-white' : 'fas fa-sun mr-5 text-black'" class="cursor-pointer icon"></i>
+            </transition>
+          </div>
         </div>
       </div>
     </nav>
@@ -33,7 +35,7 @@
 </template>
 
 <script>
-import Icon from './Icon.vue'
+import { Icon } from '../components'
 
 export default {
   name: 'Navbar',

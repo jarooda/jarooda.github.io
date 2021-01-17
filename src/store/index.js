@@ -12,7 +12,7 @@ export default new Vuex.Store({
         description: 'Simple Sudoku Mobile Game, built with frontend library React Native and Expo. The features are play Sudoku with 3 level provided by sugoku API, each level have different timer, solve button with current sudoku board, and Leader Board sorted by fastest time clear.',
         demo: 'https://expo.io/@jarooda/projects/jaroodasugoku',
         repo: 'https://github.com/jarooda/sudokuuu-react-native',
-        image: 'https://i.ibb.co/0nRRLjT/sudokuuu.png',
+        image: 'https://i.ibb.co/DVnLmFz/sudokuuu.png',
         backend: ['-'],
         frontend: ['React Native', 'Expo']
       },

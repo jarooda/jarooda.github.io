@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center sm:rounded-3xl rounded-3xl bg-white max-w-screen-md h-1/2 items-center flex-wrap sm:flex-nowrap p-5 sm:p-0 mx-5 shadow-md sm:mt-3 dark:bg-gray-900 border-2 dark:border-gray-200">
+  <div class="flex justify-center sm:rounded-3xl rounded-3xl bg-white max-w-screen-md h-1/2 items-center flex-wrap sm:flex-nowrap p-5 sm:p-0 mx-5 shadow-lg sm:mt-3 dark:bg-gray-900 sm:border-0 border-2 dark:border-gray-200">
     <img src="https://i.ibb.co/DYQR28Z/jaluwibowo.jpg" class="sm:rounded-3xl sm:shadow-none shadow-lg rounded-full max-h-32 sm:max-h-72" alt="Jalu Wibowo Aji">
     <div class="pt-6 md:p-8 text-center md:text-left space-y-4">
       <blockquote>
