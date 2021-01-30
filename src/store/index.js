@@ -9,11 +9,11 @@ export default new Vuex.Store({
       {
         id: 9,
         name: 'LPG - Learning Pronunciation Game',
-        description: 'This game give you a unique experience in learning pronunciation in foreign languages. Here you can race against time to get best scores. The game offer various difficulty for you to tackle it and be better in pronunciation. Built with backend framework Express.js and database MongoDB, frontend library React, CSS framework TailwindCSS, animation using P5.js and Web Speech API. The features are using speech recognition to beat the game, and using speech synthesis to give a clue, and leaderboard to give a sense of achievement.',
+        description: 'This game give you a unique experience in learning pronunciation in foreign languages. Here you can race against time to get best scores. The game offer various difficulty for you to tackle it and be better in pronunciation. Built with backend framework Express.js, Jest for TDD and database MongoDB, frontend library React, CSS framework TailwindCSS, animation using P5.js and Web Speech API. The features are using speech recognition to beat the game, and using speech synthesis to give a clue, and leaderboard to give a sense of achievement.',
         demo: 'https://florence-fox-lpg.herokuapp.com/',
         repo: 'https://github.com/Learn-Pronounciation-Game-Team',
         image: 'https://i.ibb.co/PwFtHBH/lpg-game.png',
-        backend: ['Node.js', 'Express.js', 'MongoDB'],
+        backend: ['Node.js', 'Express.js', 'Jest', 'MongoDB'],
         frontend: ['React', 'TailwindCSS', 'P5.js', 'Web Speech API']
       },
       {
