@@ -2,11 +2,11 @@
   <div class="flex flex-wrap justify-center border-t-2 border-gray-500 hover:border-dark-green dark:hover:border-blue-400 rounded-md sm:mx-0 transition duration-300 ease-in-out transform sm:hover:-translate-y-3 sm:hover:translate-x-1 dark:bg-gray-800 bg-gray-100 shadow-md">
     <h1 class=" sm:text-xl text-base font-semibold text-center py-2 px-2 min-w-full cursor-pointer icon" @click="active = !active">{{ portfolio.name}}</h1>
     <transition name="slide-fade">
-      <div class="mx-3 my-2" v-if="active">
+      <div class="mx-3 my-2 p-2" v-if="active">
         <div class="transform mb-5 bg-dark-green dark:bg-blue-400 rounded-3xl transition hover:ease-out" :class="portfolio.id % 2 === 0 ? 'sm:hover:rotate-3 sm:rotate-0 rotate-3' : 'sm:hover:-rotate-3  sm:rotate-0 -rotate-3'">
           <img :src="portfolio.image" class="rounded-3xl shadow-md mb-2 transform" :alt="portfolio.name" :class="portfolio.id % 2 === 0 ? 'sm:hover:-rotate-3 sm:rotate-0 -rotate-3' : 'sm:hover:rotate-3  sm:rotate-0 rotate-3'">
         </div>
-        <span class="my-3 text-sm text-center sm:text-left break">{{ portfolio.description}}</span>
+        <p class="my-3 text-sm text-center sm:text-justify">{{ portfolio.description }}</p>
         <div class="flex flex-row justify-around w-full border-b py-2 text-center">
           <ul class=" w-6/12">
             <li class="font-semibold text-md border-b pb-2 mb-2">Backend</li>

@@ -7,9 +7,19 @@ export default new Vuex.Store({
   state: {
     portfolios: [
       {
+        id: 9,
+        name: 'LPG - Learning Pronunciation Game',
+        description: 'This game give you a unique experience in learning pronunciation in foreign languages. Here you can race against time to get best scores. The game offer various difficulty for you to tackle it and be better in pronunciation. Built with backend framework Express.js and database MongoDB, frontend library React, CSS framework TailwindCSS, animation using P5.js and Web Speech API. The features are using speech recognition to beat the game, and using speech synthesis to give a clue, and leaderboard to give a sense of achievement.',
+        demo: 'https://florence-fox-lpg.herokuapp.com/',
+        repo: 'https://github.com/Learn-Pronounciation-Game-Team',
+        image: 'https://i.ibb.co/PwFtHBH/lpg-game.png',
+        backend: ['Node.js', 'Express.js', 'MongoDB'],
+        frontend: ['React', 'TailwindCSS', 'P5.js', 'Web Speech API']
+      },
+      {
         id: 8,
         name: 'Sudokuuu',
-        description: 'Simple Sudoku Mobile Game, built with frontend library React Native and Expo. The features are play Sudoku with 3 level provided by sugoku API, each level have different timer, solve button with current sudoku board, and Leader Board sorted by fastest time clear.',
+        description: 'Simple Sudoku Mobile Game, built with frontend library React Native and Expo. The features are play Sudoku with 3 level provided by sugoku API, each level have different timer, solve button with current sudoku board, and leaderboard sorted by fastest time clear.',
         demo: 'https://expo.io/@jarooda/projects/jaroodasugoku',
         repo: 'https://github.com/jarooda/sudokuuu-react-native',
         image: 'https://i.ibb.co/DVnLmFz/sudokuuu.png',
@@ -24,7 +34,7 @@ export default new Vuex.Store({
         repo: 'https://github.com/jarooda/poke-team',
         image: 'https://i.ibb.co/GJcc3NY/poke-team.png',
         backend: ['-'],
-        frontend: ['React', 'Tailwind']
+        frontend: ['React', 'TailwindCSS']
       },
       {
         id: 6,
@@ -34,7 +44,7 @@ export default new Vuex.Store({
         repo: 'https://github.com/jarooda/fancy-todo-react',
         image: 'https://i.ibb.co/PTFYnyh/todo-react.png',
         backend: ['Node.js', 'Express.js', 'Postgres', 'Sequelize', 'JSON Web Token', 'BCryptjs'],
-        frontend: ['React', 'Tailwind']
+        frontend: ['React', 'TailwindCSS']
       },
       {
         id: 5,
@@ -44,7 +54,7 @@ export default new Vuex.Store({
         repo: 'https://github.com/jarooda/word-count',
         image: 'https://i.ibb.co/HrGRy60/word-counter.png',
         backend: ['-'],
-        frontend: ['React', 'Tailwind']
+        frontend: ['React', 'TailwindCSS']
       },
       {
         id: 4,
