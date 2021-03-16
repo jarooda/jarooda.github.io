@@ -26,7 +26,7 @@ export default {
   name: 'Timeline',
   computed: {
     timelines () {
-      return this.$store.state.timelines
+      return this.$store.state.timelines.timelines
     }
   }
 }

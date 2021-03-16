@@ -41,7 +41,7 @@ export default {
   name: 'Navbar',
   computed: {
     icons () {
-      return this.$store.state.icons
+      return this.$store.state.icons.icons
     }
   },
   components: {
