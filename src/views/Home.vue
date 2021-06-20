@@ -1,21 +1,29 @@
 <template>
-  <div class="flex justify-center items-center py-2 sm:py-5 -mb-4 sm:mb-0 flex-col pb-5 font-fira-code">
-    <Title title="About Me" />
-    <AboutCard />
-    <Title title="Education & Job" />
-    <Timeline />
+  <div>
+    <Header ref="header"/>
+    <div @click="clickOutsideHeader">
+      <Portfolios :limit="4"/>
+      <Footer top="header"/>
+    </div>
   </div>
 </template>
 
 <script>
-import { AboutCard, Title, Timeline } from '../components'
+import Header from '@/components/header/Header.vue'
+import Portfolios from '@/components/portfolios/Portfolios.vue'
+import Footer from '@/components/footer/Footer.vue'
 
 export default {
   name: 'Home',
   components: {
-    AboutCard,
-    Timeline,
-    Title
+    Header,
+    Portfolios,
+    Footer
+  },
+  methods: {
+    clickOutsideHeader () {
+      this.$refs.header.closeNav(0)
+    }
   }
 }
 </script>

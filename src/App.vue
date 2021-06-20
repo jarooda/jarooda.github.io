@@ -1,28 +1,15 @@
 <template>
-  <div id="app" class="dock">
-    <Navbar />
-    <transition name="fade">
-      <router-view/>
-    </transition>
+  <div>
+    <router-view/>
   </div>
 </template>
 
 <script>
-
-import Navbar from '@/components/Navbar.vue'
+import meta from '@/constants/meta.js'
 
 export default {
-  components: {
-    Navbar
+  metaInfo () {
+    return meta
   }
 }
 </script>
-
-<style>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-</style>

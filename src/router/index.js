@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { Home, Portfolio } from '../views'
 
 Vue.use(VueRouter)
 
@@ -8,23 +7,22 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
   },
   {
-    path: '/portfolio',
-    name: 'Portfolio',
-    component: Portfolio
-  },
-  {
-    path: '*',
-    component: Home
+    path: '/portfolios',
+    name: 'Portfolios',
+    component: () => import(/* webpackChunkName: "portfolios" */ '../views/Portfolios.vue')
   }
 ]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    return { x: 0, y: 0 }
+  }
 })
 
 export default router
