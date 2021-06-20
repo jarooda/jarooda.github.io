@@ -168,7 +168,6 @@ export default {
   .header-wrapper {
     width: 100%;
     min-height: 100vh;
-    padding-bottom: 60px;
     grid-template-columns: 100%;
   }
 
@@ -202,14 +201,10 @@ export default {
     display: flex;
     flex-direction: column;
   }
-/*
-  .image-mobile {
-    height: 100px;
-    widows: 100px;
-  }*/
 
   .header-right {
     text-align: justify;
+    margin-top: 20px;
   }
 }
 </style>
