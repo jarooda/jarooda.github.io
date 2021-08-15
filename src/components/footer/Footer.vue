@@ -105,5 +105,9 @@ export default {
     width: 100%;
     grid-template-columns: 100%;
   }
+
+  .footer-right, .footer-left {
+    border: none;
+  }
 }
 </style>
