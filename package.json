@@ -1,0 +1,21 @@
+{
+  "name": "jarooda.github.io",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^0.19.7",
+    "@astrojs/rss": "^2.4.3",
+    "@astrojs/sitemap": "^2.0.1",
+    "@astrojs/vue": "^2.2.1",
+    "astro": "^2.10.1",
+    "sass": "^1.64.2",
+    "vue": "^3.2.30"
+  }
+}
