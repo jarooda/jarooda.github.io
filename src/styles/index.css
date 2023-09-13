@@ -1,0 +1,24 @@
+:root {
+  /* https://tailwindcss.com/docs/customizing-colors */
+  --lime-500: #84cc16;
+  --underline-offset: 2px;
+}
+
+a {
+  display: inline-block;
+  text-decoration: none;
+}
+
+a.active {
+  font-weight: bolder;
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset);
+}
+
+mark {
+  background: none;
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset);
+  text-decoration-color: var(--lime-500);
+  text-decoration-style: solid;
+}
