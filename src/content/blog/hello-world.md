@@ -105,3 +105,14 @@ X<sup>n</sup> + Y<sup>n</sup> = Z<sup>n</sup>
 Press <kbd><kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>Delete</kbd></kbd> to end the session.
 
 Most <mark>salamanders</mark> are nocturnal, and hunt for insects, worms, and other small creatures.
+
+<div class="py-2 px-4 bg-purple-500 text-white font-semibold rounded-lg shadow-md">
+  Tailwind classes also work in Markdown!
+ </div>
+
+<ul class=" list-disc list-inside">
+  <li>Bullet</li>
+  <li>and</li>
+  <li>Numbering</li>
+  <li>Works too!</li>
+</ul>
