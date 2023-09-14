@@ -1,7 +1,11 @@
 :root {
   /* https://tailwindcss.com/docs/customizing-colors */
-  --lime-500: #84cc16;
+  --green-700: #15803d;
   --underline-offset: 2px;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 a {
@@ -16,9 +20,10 @@ a.active {
 }
 
 mark {
+  color: inherit;
   background: none;
   text-decoration: underline;
   text-underline-offset: var(--underline-offset);
-  text-decoration-color: var(--lime-500);
+  text-decoration-color: var(--green-700);
   text-decoration-style: solid;
 }

@@ -9,6 +9,9 @@ module.exports = {
       width: {
         'md': '768px'
       },
+      maxWidth: {
+        '20': '20px'
+      },
       keyframes: {
         typing: {
           '0%': {
@@ -33,7 +36,7 @@ module.exports = {
             borderColor: 'transparent'
           },
           '100%': {
-            borderColor: '#84cc16'
+            borderColor: 'var(--green-700)'
           }  
         }
       },
