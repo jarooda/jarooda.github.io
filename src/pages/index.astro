@@ -1,7 +1,6 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
-import Main from '../components/Main.astro';
-import Footer from '../components/Footer.astro';
+import HomePage from '../layouts/HomePage.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import '../styles/index.css';
 ---
@@ -12,7 +11,29 @@ import '../styles/index.css';
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 	</head>
 	<body class=" bg-gray-200">
-		<Main />
-		<Footer />
+    <HomePage />
 	</body>
+  <script>
+    const scrollAndRemoveQuery = () => {
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
+      const { protocol, host, pathname } = window.location;
+      const url = `${protocol}//${host}${pathname}`;
+      window.history.replaceState({}, '', url);
+    }
+    // automatically jump into anchor
+    const location = window.location;
+    if (location.hash) {
+      setTimeout(() => {
+        const id = location.hash.slice(1);
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView();
+        } else {
+          scrollAndRemoveQuery()
+        }
+      }, 0);
+    } else {
+      scrollAndRemoveQuery()
+    }
+  </script>
 </html>
