@@ -3,12 +3,16 @@ import { Icon } from 'astro-icon'
 
 interface Props {
   icon?: string
+  dark?: boolean
 }
 
-const { icon } = Astro.props;
+const { icon, dark } = Astro.props;
+const classes = dark ? 'text-gray-200 bg-gray-700 border-gray-200' : 'text-gray-700 bg-white border-gray-700'
 ---
 
-<span class=" px-4 py-2 flex items-center w-max rounded-md border-gray-700 text-gray-700 bg-white border-2 text-sm md:text-base font-medium">
+<span
+  class={ ` px-4 py-2 flex items-center w-max rounded-md border-2 text-sm md:text-base font-medium ${ classes }` }
+>
   { icon && <Icon name={icon} class="mr-2 h-5 max-w-20" /> }
   <slot />
 </span>

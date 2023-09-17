@@ -1,22 +1,27 @@
 ---
+import { Icon } from 'astro-icon'
 interface Props {
   href: string
   rel?: string
   target?: string
+  icon?: string
+  block?: boolean
+  border?: boolean
 }
 
-const { href, rel, target } = Astro.props;
+const { href, rel, target, icon, block, border } = Astro.props;
 ---
 
 <a
   href={ href }
   rel={ rel }
   target={ target }
-  class="relative px-4 py-2 overflow-hidden font-semibold text-gray-700 bg-white rounded-sm shadow-md group text-sm md:text-base"
+  class={ `relative px-4 py-2 overflow-hidden font-semibold text-gray-700 bg-white rounded-sm shadow-lg group text-sm md:text-base ${ block ? 'w-full text-center' : 'w-max' } ${ border ? 'border border-gray-400' : ''}` }
 >
-  <span class="absolute w-0 h-0 transition-all duration-300 border-t-2 border-gray-700 group-hover:w-full ease top-0 left-0 " />
+  <span class="absolute w-0 h-0 transition-all duration-300 border-t-2 border-gray-700 group-hover:w-full rounded-xl ease top-0 left-0 " />
   <span class="absolute w-0 h-0 transition-all duration-300 border-b-2 border-gray-700 group-hover:w-full ease bottom-0 right-0" />
   <span class="absolute w-0 h-0 transition-all duration-300 border-r-2 border-gray-700 group-hover:h-full ease top-0 right-0"></span>
   <span class="absolute w-0 h-0 transition-all duration-300 border-l-2 border-gray-700 group-hover:h-full ease bottom-0 left-0"></span>
+  { icon && <Icon name={icon} class="h-5 max-w-20" /> }
   <slot />
 </a>

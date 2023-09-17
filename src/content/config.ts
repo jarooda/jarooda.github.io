@@ -18,7 +18,7 @@ const blog = defineCollection({
 	}),
 });
 
-const portofolio = defineCollection({
+const project = defineCollection({
 	// Type-check frontmatter using a schema
 	schema: z.object({
 		title: z.string(),
@@ -34,7 +34,10 @@ const portofolio = defineCollection({
 			.optional()
 			.transform((str) => (str ? new Date(str) : undefined)),
 		heroImage: z.string().optional(),
+    isFeatured: z.boolean().optional(),
+    featuredOrder: z.number().optional(),
+    stacks: z.array(z.string()),
 	}),
 }); 
 
-export const collections = { blog, portofolio };
+export const collections = { blog, project };
