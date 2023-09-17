@@ -9,7 +9,7 @@ const posts = (await getCollection('project')).filter(item => item.data.isFeatur
 
 ---
 
-<section id="projects" class=" min-h-screen justify-center flex flex-col bg-gray-200 text-gray-700 xl:mb-10">
+<section id="projects" class=" min-h-screen justify-center flex flex-col bg-gray-700 text-gray-200 xl:pb-10">
   <div class=" mx-auto w-full md:w-192 py-4 px-4 md:py-12">
     <div class=" w-max flex flex-col md:flex-row gap-0 md:gap-4 text-2xl md:text-5xl font-semibold">
       <h1 class=" mb-4">#Projects</h1>
@@ -22,7 +22,7 @@ const posts = (await getCollection('project')).filter(item => item.data.isFeatur
       }
     </div>
     <content class=" text-md md:text-xl mt-4 md:mt-8 flex justify-end xl:justify-start gap-2 w-full">
-      <Anchor href='/projects'>See more...</Anchor>
+      <Anchor href='/projects' isContrast>See more...</Anchor>
     </content>
   </div>
 </section>
