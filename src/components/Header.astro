@@ -1,16 +1,15 @@
 ---
 import HeaderLink from './HeaderLink.astro';
-import { SITE_TITLE } from '../consts';
 import '../styles/index.css';
 ---
 
-<header class=" font-inter flex flex-col items-end">
-	<nav class=" flex items-center justify-end p-4 w-full">
+<header class=" font-inter flex flex-col items-end mb-4">
+	<nav class=" flex items-center justify-center md:justify-end p-4 w-full">
 		<div class=" flex gap-3">
-			<HeaderLink href="/">HOME</HeaderLink>
-			<HeaderLink href="/about">PORTOFOLIO</HeaderLink>
-			<HeaderLink href="/blog">BLOG</HeaderLink>
+			<HeaderLink href="/">#Home</HeaderLink>
+			<HeaderLink href="/projects">#Projects</HeaderLink>
+			<HeaderLink href="/blogs">#Blogs</HeaderLink>
 		</div>
 	</nav>
-  <div class=" border-b-gray-900 border-b-2 w-3/5 rounded-md" />
+  <div class=" border-b-gray-900 border-b-2 w-full md:w-3/5 rounded-md" />
 </header>

@@ -1,12 +1,10 @@
 ---
 import Tag from './Tag.astro';
+import { getIcon } from '../consts'
 
 interface Props {
   title: string
-  lists: {
-    name: string
-    icon?: string
-  }[]
+  lists: string[]
 }
 
 const { title, lists } = Astro.props;
@@ -17,7 +15,7 @@ const { title, lists } = Astro.props;
   <div class=" flex gap-2 mt-2 flex-wrap">
     {
       lists.map((list) => (
-        <Tag icon={list.icon}>{list.name}</Tag>
+        <Tag icon={ getIcon(list) }>{ list }</Tag>
       ))
     }
   </div>

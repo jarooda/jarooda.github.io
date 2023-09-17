@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import Anchor from './Anchor.astro';
+import ProjectsFeaturedCard from './ProjectsFeaturedCard.astro';
+
+// Filter featured posts and sort by date
+const posts = (await getCollection('project')).filter(item => item.data.isFeatured).sort(
+	(a, b) => (a.data.featuredOrder || 0) - (b.data.featuredOrder || 1)).reverse();
+
+---
+
+<section id="projects" class=" min-h-screen justify-center flex flex-col bg-gray-200 text-gray-700 xl:mb-10">
+  <div class=" mx-auto w-full md:w-192 py-4 px-4 md:py-12">
+    <div class=" w-max flex flex-col md:flex-row gap-0 md:gap-4 text-2xl md:text-5xl font-semibold">
+      <h1 class=" mb-4">#Projects</h1>
+    </div>
+    <div class=" flex flex-col md:flex-row md:justify-evenly flex-wrap gap-4 xl:relative">
+      {
+        posts.slice(0, 3).map((post, index) => (
+          <ProjectsFeaturedCard { ...post.data } isFeatured index={ index } />
+        ))
+      }
+    </div>
+    <content class=" text-md md:text-xl mt-4 md:mt-8 flex justify-end xl:justify-start gap-2 w-full">
+      <Anchor href='/projects'>See more...</Anchor>
+    </content>
+  </div>
+</section>
