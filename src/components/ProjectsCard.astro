@@ -31,7 +31,7 @@ const { Content } = await render();
     {
       repo && (
         <div class="!absolute top-4 right-4 h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-full text-center align-middle font-sans text-xs font-medium uppercase transition-all disabled:opacity-50 disabled:shadow-none">
-          <Anchor href={ repo } icon={ getIcon('github') } rel='noopener noreferrer' target='_blank' />
+          <Anchor href={ repo } icon="mdi:github" rel='noopener noreferrer' target='_blank' />
         </div>
       )
     }
@@ -49,14 +49,14 @@ const { Content } = await render();
         ))
       }
     </div>
-  </div>
   {
     demo && (
-    <aside class=" flex pb-4 px-4">
-      <Anchor href={ demo } rel='noopener noreferrer' block border target='_blank'>
+    <aside class=" flex mt-4">
+      <Anchor href={ demo } rel='noopener noreferrer' block target='_blank' icon="fluent:preview-link-16-regular">
         Preview
       </Anchor>
     </aside>
     )
   }
+  </div>
 </div>
