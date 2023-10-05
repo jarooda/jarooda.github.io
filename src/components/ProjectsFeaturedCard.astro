@@ -12,7 +12,7 @@ interface Props {
   index: number
 }
 
-const { title, heroImage, stacks = [], isFeatured, index } = Astro.props;
+const { title, heroImage, stacks = [], isFeatured, index, demo, repo } = Astro.props;
 const featuredStacks = isFeatured ? stacks.slice(0, 3) : stacks;
 
 let dynamicClasses = 'md:left-64';
@@ -28,7 +28,11 @@ switch (index) {
 }
 ---
 
-<div class={ ` w-full md:w-2/5 xl:w-96 bg-white border border-gray-200 rounded-lg shadow-lg group xl:rotate-6 xl:hover:rotate-0 transform transition-all xl:absolute ${ dynamicClasses }` }>
+<a
+  href={ demo || repo }
+  target="_blank"
+  class={ ` w-full md:w-2/5 xl:w-96 bg-white border border-gray-200 rounded-lg shadow-lg group xl:rotate-6 xl:hover:rotate-0 transform transition-all xl:absolute ${ dynamicClasses }` }
+>
   <img class=" rounded-t-lg" src={ heroImage } alt={ title } />
   <div class=" flex flex-col justify-between">
     <div class="p-4">
@@ -46,4 +50,4 @@ switch (index) {
       }
     </div>
   </div>
-</div>
+</a>

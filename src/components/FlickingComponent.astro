@@ -1,0 +1,54 @@
+<script>
+  import Flicking from '@egjs/flicking'
+  import { AutoPlay, Arrow, Fade } from "@egjs/flicking-plugins"
+  import '@egjs/flicking/dist/flicking.css'
+  import "@egjs/flicking-plugins/dist/flicking-plugins.css"
+  import "@egjs/flicking-plugins/dist/arrow.css";
+
+  const flicking = new Flicking("#flick", {
+    circular: true,
+    align: 'prev',
+    adaptive: false,
+    horizontal: true
+  })
+
+  flicking.addPlugins(new AutoPlay({ duration: 10000, direction: "NEXT", stopOnHover: false }))
+  flicking.addPlugins(new Fade())
+  flicking.addPlugins(new Arrow())
+</script>
+
+<div id="flick" class="flicking-viewport">
+  <div class="flicking-camera">
+    <slot />
+  </div>
+  <span class="flicking-arrow-prev opacity-0"></span>
+  <span class="flicking-arrow-next opacity-0"></span>
+</div>
+
+<style>
+  .flicking-viewport:hover {
+    cursor: grab;
+  }
+
+  .flicking-viewport:hover > .flicking-arrow-next,
+  .flicking-viewport:hover > .flicking-arrow-prev {
+    animation: fadeIn 0.3s ease-in-out forwards;
+  }
+
+  .flicking-arrow-prev,
+  .flicking-arrow-next {
+    opacity: 0;
+  }
+
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .flicking-arrow-prev::before,
+  .flicking-arrow-prev::after,
+  .flicking-arrow-next::before,
+  .flicking-arrow-next::after {
+    background-color: var(--green-700);
+  }
+</style>

@@ -17,27 +17,41 @@ const { Content } = await render();
 
 ---
 
-<div class="relative flex w-full max-w-md h-auto flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
-  <div class="relative overflow-hidden rounded-t-xl bg-blue-gray-500 bg-clip-border text-white shadow-lg group">
-    <img
-      src={ heroImage }
-      alt={ title + '-img' }
-      class=" group-hover:scale-110 transition-all duration-500 ease-in-out transform object-cover object-center"
-    />
-    <div class=" to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/50 group-hover:hidden flex items-center justify-center bg-gray-700 bg-opacity-50 p-4">
+<div class=" flicking-panel relative flex w-full h-min flex-col rounded-xl bg-white bg-clip-border text-gray-700">
+  <div class="relative overflow-hidden rounded-t-xl bg-blue-gray-500 bg-clip-border text-white group">
+    <div
+      style={{
+        backgroundImage: `url(${heroImage})`
+      }}
+      class=" w-full h-48 md:h-96 group-hover:scale-110 transition-all duration-500 ease-in-out transform object-cover object-center bg-no-repeat bg-center bg-cover"
+      />
+    </div>
+  <div class="p-6">
+    <div class=" flex flex-col md:flex-row mb-6 items-center justify-between ">
       <h2 class=" block font-sans text-lg md:text-3xl font-bold leading-snug tracking-normal antialiased text-center">
         { title }
       </h2>
+      <div class=" flex gap-4">
+        {
+          demo && (
+          <aside class=" flex">
+            <Anchor href={ demo } rel='noopener noreferrer' block target='_blank' icon="fluent:preview-link-16-regular">
+              Preview
+            </Anchor>
+          </aside>
+          )
+        }
+        {
+          repo && (
+          <aside class=" flex">
+            <Anchor href={ repo } rel='noopener noreferrer' block target='_blank' icon="mdi:github">
+              Repo
+            </Anchor>
+          </aside>
+          )
+        }
+      </div>
     </div>
-    {
-      repo && (
-        <div class="!absolute top-4 right-4 h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-full text-center align-middle font-sans text-xs font-medium uppercase transition-all">
-          <Anchor href={ repo } icon="mdi:github" rel='noopener noreferrer' target='_blank' />
-        </div>
-      )
-    }
-  </div>
-  <div class="p-6">
     <Content class="block font-sans text-sm md:text-base font-light leading-relaxed text-gray-700 antialiased" />
     <div class="group mt-8 inline-flex flex-wrap items-center gap-3">
       {
@@ -50,14 +64,5 @@ const { Content } = await render();
         ))
       }
     </div>
-  {
-    demo && (
-    <aside class=" flex mt-4">
-      <Anchor href={ demo } rel='noopener noreferrer' block target='_blank' icon="fluent:preview-link-16-regular">
-        Preview
-      </Anchor>
-    </aside>
-    )
-  }
   </div>
 </div>
