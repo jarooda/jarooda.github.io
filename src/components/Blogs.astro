@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import Anchor from './Anchor.astro';
-import ProjectsFeaturedCard from './ProjectsFeaturedCard.astro';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -14,7 +13,7 @@ const posts = (await getCollection('blog')).sort(
     <div class=" w-max flex flex-col md:flex-row gap-0 md:gap-4 text-2xl md:text-5xl font-semibold">
       <h1 class=" mb-4">#Blog</h1>
     </div>
-    <main class=" flex flex-col gap-4 md:p-4">
+    <main class=" flex flex-col gap-4 md:p-4 mt-3">
       {
         posts.slice(0, 3).map((post) => (
           <div class=" border-b border-white pb-4">
@@ -27,7 +26,7 @@ const posts = (await getCollection('blog')).sort(
       }
     </main>
     <content class=" text-md md:text-xl mt-4 md:mt-8 flex justify-end gap-2 w-full">
-      <Anchor href='/blog' isContrast>Read more...</Anchor>
+      <Anchor href='/blog' isContrast icon='mdi:chevron-double-right'>Discover Other Posts</Anchor>
     </content>
   </div>
 </section>
