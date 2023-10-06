@@ -152,3 +152,24 @@ a {
   text-decoration: none; /* Remove underline from links */
 }
 
+/* Style links on hover */
+a:hover {
+  color: var(--green-500); /* Darken links on hover */
+  text-decoration: underline; /* Add underline on hover */
+}
+
+.copy-code {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #3730a3;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  border-radius: 0 0 0 0.25rem;
+}
+
+.copy-code:hover {
+  background-color: #312e81;
+}

@@ -1,6 +1,7 @@
 :root {
   /* https://tailwindcss.com/docs/customizing-colors */
   --green-700: #15803d;
+  --green-500: #22c55e;
   --underline-offset: 2px;
 }
 
