@@ -155,7 +155,6 @@ a {
 /* Style links on hover */
 a:hover {
   color: var(--green-500); /* Darken links on hover */
-  text-decoration: underline; /* Add underline on hover */
 }
 
 .copy-code {
