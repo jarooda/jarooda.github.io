@@ -3,9 +3,8 @@ import { SITE_TITLE } from '../consts';
 const today = new Date();
 ---
 
-<footer class=" text-center p-4">
-  <p class=" font-semibold">
-    &copy; { today.getFullYear() } <span class=" ml-1">{ SITE_TITLE }</span>. All rights reserved.
-  </p>
+<footer class=" text-center p-4 font-semibold">
+  <p>&copy; { today.getFullYear() }&nbsp;{ SITE_TITLE }</p>
+  <p>Website code: <a href="https://github.com/jarooda/jarooda.github.io/blob/main/license.md" class=" text-green-700 hover:underline underline-offset-2">MIT License</a> | Blog content: <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="text-green-700 hover:underline underline-offset-2">CC BY-NC-SA 4.0</a></p>
 </footer>
 
