@@ -8,8 +8,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab on GitHub.
   workflow_dispatch:
 
-env:
-  PUBLIC_CONTACT_ME_API: ${{ secrets.CONTACT_ME_API }}
 
 # Allow this job to clone the repo and create a page deployment
 permissions:
@@ -20,6 +18,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PUBLIC_CONTACT_ME_API: ${{ secrets.CONTACT_ME_API }}
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v3
