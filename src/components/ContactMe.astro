@@ -39,6 +39,9 @@ const socials = [
       sendMsgBtn.addEventListener('click', async () => {
         try {
           sendMsgBtn?.setAttribute('disabled', 'disabled')
+          sendMsgBtn?.classList.add('cursor-not-allowed')
+          sendMsgBtn?.classList.add('opacity-50')
+
           const email = document.getElementById('email').value
           const name = document.getElementById('name').value
           const message = document.getElementById('message').value
@@ -67,6 +70,9 @@ const socials = [
           const data = await response.json()
 
           if (response.status === 200) {
+            document.getElementById('email').value = ''
+            document.getElementById('name').value = ''
+            document.getElementById('message').value = ''
             Toastify({
               text: data.message,
               duration: 2000,
@@ -93,6 +99,8 @@ const socials = [
           }).showToast()
         } finally {
           sendMsgBtn?.removeAttribute('disabled')
+          sendMsgBtn?.classList.remove('cursor-not-allowed')
+          sendMsgBtn?.classList.remove('opacity-50')
         }
       })
     }
@@ -143,7 +151,7 @@ const socials = [
               <span class=" group-hover:w-full w-0 absolute h-0 transition-all duration-300 border-b-2 border-gray-700 ease bottom-0 right-0" />
               <span class=" group-hover:h-full h-0 absolute w-0 transition-all duration-300 border-r-2 border-gray-700 ease top-0 right-0" />
               <span class=" group-hover:h-full h-0 absolute w-0 transition-all duration-300 border-l-2 border-gray-700 ease bottom-0 left-0" />
-              <div class=" flex justify-center items-center gap-2">
+              <div id="send-msg-btn-title" class=" flex justify-center items-center gap-2">
                 <Icon name="ri:mail-send-fill" class=" h-5 max-w-20" />
                 Send Message!
               </div>
