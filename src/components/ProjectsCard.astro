@@ -17,7 +17,7 @@ const { Content } = await render();
 
 ---
 
-<div class=" flicking-panel relative flex w-full h-min flex-col rounded-xl bg-white bg-clip-border text-gray-700">
+<div class=" flicking-panel relative flex w-full sm:w-128 mx-0 sm:mx-2 h-min flex-col rounded-xl bg-white bg-clip-border text-gray-700">
   <div class="relative overflow-hidden rounded-t-xl bg-blue-gray-500 bg-clip-border text-white group">
     <div
       style={{
@@ -28,7 +28,7 @@ const { Content } = await render();
     </div>
   <div class="p-6">
     <div class=" flex flex-col md:flex-row mb-6 items-center justify-between ">
-      <h2 class=" block font-sans text-lg md:text-3xl font-bold leading-snug tracking-normal antialiased text-center">
+      <h2 class=" block font-sans text-lg md:text-3xl font-bold leading-snug tracking-normal antialiased text-left">
         { title }
       </h2>
       <div class=" flex gap-4">

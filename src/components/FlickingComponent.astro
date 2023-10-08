@@ -7,7 +7,7 @@
 
   const flicking = new Flicking("#flick", {
     circular: true,
-    align: 'prev',
+    align: 'center',
     adaptive: false,
     horizontal: true
   })
@@ -21,8 +21,8 @@
   <div class="flicking-camera">
     <slot />
   </div>
-  <span class="flicking-arrow-prev opacity-0"></span>
-  <span class="flicking-arrow-next opacity-0"></span>
+  <span class="flicking-arrow-prev" />
+  <span class="flicking-arrow-next" />
 </div>
 
 <style>
@@ -30,15 +30,18 @@
     cursor: grab;
   }
 
-  .flicking-viewport:hover > .flicking-arrow-next,
-  .flicking-viewport:hover > .flicking-arrow-prev {
-    animation: fadeIn 0.3s ease-in-out forwards;
+  @media screen and (min-width: 768px) {
+    .flicking-viewport:hover > .flicking-arrow-next,
+    .flicking-viewport:hover > .flicking-arrow-prev {
+      animation: fadeIn 0.3s ease-in-out forwards;
+    }
+  
+    .flicking-arrow-prev,
+    .flicking-arrow-next {
+      opacity: 0;
+    }
   }
 
-  .flicking-arrow-prev,
-  .flicking-arrow-next {
-    opacity: 0;
-  }
 
   @keyframes fadeIn {
     0% { opacity: 0; }
