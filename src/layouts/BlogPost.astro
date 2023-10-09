@@ -6,10 +6,12 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import '../styles/base.css'
 import '../styles/blogs.css'
+import { SITE_TITLE } from '../consts';
 
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const headerTitle = title + ' - ' + SITE_TITLE
 ---
 
 <html lang="en">
@@ -51,7 +53,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     }
   </script>
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead title={ headerTitle } description={description} />
 	</head>
 
 	<body>
