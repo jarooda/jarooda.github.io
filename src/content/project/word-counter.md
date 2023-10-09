@@ -1,7 +1,7 @@
 ---
 title: 'Word Counter'
 pubDate: 'Dec 26 2020'
-heroImage: 'https://i.ibb.co/HrGRy60/word-counter.png'
+heroImage: 'https://cdn.jaluwibowo.id/assets/word-counter.png'
 repo: 'https://github.com/jarooda/word-count'
 demo: 'https://word-count-kohl.vercel.app/'
 stacks: ['React', 'Tailwind']
