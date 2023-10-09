@@ -1,20 +1,29 @@
 ---
 import HeaderLink from './HeaderLink.astro';
 import '../styles/index.css';
+
+interface Props {
+	hasSeparator?: boolean
+}
+
+const { hasSeparator = true } = Astro.props
 ---
 <script>
   // after 60px of scroll, add fixed to header & remove separator
   window.addEventListener('scroll', () => {
     const separator = document.getElementById('web-header-separator');
-    if (window.scrollY > 64) {
-      separator.classList.add('hidden');
-    } else {
-      separator.classList.remove('hidden');
+    
+    if (separator) {
+      if (window.scrollY > 64) {
+        separator.classList.add('hidden');
+      } else {
+        separator.classList.remove('hidden');
+      }
     }
   });
 </script>
 
-<header class=" font-inter flex flex-col items-end mb-4 w-full z-50 fixed">
+<header class=" font-inter flex flex-col items-end mb-4 w-full z-50 fixed bg-white">
 	<nav class=" flex items-center justify-center md:justify-end p-4 w-full h-16 ">
 		<div class=" flex gap-3">
 			<HeaderLink href="/">#Home</HeaderLink>
@@ -22,5 +31,7 @@ import '../styles/index.css';
 			<HeaderLink href="/blog">#Blog</HeaderLink>
 		</div>
 	</nav>
-  <div id="web-header-separator" class=" border-b-gray-900 border-b-2 w-full md:w-3/5 rounded-md mb-4" />
+  {
+    hasSeparator && <div id="web-header-separator" class=" border-b-gray-900 border-b-2 w-full md:w-3/5 rounded-md mb-4" />
+  }
 </header>
