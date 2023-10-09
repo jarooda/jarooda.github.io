@@ -53,12 +53,12 @@ const headerTitle = title + ' - ' + SITE_TITLE
     }
   </script>
 	<head>
-		<BaseHead title={ headerTitle } description={description} />
+		<BaseHead title={ headerTitle } description={description} image={ heroImage } />
 	</head>
 
 	<body>
-		<Header />
-		<main>
+		<Header hasSeparator={ false } />
+		<main class=" pt-16">
 			<article>
 				<div>
 					{heroImage && <img width={1020} height={510} src={heroImage} alt="hero" class=" w-full max-h-96 object-cover object-center" />}

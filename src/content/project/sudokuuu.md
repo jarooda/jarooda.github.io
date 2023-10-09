@@ -1,7 +1,7 @@
 ---
 title: 'Sudokuuu'
 pubDate: 'Jan 13 2021'
-heroImage: 'https://i.ibb.co/DVnLmFz/sudokuuu.png'
+heroImage: 'https://cdn.jaluwibowo.id/assets/sudokuuu.png'
 repo: 'https://github.com/jarooda/sudokuuu-react-native'
 demo: 'https://expo.dev/@jarooda/jaroodasugoku'
 stacks: ['React Native', 'Expo']
