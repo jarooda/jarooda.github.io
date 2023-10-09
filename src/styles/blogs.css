@@ -1,14 +1,14 @@
 /* generate HTML tag CSS */
 
 /* Style the main heading */
-h1 {
+.blog h1 {
   font-size: 24px;
   color: #333; /* Dark text color */
   margin-bottom: 20px; /* Add some space below the heading */
 }
 
 /* Style subheadings */
-h2 {
+.blog h2 {
   font-size: 20px;
   color: #555; /* Slightly lighter text color */
   margin-top: 20px; /* Add space above subheadings */
@@ -16,7 +16,7 @@ h2 {
 }
 
 /* Style h3 */
-h3 {
+.blog h3 {
   font-size: 18px;
   color: #666; /* Slightly lighter text color */
   margin-top: 15px; /* Add space above h3 */
@@ -24,7 +24,7 @@ h3 {
 }
 
 /* Style h4 */
-h4 {
+.blog h4 {
   font-size: 16px;
   color: #777; /* Slightly lighter text color */
   margin-top: 15px; /* Add space above h4 */
@@ -32,7 +32,7 @@ h4 {
 }
 
 /* Style h5 */
-h5 {
+.blog h5 {
   font-size: 14px;
   color: #888; /* Slightly lighter text color */
   margin-top: 15px; /* Add space above h5 */
@@ -40,7 +40,7 @@ h5 {
 }
 
 /* Style h6 */
-h6 {
+.blog h6 {
   font-size: 12px;
   color: #999; /* Slightly lighter text color */
   margin-top: 15px; /* Add space above h6 */
@@ -48,31 +48,31 @@ h6 {
 }
 
 /* Style paragraphs */
-p {
+.blog p {
   font-size: 16px;
   line-height: 1.5; /* Improve readability with some line spacing */
   margin-bottom: 15px; /* Add space below paragraphs */
 }
 
 /* Style strong tags */
-strong {
+.blog strong {
   font-weight: bold; /* Make text within strong tags bold */
 }
 
 /* Style italic tags */
-italic {
+.blog italic {
   font-style: italic; /* Make text within italic tags italic */
 }
 
 /* Style blockquotes */
-blockquote {
+.blog blockquote {
   border-left: 2px solid #888; /* Add a left border to blockquotes */
   padding-left: 15px; /* Add left padding for blockquotes */
   margin-left: 0; /* Reset default margin for blockquotes */
 }
 
 /* Style code */
-code {
+.blog code {
   font-family: monospace; /* Use a monospace font for code */
   font-size: 16px;
   background-color: #f5f5f5; /* Add a grey background color */
@@ -81,7 +81,7 @@ code {
 }
 
 /* Style pre tags */
-pre {
+.blog pre {
   font-family: monospace; /* Use a monospace font for code */
   font-size: 16px;
   background-color: #f5f5f5; /* Add a grey background color */
@@ -89,14 +89,14 @@ pre {
   border-radius: 4px; /* Add rounded corners */
 }
 
-pre code {
+.blog pre code {
   background-color: transparent; /* Remove background color from code */
   padding: 0; /* Remove padding from code */
   border-radius: 0; /* Remove border radius from code */
 }
 
 /* Style table */
-table {
+.blog table {
   text-align: left;
   border-collapse: collapse; /* Collapse borders */
   width: 100%; /* Make table as wide as possible */
@@ -104,57 +104,58 @@ table {
 }
 
 /* Style table thead */
-thead {
+.blog thead {
   background-color: #333; /* Darken header row */
   color: #fff; /* Lighten header row text */
 }
 
 /* Style table tbody */
-tbody {
+.blog tbody {
   background-color: #fff; /* Add a background color to all table rows */
 }
 
 /* Style table th */
-th {
+.blog th {
   padding: 10px 15px; /* Add padding */
 }
 
 /* Style table td */
-td {
+.blog td {
   border: 1px solid #ccc; /* Add borders */
   padding: 10px 15px; /* Add padding */
 }
 
 /* Style unordered list */
-ul {
+.blog ul {
   list-style: disc; /* Use disc bullets */
 }
 
 /* Style ordered lists */
-ol {
+.blog ol {
   list-style: decimal; /* Use decimal numbers */
 }
 
 /* Style list items */
-li {
+.blog li {
   margin-bottom: 5px; /* Add space below list items */
 }
 
 /* Style abbr */
-abbr {
+.blog abbr {
   text-decoration: none; /* Remove underline from abbreviations */
   border-bottom: 1px dotted #333; /* Add bottom border to abbreviations */
 }
 
 /* Style link */
-a {
+.blog a {
   color: var(--green-700); /* Darken links */
   text-decoration: none; /* Remove underline from links */
 }
 
 /* Style links on hover */
-a:hover {
+.blog a:hover {
   color: var(--green-500); /* Darken links on hover */
+  text-decoration: underline; /* Add underline on hover */
 }
 
 .copy-code {

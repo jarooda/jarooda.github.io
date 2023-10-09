@@ -5,25 +5,22 @@ import '../styles/index.css';
 <script>
   // after 60px of scroll, add fixed to header & remove separator
   window.addEventListener('scroll', () => {
-    const header = document.getElementById('web-header');
     const separator = document.getElementById('web-header-separator');
-    if (window.scrollY > 84) {
-      header.classList.add('fixed');
+    if (window.scrollY > 64) {
       separator.classList.add('hidden');
     } else {
-      header.classList.remove('fixed');
       separator.classList.remove('hidden');
     }
   });
 </script>
 
-<header id="web-header" class=" font-inter flex flex-col items-end mb-4 bg-white w-full z-50">
-	<nav class=" flex items-center justify-center md:justify-end p-4 w-full">
+<header class=" font-inter flex flex-col items-end mb-4 w-full z-50 fixed">
+	<nav class=" flex items-center justify-center md:justify-end p-4 w-full h-16 ">
 		<div class=" flex gap-3">
 			<HeaderLink href="/">#Home</HeaderLink>
 			<HeaderLink href="/projects">#Projects</HeaderLink>
 			<HeaderLink href="/blog">#Blog</HeaderLink>
 		</div>
 	</nav>
-  <div id="web-header-separator" class=" border-b-gray-900 border-b-2 w-full md:w-3/5 rounded-md" />
+  <div id="web-header-separator" class=" border-b-gray-900 border-b-2 w-full md:w-3/5 rounded-md mb-4" />
 </header>

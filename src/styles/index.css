@@ -26,5 +26,11 @@ mark {
   text-decoration: underline;
   text-underline-offset: var(--underline-offset);
   text-decoration-color: var(--green-700);
-  text-decoration-style: solid;
+  text-decoration-style: dashed;
+}
+
+mark:hover {
+  text-decoration: none;
+  background-color: var(--green-700);
+  color: white;
 }
