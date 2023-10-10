@@ -1,7 +1,7 @@
 ---
 title: 'jaluwibowo.id'
 pubDate: '10 Oct 2023'
-heroImage: 'https://cdn.jaluwibowo.id/assets/jaluwibowo-id.png'
+heroImage: 'https://cdn.jaluwibowo.id/assets/projects/jaluwibowo-id.png'
 repo: 'https://github.com/jarooda/jarooda.github.io'
 demo: 'https://www.jaluwibowo.id/'
 isFeatured: false
