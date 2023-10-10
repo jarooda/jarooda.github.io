@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon'
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -8,9 +9,12 @@ import '../styles/base.css'
 import '../styles/blogs.css'
 import { SITE_TITLE } from '../consts';
 
-type Props = CollectionEntry<'blog'>['data'];
+type AstroProps = CollectionEntry<'blog'>['data'];
+interface Props extends AstroProps {
+  remark?: any;
+}
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, remark } = Astro.props;
 const headerTitle = title + ' - ' + SITE_TITLE
 ---
 
@@ -64,12 +68,23 @@ const headerTitle = title + ' - ' + SITE_TITLE
 					{heroImage && <img width={1020} height={510} src={heroImage} alt="hero" class=" w-full max-h-96 object-cover object-center" />}
 				</div>
 				<div class=" font-inter w-full lg:w-224 mx-auto p-4">
-					<div>
+					<div class=" flex flex-col">
             <h1 class=" text-4xl font-bold">{title}</h1>
-						<div>
-              <p class=" font-semibold text-base md:text-sm mt-1">
-                <FormattedDate date={pubDate} />
-              </p>
+						<div class=" mt-2 gap2 flex flex-col">
+              <div class=" flex gap-1 items-center">
+                <Icon name="mdi:calendar-multiselect" class="h-4 max-w-10" />
+                <p class=" text-base md:text-sm">
+                  <FormattedDate date={pubDate} />
+                </p>
+              </div>
+              <div class=" flex gap-1 items-center">
+                <Icon name="mdi:clock-time-two-outline" class="h-4 max-w-10" />
+                <p class=" text-base md:text-sm">
+                  <span>{
+                    remark.minutesRead
+                  }</span>
+                </p>
+              </div>
 							{
 								updatedDate && (
                   <p class=" font-light text-base md:text-sm mt-1">
@@ -78,7 +93,7 @@ const headerTitle = title + ' - ' + SITE_TITLE
 								)
 							}
 						</div>
-						<hr class=" my-4" />
+						<hr class=" my-3" />
 					</div>
           <div class=" blog">
             <slot />
