@@ -148,14 +148,13 @@
 
 /* Style link */
 .blog a {
-  color: var(--green-700); /* Darken links */
-  text-decoration: none; /* Remove underline from links */
+  color: var(--green-900); /* Darken links */
+  text-decoration: underline; /* Add underline */
 }
 
 /* Style links on hover */
 .blog a:hover {
-  color: var(--green-500); /* Darken links on hover */
-  text-decoration: underline; /* Add underline on hover */
+  color: var(--green-700); /* Lighten links on hover */
 }
 
 .copy-code {

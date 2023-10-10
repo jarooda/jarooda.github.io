@@ -4,22 +4,27 @@ import { Icon } from 'astro-icon'
 const url = import.meta.env.PUBLIC_CONTACT_ME_API
 const socials = [
   {
+    label: 'github',
     icon: 'logos:github-icon',
     url: 'https://github.com/jarooda'
   },
   {
+    label: 'linkedin',
     icon: 'logos:linkedin-icon',
     url: 'https://linkedin.com/in/jaluwibowoaji'
   },
   {
+    label: 'stackoverflow',
     icon: 'logos:stackoverflow-icon',
     url: 'https://stackoverflow.com/users/14604582/jalu-wibowo'
   },
   {
+    label: 'google developers',
     icon: 'logos:google-developers',
     url: 'https://g.dev/jaluwibowo'
   },
   {
+    label: 'twitter',
     icon: 'logos:twitter',
     url: 'https://twitter.com/jaluwibowoaji'
   }
@@ -120,28 +125,30 @@ const socials = [
         <div class=" flex flex-wrap gap-8 my-8">
           {
             socials.map(social => (
-              <a href={social.url} target="_blank" class=" flex flex-row gap-2 items-center hover:drop-shadow-md">
+              <a href={social.url} target="_blank" class=" flex flex-row gap-2 items-center hover:drop-shadow-md" aria-label={social.label}>
                 <Icon name={social.icon} class=" w-10 h-10 md:w-14 md:h-14" />
               </a>
             ))
           }
         </div>
         <h2 class=" text-xl md:text-2xl">Or reach me using form below,</h2>
-        <form method="POST" class=" my-8 flex flex-wrap gap-2 text-base">
-          <div class="relative z-0 w-full md:w-1/2 mb-6 group">
-            <input type="email" name="email" id="email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer" placeholder=" " required />
-            <label for="email" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Your Email</label>
-          </div>
-          <div class="relative z-0 w-full md:w-1/2 mb-6 group">
-            <input type="text" name="name" id="name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer" placeholder=" " required />
-            <label for="name" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Your Name</label>
-          </div>
-          <div class="relative z-0 w-full mb-6 group">
-            <textarea name="message" rows="5" id="message" class=" resize-none block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer" placeholder=" " required />
-            <label for="message" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Your Message</label>
+        <form method="POST" class=" mt-8 text-base">
+          <div class=" bg-white p-6 rounded-lg w-full flex flex-wrap gap-1">
+            <div class="relative z-0 w-full md:w-1/2 mb-4 group">
+              <input type="email" name="email" id="email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer" placeholder=" " required />
+              <label for="email" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Your Email</label>
+            </div>
+            <div class="relative z-0 w-full md:w-1/2 mb-4 group">
+              <input type="text" name="name" id="name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer" placeholder=" " required />
+              <label for="name" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Your Name</label>
+            </div>
+            <div class="relative z-0 w-full group">
+              <textarea name="message" rows="5" id="message" class=" resize-none block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer" placeholder=" " required />
+              <label for="message" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Your Message</label>
+            </div>
           </div>
           
-          <div class=" flex justify-end w-full">
+          <div class=" flex justify-end w-full mt-4">
             <button
               id="send-msg-btn"
               type="button"
