@@ -27,14 +27,14 @@ const { Content } = await render();
       />
     </div>
   <div class="p-6">
-    <div class=" flex flex-col md:flex-row mb-6 items-center justify-between ">
-      <h2 class=" block font-sans text-lg md:text-3xl font-bold leading-snug tracking-normal antialiased text-left">
+    <div class=" flex flex-col md:flex-row mb-6 justify-between gap-4">
+      <h2 class=" block font-sans text-lg md:text-2xl font-bold leading-snug tracking-normal antialiased text-left">
         { title }
       </h2>
       <div class=" flex gap-4">
         {
           demo && (
-          <aside class=" flex">
+          <aside class=" flex h-min">
             <Anchor href={ demo } rel='noopener noreferrer' block target='_blank' icon="fluent:preview-link-16-regular">
               Preview
             </Anchor>
@@ -43,7 +43,7 @@ const { Content } = await render();
         }
         {
           repo && (
-          <aside class=" flex">
+          <aside class=" flex h-min">
             <Anchor href={ repo } rel='noopener noreferrer' block target='_blank' icon="mdi:github">
               Repo
             </Anchor>
