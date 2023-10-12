@@ -34,6 +34,7 @@ const calculateMarginLeft = (depth: number) => {
 
 <html lang="en">
   <script>
+    // Copy code
     let copyButtonLabel = "Copy Code";
     let codeBlocks = Array.from(document.querySelectorAll("pre"));
 
@@ -69,6 +70,29 @@ const calculateMarginLeft = (depth: number) => {
         button.innerText = copyButtonLabel;
       }, 700);
     }
+
+    // Jump to anchor
+    const scrollAndRemoveQuery = () => {
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
+      const { protocol, host, pathname } = window.location;
+      const url = `${protocol}//${host}${pathname}`;
+      window.history.replaceState({}, '', url);
+    }
+    // automatically jump into anchor
+    const location = window.location;
+    if (location.hash) {
+      setTimeout(() => {
+        const id = location.hash.slice(1);
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView();
+        } else {
+          scrollAndRemoveQuery()
+        }
+      }, 0);
+    } else {
+      scrollAndRemoveQuery()
+    }
   </script>
 	<head>
 		<BaseHead title={ headerTitle } description={description} image={ heroImage } />
@@ -83,7 +107,7 @@ const calculateMarginLeft = (depth: number) => {
 				</div>
 				<div class=" font-inter w-full lg:w-224 mx-auto p-4">
 					<div class=" flex flex-col">
-            <h1 class=" text-4xl font-bold">{title}</h1>
+            <h1 class=" text-4xl font-bold text-center my-10">{title}</h1>
 						<div class=" mt-2 gap2 flex flex-col">
               <div class=" flex gap-1 items-center">
                 <Icon name="mdi:calendar-multiselect" class="h-4 max-w-10" />
