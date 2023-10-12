@@ -34,7 +34,7 @@ const project = defineCollection({
 			.string()
 			.optional()
 			.transform((str) => (str ? new Date(str) : undefined)),
-		heroImage: z.string().optional(),
+		heroImage: z.string(),
     isFeatured: z.boolean().optional(),
     featuredOrder: z.number().optional(),
     stacks: z.array(z.string()),
