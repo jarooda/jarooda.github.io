@@ -1,9 +1,21 @@
 ---
 title: 'Revamp, Hello World, dan Astro'
-description: 'Memutuskan untuk mulai membagi ilmu-ilmu yang aku punya dalam media tulisan, aku merubah personal web ku dari Vue.js ke Astro dan menambahkan blog.'
+description: 'Memutuskan untuk merubah personal web dari Vue.js ke Astro dan menambahkan fitur blog pribadi.'
 pubDate: '10 Oct 2023'
 heroImage: 'https://cdn.jaluwibowo.id/assets/blog/laptop-top-desk.jpg'
-tags: ['Blog', 'Astro']
+tags: ['web', 'javascript', 'astro']
 ---
 
-Still Draft
+# Memutuskan Revamp
+
+# Menggunakan Astro
+
+## Fitur Blog
+
+## Fitur Contact Me
+
+## Tantangan
+
+## Solusi
+
+# Hasil Akhir
