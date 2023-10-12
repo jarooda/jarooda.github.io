@@ -12,10 +12,24 @@ import { SITE_TITLE } from '../consts';
 type AstroProps = CollectionEntry<'blog'>['data'];
 interface Props extends AstroProps {
   remark?: any;
+  headings: {
+    depth: number
+    slug: string
+    text: string
+  }[]
 }
 
-const { title, description, pubDate, updatedDate, heroImage, remark } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, remark, headings } = Astro.props;
 const headerTitle = title + ' - ' + SITE_TITLE
+
+const removeSRLabel = (text: string) => {
+  const labelStart = text.indexOf('Section titled')
+  return text.substring(0, labelStart)
+}
+
+const calculateMarginLeft = (depth: number) => {
+  return `${2 * (depth - 1)}rem`
+}
 ---
 
 <html lang="en">
@@ -96,6 +110,19 @@ const headerTitle = title + ' - ' + SITE_TITLE
 						<hr class=" my-3" />
 					</div>
           <div class=" blog">
+            <aside>
+              <h2 class="font-semibold text-black">Contents</h2>
+              <ul>
+                {
+                  headings.map(({ depth, slug, text }) => (
+                    <li style={{ marginLeft: calculateMarginLeft(depth) }} class=" list-inside">
+                      <a href={`#${slug}`}>{removeSRLabel(text)}</a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </aside>
+            <hr class=" my-3" />
             <slot />
           </div>
 				</div>
