@@ -10,7 +10,7 @@ tags: ['web', 'javascript', 'astro']
 
 # Hello, World!
 
-Biasanya saat kita memulai belajar *ngoding*, kita akan menemui kalimat tersebut. Hello World biasanya digunakan untuk memastikan bahwa bahasa atau sistem sudah berjalan dengan semestinya. Untuk tulisan pertama saya di web ini, sepertinya lebih lengkap dengan Hello World hehe.
+Biasanya saat kita memulai belajar *ngoding*, kita akan menemui kalimat tersebut. Hello World biasanya digunakan untuk memastikan bahwa bahasa atau sistem sudah berjalan dengan semestinya. Maka, untuk tulisan pertama saya di web ini, sepertinya lebih lengkap dengan adanya Hello World hehe.
 
 Sebelumnya, aku sudah pernah membuat sebuah web pribadi, masih sama seperti yang sekarang, web tersebut adalah web statis yang dideploy di [Github Pages](https://pages.github.com/) karena kebutuhannya memang hanya sebagai web untuk memajang hasil beberapa portofolio-ku selama bootcamp.
 
@@ -65,7 +65,7 @@ Karena fokus dari revamp ini adalah blog, maka ini adalah hal pertama yang jadi 
 
 **3. Support Github Action dari developer**
 
-Dengan [github action](https://docs.astro.build/en/guides/deploy/github/), memudahkan untuk deploy website, kita hanya perlu push kedalam branch yang ditentukan kemudian akan otomatis build & generate halaman statis yang dibutuhkan.
+Dengan [github action](https://docs.astro.build/en/guides/deploy/github/), memudahkan untuk deploy website, kita hanya perlu push kedalam branch yang ditentukan kemudian akan otomatis build & generate halaman statis yang dibutuhkan. Jadi masih tetap bisa menggunakan github pages yang gratisan.
 
 # Fitur Blog
 
@@ -83,11 +83,11 @@ Backend-nya sendiri aku buat menggunakan `express.js` dan `nodemailer` dan di de
 
 # Hasil Akhir
 
-Setelah selesai, akhirnya ku coba kembali untuk test menggunakan `Lighthouse`, dan hasilnya sangat memuaskan.
+Setelah selesai, akhirnya ku coba kembali untuk test menggunakan `Lighthouse`,
 
 ![Hasil Lighthouse V2](https://cdn.jaluwibowo.id/assets/blog/jaluwibowo-v2-lighthouse.png)
 
-Menurutku pribadi, hasilnya sudah sangat memuaskan, kemudian ada beberapa fitur yang mungkin nanti akan aku tambahkan seperti Dark Mode dan juga clickable Article tags.
+Dan menurutku pribadi, hasilnya sudah sangat memuaskan, kemudian ada beberapa fitur yang mungkin nanti akan aku tambahkan seperti Dark Mode dan juga clickable Article tags.
 
 Menggunakan Astro juga membuatku kembali menggunakan `Javascript DOM` yang tentu saja bisa menambah fundamental ku sebagai web developer.
 
