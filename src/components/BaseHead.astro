@@ -1,5 +1,4 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
 import '../styles/fonts.css';
 
 interface Props {
@@ -40,5 +39,3 @@ const { title, description, image = 'https://cdn.jaluwibowo.id/assets/logo-1600x
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
-
-<ViewTransitions />

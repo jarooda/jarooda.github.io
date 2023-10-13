@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
 import { Image } from "astro:assets"
 import type { CollectionEntry } from 'astro:content';
 import { Icon } from 'astro-icon'
@@ -97,6 +98,7 @@ const calculateMarginLeft = (depth: number) => {
   </script>
 	<head>
 		<BaseHead title={ headerTitle } description={description} image={ heroImage } />
+    <ViewTransitions />
 	</head>
 
 	<body>
@@ -140,7 +142,7 @@ const calculateMarginLeft = (depth: number) => {
               <ul>
                 {
                   headings.map(({ depth, slug, text }) => (
-                    <li style={{ marginLeft: calculateMarginLeft(depth) }} class=" list-inside">
+                    slug !== 'footnote-label' && <li style={{ marginLeft: calculateMarginLeft(depth) }} class=" list-inside">
                       <a href={`#${slug}`}>{removeSRLabel(text)}</a>
                     </li>
                   ))

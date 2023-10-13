@@ -126,11 +126,13 @@
 /* Style unordered list */
 .blog ul {
   list-style: disc; /* Use disc bullets */
+  margin-left: 1.5rem; /* Add some left margin */
 }
 
 /* Style ordered lists */
 .blog ol {
   list-style: decimal; /* Use decimal numbers */
+  margin-left: 1.5rem; /* Add some left margin */
 }
 
 /* Style list items */
