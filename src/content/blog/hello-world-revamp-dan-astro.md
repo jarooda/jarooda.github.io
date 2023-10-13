@@ -1,14 +1,15 @@
 ---
 title: 'Hello World, Revamp, dan Astro'
 description: 'Memutuskan untuk rewrite & revamp web ini dari Vue.js ke Astro dan menambahkan fitur blog.'
-pubDate: '13 Oct 2023'
+pubDate: '12 Oct 2023'
+updatedDate: '13 Oct 2023'
 heroImage: 'https://cdn.jaluwibowo.id/assets/blog/laptop-top-desk.jpg'
 tags: ['web', 'javascript', 'astro']
 ---
 
 # Hello, World!
 
-Biasanya saat kita memulai belajar *ngoding*, kita akan menemui kalimat tersebut. Hello World biasanya digunakan untuk memastikan bahwa bahasa atau sistem sudah berjalan dengan semestinya. Karena ini adalah tulisan pertama saya di web ini, maka yang pertama-tama memang sepertinya lebih lengkap kalau dengan Hello World hehe.
+Biasanya saat kita memulai belajar *ngoding*, kita akan menemui kalimat tersebut. Hello World biasanya digunakan untuk memastikan bahwa bahasa atau sistem sudah berjalan dengan semestinya. Untuk tulisan pertama saya di web ini, sepertinya lebih lengkap dengan Hello World hehe.
 
 Sebelumnya, aku sudah pernah membuat sebuah web pribadi, masih sama seperti yang sekarang, web tersebut adalah web statis yang dideploy di [Github Pages](https://pages.github.com/) karena kebutuhannya memang hanya sebagai web untuk memajang hasil beberapa portofolio-ku selama bootcamp.
 
@@ -49,7 +50,7 @@ Opsi ini muncul karena aku ingin mencoba untuk membuat sebuah blog pribadi, dima
 
 Beberapa Framework seperti Nuxt, Vitepress, Next, Gatsby, dan Astro menjadi pertimbangan, tetapi akhirnya Astro yang kupilih.
 
-# Menggunakan Astro
+# Mengapa Astro?
 
 Astro kupilih karena beberapa alasan,
 
@@ -63,7 +64,7 @@ Karena fokus dari revamp ini adalah blog, maka ini adalah hal pertama yang jadi 
 
 **3. Support Github Action dari developer**
 
-Dengan adanya [github action](https://docs.astro.build/en/guides/deploy/github/), memudahkan untuk deploy website, kita hanya perlu push kedalam branch yang ditentukan kemudian akan otomatis build & generate halaman statis yang dibutuhkan.
+Dengan [github action](https://docs.astro.build/en/guides/deploy/github/), memudahkan untuk deploy website, kita hanya perlu push kedalam branch yang ditentukan kemudian akan otomatis build & generate halaman statis yang dibutuhkan.
 
 # Fitur Blog
 
@@ -80,6 +81,10 @@ Dengan form Contact Me ini, user hanya perlu memasukkan Nama, Email dan juga Mes
 Backend-nya sendiri aku buat menggunakan `express.js` dan `nodemailer` dan di deploy di [Railway](https://railway.app/), source code-nya sendiri bisa di lihat di repo [jarooda/contact-me](https://github.com/jarooda/contact-me).
 
 # Hasil Akhir
+
+Setelah selesai, akhirnya ku coba kembali untuk test menggunakan `Lighthouse`, dan hasilnya sangat memuaskan.
+
+![Hasil Lighthouse V2](https://cdn.jaluwibowo.id/assets/blog/jaluwibowo-v2-lighthouse.png)
 
 Menurutku pribadi, hasilnya sudah sangat memuaskan, kemudian ada beberapa fitur yang mungkin nanti akan aku tambahkan seperti Dark Mode dan juga clickable Article tags.
 
