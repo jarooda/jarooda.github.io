@@ -35,67 +35,9 @@ const calculateMarginLeft = (depth: number) => {
 ---
 
 <html lang="en">
-  <script>
-    // Copy code
-    let copyButtonLabel = "Copy Code";
-    let codeBlocks = Array.from(document.querySelectorAll("pre"));
-
-    for (let codeBlock of codeBlocks) {
-      let wrapper = document.createElement("div");
-      wrapper.style.position = "relative";
-
-      let copyButton = document.createElement("button");
-      copyButton.className = "copy-code";
-      copyButton.innerHTML = copyButtonLabel;
-
-      codeBlock.setAttribute("tabindex", "0");
-      codeBlock.appendChild(copyButton);
-      // wrap codebock with relative parent element
-      codeBlock.parentNode.insertBefore(wrapper, codeBlock);
-      wrapper.appendChild(codeBlock);
-
-      copyButton.addEventListener("click", async () => {
-        await copyCode(codeBlock, copyButton);
-      });
-    }
-
-    async function copyCode(block, button) {
-      let code = block.querySelector("code");
-      let text = code.innerText;
-
-      await navigator.clipboard.writeText(text);
-
-      // visual feedback that task is completed
-      button.innerText = "Code Copied";
-
-      setTimeout(() => {
-        button.innerText = copyButtonLabel;
-      }, 700);
-    }
-
-    // Jump to anchor
-    const scrollAndRemoveQuery = () => {
-      document.body.scrollTop = document.documentElement.scrollTop = 0;
-      const { protocol, host, pathname } = window.location;
-      const url = `${protocol}//${host}${pathname}`;
-      window.history.replaceState({}, '', url);
-    }
-    // automatically jump into anchor
-    const location = window.location;
-    if (location.hash) {
-      setTimeout(() => {
-        const id = location.hash.slice(1);
-        const el = document.getElementById(id);
-        if (el) {
-          el.scrollIntoView();
-        } else {
-          scrollAndRemoveQuery()
-        }
-      }, 0);
-    } else {
-      scrollAndRemoveQuery()
-    }
-  </script>
+  <link href="/themes/prism.css" rel="stylesheet" />
+  <script src="../utils/fenced-block-custom.ts" />
+  <script src="../utils/jump-to-anchor.ts" />
 	<head>
 		<BaseHead title={ headerTitle } description={description} image={ metaImage || heroImage } />
     <ViewTransitions />
