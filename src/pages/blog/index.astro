@@ -36,9 +36,9 @@ const title = `Blog - ${ SITE_TITLE }`
                   height={360}
                   src={post.data.heroImage}
                   alt={ post.slug }
-                  class=" w-full sm:w-2/5 rounded-tl-lg rounded-bl-lg group-hover:scale-110 transition-all duration-500 ease-in-out transform object-cover object-center"
+                  class=" w-full sm:w-2/5 rounded-tr-lg md:rounded-tr-none rounded-tl-lg md:rounded-bl-lg group-hover:scale-110 transition-all duration-500 ease-in-out transform object-cover object-center"
                 />
-                <div class=" w-full p-4 flex flex-col gap-1 border-t border-b border-r border-gray-400 rounded-tr-lg rounded-br-lg">
+                <div class=" w-full p-4 flex flex-col gap-1 border-l md:border-l-0 md:border-t border-b border-r border-gray-400 md:rounded-tr-lg rounded-br-lg rounded-bl-lg md:rounded-bl-none">
                   <a href={`/blog/${post.slug}/`}>
                     <h4 class=" text-xl font-bold hover:underline underline-offset-4">{post.data.title}</h4>
                   </a>
