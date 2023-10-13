@@ -21,7 +21,7 @@ interface Props extends AstroProps {
   }[]
 }
 
-const { title, description, pubDate, updatedDate, heroImage, remark, headings } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, metaImage, remark, headings } = Astro.props;
 const headerTitle = title + ' - ' + SITE_TITLE
 
 const removeSRLabel = (text: string) => {
@@ -97,7 +97,7 @@ const calculateMarginLeft = (depth: number) => {
     }
   </script>
 	<head>
-		<BaseHead title={ headerTitle } description={description} image={ heroImage } />
+		<BaseHead title={ headerTitle } description={description} image={ metaImage || heroImage } />
     <ViewTransitions />
 	</head>
 

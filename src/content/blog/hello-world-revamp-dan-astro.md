@@ -4,6 +4,7 @@ description: 'Memutuskan untuk rewrite & revamp web ini dari Vue.js ke Astro dan
 pubDate: '12 Oct 2023'
 updatedDate: '13 Oct 2023'
 heroImage: 'https://cdn.jaluwibowo.id/assets/blog/laptop-top-desk.jpg'
+metaImage: 'https://cdn.jaluwibowo.id/assets/blog/laptop-top-desk-300-225.png'
 tags: ['web', 'javascript', 'astro']
 ---
 
