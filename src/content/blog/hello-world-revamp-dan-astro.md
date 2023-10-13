@@ -43,7 +43,7 @@ Maka opsi ini tidak saya lanjutkan, ya walaupun Vue 2 bisa dibilang sudah stable
 
 Migrasi dari Vue 2 ke Vue 3 juga jadi pertimbanganku waktu itu, disamping sudah terdapat [guide dari Evan You](https://github.com/vuejs/vue-hackernews-2.0/compare/migration) untuk cara migrasi dari Vue 2 ke Vue 3, codebase yang sebelumnya juga tidak terlalu besar yang harusnya tidak memerlukan waktu yang cukup lama. Dan yang jelas dengan cara ini, aku bisa mengupgrade dependency yang support dengan Node.js terbaru.
 
-Tapi opsi ini juga tidak kulanjutkan, karena di pekerjaan yang sekarang sedang memakan Vue.js juga, jadi aku ingin mencoba hal lain dan juga framework yang baru.
+Tapi opsi ini juga tidak kulanjutkan, karena di pekerjaan yang sekarang sedang memakai Vue.js juga, jadi aku ingin mencoba hal lain dan juga framework yang baru.
 
 **3. Rewrite menjadi SSR atau SSG**
 
@@ -89,6 +89,6 @@ Setelah selesai, akhirnya ku coba kembali untuk test menggunakan `Lighthouse`,
 
 Dan menurutku pribadi, hasilnya sudah sangat memuaskan, kemudian ada beberapa fitur yang mungkin nanti akan aku tambahkan seperti Dark Mode dan juga clickable Article tags.
 
-Menggunakan Astro juga membuatku kembali menggunakan `Javascript DOM` yang tentu saja bisa menambah fundamental ku sebagai web developer.
+Menggunakan Astro juga membuatku kembali menggunakan `Javascript DOM` yang tentu saja bisa menambah ilmu fundamental-ku sebagai web developer.
 
 Jika ada masukan atau saran, jangan sungkan untuk hubungi aku langsung, bisa lewat [email](https://www.jaluwibowo.id/#contactme) ataupun [open issue](https://github.com/jarooda/jarooda.github.io/issues) di github repo ini.
