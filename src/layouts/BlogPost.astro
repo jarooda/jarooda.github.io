@@ -1,4 +1,6 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
+import { Image } from "astro:assets"
 import type { CollectionEntry } from 'astro:content';
 import { Icon } from 'astro-icon'
 import BaseHead from '../components/BaseHead.astro';
@@ -12,14 +14,29 @@ import { SITE_TITLE } from '../consts';
 type AstroProps = CollectionEntry<'blog'>['data'];
 interface Props extends AstroProps {
   remark?: any;
+  headings: {
+    depth: number
+    slug: string
+    text: string
+  }[]
 }
 
-const { title, description, pubDate, updatedDate, heroImage, remark } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, remark, headings } = Astro.props;
 const headerTitle = title + ' - ' + SITE_TITLE
+
+const removeSRLabel = (text: string) => {
+  const labelStart = text.indexOf('Section titled')
+  return text.substring(0, labelStart)
+}
+
+const calculateMarginLeft = (depth: number) => {
+  return `${2 * (depth - 1)}rem`
+}
 ---
 
 <html lang="en">
   <script>
+    // Copy code
     let copyButtonLabel = "Copy Code";
     let codeBlocks = Array.from(document.querySelectorAll("pre"));
 
@@ -55,9 +72,33 @@ const headerTitle = title + ' - ' + SITE_TITLE
         button.innerText = copyButtonLabel;
       }, 700);
     }
+
+    // Jump to anchor
+    const scrollAndRemoveQuery = () => {
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
+      const { protocol, host, pathname } = window.location;
+      const url = `${protocol}//${host}${pathname}`;
+      window.history.replaceState({}, '', url);
+    }
+    // automatically jump into anchor
+    const location = window.location;
+    if (location.hash) {
+      setTimeout(() => {
+        const id = location.hash.slice(1);
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView();
+        } else {
+          scrollAndRemoveQuery()
+        }
+      }, 0);
+    } else {
+      scrollAndRemoveQuery()
+    }
   </script>
 	<head>
 		<BaseHead title={ headerTitle } description={description} image={ heroImage } />
+    <ViewTransitions />
 	</head>
 
 	<body>
@@ -65,11 +106,11 @@ const headerTitle = title + ' - ' + SITE_TITLE
 		<main class=" pt-16">
 			<article>
 				<div>
-					{heroImage && <img width={1020} height={510} src={heroImage} alt="hero" class=" w-full max-h-96 object-cover object-center" />}
+					{heroImage && <Image width={1020} height={510} src={heroImage} alt="hero" class=" w-full max-h-96 object-cover object-center" />}
 				</div>
 				<div class=" font-inter w-full lg:w-224 mx-auto p-4">
 					<div class=" flex flex-col">
-            <h1 class=" text-4xl font-bold">{title}</h1>
+            <h1 class=" text-4xl font-bold text-center my-10">{title}</h1>
 						<div class=" mt-2 gap2 flex flex-col">
               <div class=" flex gap-1 items-center">
                 <Icon name="mdi:calendar-multiselect" class="h-4 max-w-10" />
@@ -96,6 +137,19 @@ const headerTitle = title + ' - ' + SITE_TITLE
 						<hr class=" my-3" />
 					</div>
           <div class=" blog">
+            <aside>
+              <h2 class="font-semibold text-black">Contents</h2>
+              <ul>
+                {
+                  headings.map(({ depth, slug, text }) => (
+                    slug !== 'footnote-label' && <li style={{ marginLeft: calculateMarginLeft(depth) }} class=" list-inside">
+                      <a href={`#${slug}`}>{removeSRLabel(text)}</a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </aside>
+            <hr class=" my-3" />
             <slot />
           </div>
 				</div>

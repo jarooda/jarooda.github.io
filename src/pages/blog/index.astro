@@ -1,4 +1,6 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
+import { Image } from "astro:assets"
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
@@ -6,11 +8,10 @@ import Tag from '../../components/Tag.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
+import { sortPosts } from '../../utils/sort-posts';
 import '../../styles/base.css';
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const posts = sortPosts(await getCollection('blog'))
 
 const title = `Blog - ${ SITE_TITLE }`
 ---
@@ -19,6 +20,7 @@ const title = `Blog - ${ SITE_TITLE }`
 <html lang="en">
 	<head>
 		<BaseHead title={ title } description={SITE_DESCRIPTION} />
+    <ViewTransitions />
 	</head>
 	<body>
 		<Header />
@@ -29,14 +31,14 @@ const title = `Blog - ${ SITE_TITLE }`
 					{
 						posts.map((post) => (
 							<li class=" w-full flex flex-col sm:flex-row bg-white rounded-lg">
-                <img
+                <Image
                   width={720}
                   height={360}
                   src={post.data.heroImage}
                   alt={ post.slug }
                   class=" w-full sm:w-2/5 rounded-tl-lg rounded-bl-lg group-hover:scale-110 transition-all duration-500 ease-in-out transform object-cover object-center"
                 />
-                <div class=" p-4 flex flex-col gap-1 border-t border-b border-r border-gray-400 rounded-tr-lg rounded-br-lg">
+                <div class=" w-full p-4 flex flex-col gap-1 border-t border-b border-r border-gray-400 rounded-tr-lg rounded-br-lg">
                   <a href={`/blog/${post.slug}/`}>
                     <h4 class=" text-xl font-bold hover:underline underline-offset-4">{post.data.title}</h4>
                   </a>
@@ -47,7 +49,7 @@ const title = `Blog - ${ SITE_TITLE }`
                     <p class=" mt-2 text-base md:text-sm"> { post.data.description }</p>
                     <div class=" mt-2 flex flex-wrap gap-2">
                       {
-                        post.data.tags.map((tag) => (
+                        post.data.tags.map((tag: string) => (
                           <Tag>
                             <p class="text-xs md:text-sm">
                               #{ tag }
