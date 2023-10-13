@@ -1,7 +1,7 @@
 ---
 title: 'Hello World, Revamp, dan Astro'
 description: 'Memutuskan untuk rewrite & revamp web ini dari Vue.js ke Astro dan menambahkan fitur blog.'
-pubDate: '10 Oct 2023'
+pubDate: '13 Oct 2023'
 heroImage: 'https://cdn.jaluwibowo.id/assets/blog/laptop-top-desk.jpg'
 tags: ['web', 'javascript', 'astro']
 ---
