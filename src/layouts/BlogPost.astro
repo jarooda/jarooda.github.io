@@ -126,13 +126,6 @@ const calculateMarginLeft = (depth: number) => {
                   }</span>
                 </p>
               </div>
-							{
-								updatedDate && (
-                  <p class=" font-light text-base md:text-sm mt-1">
-										Last updated on <FormattedDate date={updatedDate} />
-                  </p>
-								)
-							}
 						</div>
 						<hr class=" my-3" />
 					</div>
@@ -152,6 +145,13 @@ const calculateMarginLeft = (depth: number) => {
             <hr class=" my-3" />
             <slot />
           </div>
+          {
+            updatedDate && (
+              <p class=" italic font-light text-base md:text-sm mt-1">
+                Update: <FormattedDate date={updatedDate} />
+              </p>
+            )
+          }
 				</div>
 			</article>
 		</main>
