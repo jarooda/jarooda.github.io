@@ -22,6 +22,7 @@ export default defineConfig({
   ],
   markdown: {
     gfm: true,
+    syntaxHighlight: 'prism',
     remarkPlugins: [remarkReadingTime],
     rehypePlugins: [
       rehypeSlug,
