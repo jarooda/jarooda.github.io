@@ -10,7 +10,7 @@ tags: ['web', 'javascript', 'astro']
 
 # Hello, World!
 
-Biasanya saat kita memulai belajar *ngoding*, kita akan menemui kalimat tersebut. Hello World biasanya digunakan untuk memastikan bahwa bahasa atau sistem sudah berjalan dengan semestinya. Maka, untuk tulisan pertama saya di web ini, sepertinya lebih lengkap dengan adanya Hello World hehe.
+Biasanya saat kita memulai belajar *ngoding*, kita akan menemui kalimat tersebut. Hello World biasanya digunakan untuk memastikan bahwa bahasa atau sistem sudah berjalan dengan semestinya. Maka, untuk tulisan pertamaku di web ini, sepertinya lebih lengkap dengan adanya Hello World hehe.
 
 Sebelumnya, aku sudah pernah membuat sebuah web pribadi, masih sama seperti yang sekarang, web tersebut adalah web statis yang dideploy di [Github Pages](https://pages.github.com/) karena kebutuhannya memang hanya sebagai web untuk memajang hasil beberapa portofolio-ku selama bootcamp.
 
@@ -37,7 +37,7 @@ Sempat terpikir jika hanya refactor code lama saja, misal size image lebih dikec
 
 - Vue 2 yang hanya bisa menggunakan hingga Node 14 saja, karena saat kucoba di Node 16 dan Node 18 muncul error.
 
-Maka opsi ini tidak saya lanjutkan, ya walaupun Vue 2 bisa dibilang sudah stable, tapi tetap saja sangat merepotkan apabila harus ganti Node.js version yang lebih kecil hanya untuk di project ini saja.
+Maka opsi ini tidak ku lanjutkan, ya walaupun Vue 2 bisa dibilang sudah stable, tapi tetap saja sangat merepotkan apabila harus ganti Node.js version yang lebih kecil hanya untuk di project ini saja.
 
 **2. Migrasi dari Vue 2 ke Vue 3**
 
