@@ -37,3 +37,12 @@ mark:hover {
   background-color: var(--green-700);
   color: white;
 }
+
+.text-stroke-white {
+  text-shadow:
+      1px 1px 0 var(--white),
+    -1px -1px 0 var(--white),  
+    1px -1px 0 var(--white),
+    -1px 1px 0 var(--white),
+      1px 1px 0 var(--white);
+  }
