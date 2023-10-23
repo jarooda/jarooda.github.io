@@ -2,7 +2,7 @@
 title: 'Hello World, Revamp, dan Astro'
 description: 'Memutuskan untuk rewrite & revamp web ini dari Vue.js ke Astro dan menambahkan fitur blog.'
 pubDate: '12 Oct 2023'
-updatedDate: '13 Oct 2023'
+updatedDate: '23 Oct 2023'
 heroImage: 'https://cdn.jaluwibowo.id/assets/blog/laptop-top-desk.jpg'
 metaImage: 'https://cdn.jaluwibowo.id/assets/blog/laptop-top-desk-300-225.png'
 tags: ['web', 'javascript', 'astro']
@@ -91,4 +91,4 @@ Dan menurutku pribadi, hasilnya sudah sangat memuaskan, kemudian ada beberapa fi
 
 Menggunakan Astro juga membuatku kembali menggunakan `Javascript DOM` yang tentu saja bisa menambah ilmu fundamental-ku sebagai web developer.
 
-Jika ada masukan atau saran, jangan sungkan untuk hubungi aku langsung, bisa lewat [email](https://www.jaluwibowo.id/#contactme) ataupun [open issue](https://github.com/jarooda/jarooda.github.io/issues) di github repo ini.
+Jika ada masukan atau saran, jangan sungkan untuk hubungi aku langsung, bisa comment di bawah atau melalui [email](https://www.jaluwibowo.id/#contactme).
