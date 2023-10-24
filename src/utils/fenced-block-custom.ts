@@ -3,19 +3,17 @@ const checkMarkImg: string = `<svg xmlns="http://www.w3.org/2000/svg" width="24"
 const preBlocks: HTMLPreElement[] = Array.from(document.querySelectorAll("pre"));
 
 for (const preBlock of preBlocks) {
-  const codeBlock: HTMLElement = preBlock.querySelector("code")!;
-  const wrapper: HTMLDivElement = document.createElement("div");
-  wrapper.style.position = "relative";
+  // add relative style to preBlock
+  preBlock.style.position = "relative";
 
-  renderCopyBtn(wrapper, preBlock);
-  renderCodeLang(codeBlock, preBlock);
+  renderCodeLang(preBlock);
+  renderCopyBtn(preBlock);
 }
 
 // FUNCTIONS
-function renderCodeLang(codeBlock: HTMLElement, preBlock: HTMLPreElement): void {
-  const classLang: string = codeBlock.className;
+function renderCodeLang(preBlock: HTMLPreElement): void {
+  const classLang: string = preBlock.className;
   const lang: string = classLang.split('-')[1];
-  
 
   if (lang !== 'plaintext') {
     // add lang section on top left
@@ -28,8 +26,9 @@ function renderCodeLang(codeBlock: HTMLElement, preBlock: HTMLPreElement): void 
 
 }
 
-function renderCopyBtn(wrapper: HTMLDivElement, preBlock: HTMLPreElement): void {
+function renderCopyBtn(preBlock: HTMLPreElement): void {
   const copyButton: HTMLButtonElement = document.createElement("button");
+
   copyButton.className = "copy-code";
   copyButton.setAttribute("aria-label", "Copy code to clipboard");
   copyButton.setAttribute("title", "Copy code to clipboard");
@@ -37,10 +36,6 @@ function renderCopyBtn(wrapper: HTMLDivElement, preBlock: HTMLPreElement): void 
 
   preBlock.setAttribute("tabindex", "0");
   preBlock.appendChild(copyButton);
-
-  // Wrap code block with a relative parent element
-  preBlock.parentNode?.insertBefore(wrapper, preBlock);
-  wrapper.appendChild(preBlock);
 
   copyButton.addEventListener("click", async () => {
     await copyCode(preBlock, copyButton);
