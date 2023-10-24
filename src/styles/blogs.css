@@ -78,21 +78,6 @@
   border-radius: 4px; /* Add rounded corners */
 }
 
-/* Style pre tags */
-.blog pre {
-  font-family: monospace; /* Use a monospace font for code */
-  font-size: 16px;
-  padding: 30px 15px 10px 15px; /* Add some padding */
-  border-radius: 4px; /* Add rounded corners */
-  margin-bottom: 1rem; /* Add space below pre tags */
-}
-
-.blog pre code {
-  background-color: transparent; /* Remove background color from code */
-  padding: 0; /* Remove padding from code */
-  border-radius: 0; /* Remove border radius from code */
-}
-
 /* Style table */
 .blog table {
   text-align: left;
@@ -160,6 +145,23 @@
   color: var(--green-700); /* Lighten links on hover */
 }
 
+/* Code Block */
+
+/* Style pre tags */
+.blog pre {
+  font-family: monospace; /* Use a monospace font for code */
+  font-size: 16px;
+  padding: 15px 15px 15px 15px; /* Add some padding */
+  border-radius: 4px; /* Add rounded corners */
+  margin-bottom: 1rem; /* Add space below pre tags */
+}
+
+.blog pre code {
+  background-color: transparent; /* Remove background color from code */
+  padding: 0; /* Remove padding from code */
+  border-radius: 0; /* Remove border radius from code */
+}
+
 .copy-code {
   position: absolute;
   top: 10px;
@@ -186,4 +188,16 @@
   font-size: 0.75rem;
   line-height: 1rem;
   border-radius: 0 0 0.25rem 0.25rem;
+}
+
+@supports (selector(:has(*))) {
+  .blog pre:has(.code-lang) {
+    padding-top: 30px;
+  }
+}
+
+@supports not (selector(:has(*))) {
+  .blog pre {
+    padding: 30px 15px 15px 15px;
+  }
 }
