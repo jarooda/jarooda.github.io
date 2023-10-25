@@ -159,6 +159,8 @@
   background-color: transparent; /* Remove background color from code */
   padding: 0; /* Remove padding from code */
   border-radius: 0; /* Remove border radius from code */
+  white-space: pre-wrap; /* Allow pre tags to wrap */
+  word-break: break-all; /* Allow long words to break */
 }
 
 .copy-code {
