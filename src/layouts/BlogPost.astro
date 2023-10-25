@@ -52,17 +52,17 @@ const calculateMarginLeft = (depth: number) => {
 				</div>
 				<div class=" font-inter w-full lg:w-224 mx-auto p-4">
 					<div class=" flex flex-col">
-            <h1 class=" text-4xl font-bold text-center my-10">{title}</h1>
+            <h1 class=" text-4xl font-bold text-center my-1 md:my-10">{title}</h1>
 						<div class=" mt-2 gap2 flex flex-col">
               <div class=" flex gap-1 items-center">
                 <Icon name="mdi:calendar-multiselect" class="h-4 max-w-10" />
-                <p class=" text-base md:text-sm">
+                <p class=" text-sm md:text-base">
                   <FormattedDate date={pubDate} />
                 </p>
               </div>
               <div class=" flex gap-1 items-center">
                 <Icon name="mdi:clock-time-two-outline" class="h-4 max-w-10" />
-                <p class=" text-base md:text-sm">
+                <p class=" text-sm md:text-base">
                   <span>{
                     remark.minutesRead
                   }</span>
@@ -73,7 +73,7 @@ const calculateMarginLeft = (depth: number) => {
 					</div>
           <div class=" blog">
             <aside>
-              <h2 class="font-semibold text-black">Contents</h2>
+              <h1 class="font-semibold text-black">Contents</h1>
               <ul>
                 {
                   headings.map(({ depth, slug, text }) => (
@@ -89,7 +89,7 @@ const calculateMarginLeft = (depth: number) => {
           </div>
           {
             updatedDate && (
-              <p class=" italic font-light text-base md:text-sm mt-1">
+              <p class=" italic font-light text-sm md:text-base mt-1">
                 Update: <FormattedDate date={updatedDate} />
               </p>
             )

@@ -48,7 +48,7 @@
 
 /* Style paragraphs */
 .blog p {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.5; /* Improve readability with some line spacing */
 }
 
@@ -122,7 +122,8 @@
 
 /* Style list items */
 .blog li {
-  margin-bottom: 0.5rem; /* Add space below list items */
+  font-size: 18px;
+  margin-bottom: 0.5rem;
 }
 
 /* Style abbr */
@@ -133,7 +134,6 @@
 
 /* Style link */
 .blog a {
-  font-size: 16px;
   font-weight: 600;
   color: var(--green-900); /* Darken links */
   text-decoration: underline; /* Add underline */
@@ -150,7 +150,6 @@
 /* Style pre tags */
 .blog pre {
   font-family: monospace; /* Use a monospace font for code */
-  font-size: 16px;
   padding: 15px 15px 15px 15px; /* Add some padding */
   border-radius: 4px; /* Add rounded corners */
   margin-bottom: 1rem; /* Add space below pre tags */
@@ -199,5 +198,11 @@
 @supports not (selector(:has(*))) {
   .blog pre {
     padding: 30px 15px 15px 15px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .blog ul {
+    margin-left: 0;
   }
 }
