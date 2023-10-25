@@ -1,10 +1,12 @@
 // Place any global data in this file.
 // You can import this data from anywhere in your site by using the `import` keyword.
 
-export const SITE_TITLE = 'Jalu Wibowo';
-export const SITE_DESCRIPTION = "Passionate web developer with a strong focus on frontend expertise. Crafting visually stunning and user-friendly interfaces using a diverse range of frameworks and languages. Meticulous attention to detail and a commitment to excellence in every project. Let's collaborate to create outstanding web experiences!";
+import type { Dictionary } from './types';
 
-const icons = {
+export const SITE_TITLE: string = 'Jalu Wibowo';
+export const SITE_DESCRIPTION: string = "Passionate web developer with a strong focus on frontend expertise. Crafting visually stunning and user-friendly interfaces using a diverse range of frameworks and languages. Meticulous attention to detail and a commitment to excellence in every project. Let's collaborate to create outstanding web experiences!";
+
+const icons: Dictionary = {
   astro: 'astro',
   aws: 'logos:aws',
   bootstrap: 'logos:bootstrap',
@@ -61,4 +63,27 @@ export const getIcon = (title: string):string => {
   const key = title.toLowerCase().replace(/[\s\.\-_]/g, '');
   const icon = icons[key as keyof typeof icons];
   return icon || ''
+}
+
+// https://prismjs.com/#supported-languages
+export const languages: Dictionary = {
+  bash: 'Bash',
+  css: 'CSS',
+  dart: 'Dart',
+  go: 'Go',
+  graphql: 'GraphQL',
+  html: 'HTML',
+  java: 'Java',
+  js: 'JavaScript',
+  json: 'JSON',
+  md: 'Markdown',
+  php: 'PHP',
+  py: 'Python',
+  ruby: 'Ruby',
+  scss: 'SCSS',
+  sh: 'Shell',
+  shell: 'Shell',
+  sql: 'SQL',
+  ts: 'TypeScript',
+  yaml: 'YAML'
 }
