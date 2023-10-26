@@ -48,7 +48,7 @@
 
 /* Style paragraphs */
 .blog p {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.5; /* Improve readability with some line spacing */
 }
 
@@ -76,21 +76,6 @@
   background-color: var(--sky-300); /* Add a grey background color */
   padding: 2px 5px; /* Add some padding */
   border-radius: 4px; /* Add rounded corners */
-}
-
-/* Style pre tags */
-.blog pre {
-  font-family: monospace; /* Use a monospace font for code */
-  font-size: 16px;
-  padding: 30px 15px 10px 15px; /* Add some padding */
-  border-radius: 4px; /* Add rounded corners */
-  margin-bottom: 1rem; /* Add space below pre tags */
-}
-
-.blog pre code {
-  background-color: transparent; /* Remove background color from code */
-  padding: 0; /* Remove padding from code */
-  border-radius: 0; /* Remove border radius from code */
 }
 
 /* Style table */
@@ -137,7 +122,8 @@
 
 /* Style list items */
 .blog li {
-  margin-bottom: 0.5rem; /* Add space below list items */
+  font-size: 18px;
+  margin-bottom: 0.5rem;
 }
 
 /* Style abbr */
@@ -148,7 +134,6 @@
 
 /* Style link */
 .blog a {
-  font-size: 16px;
   font-weight: 600;
   color: var(--green-900); /* Darken links */
   text-decoration: underline; /* Add underline */
@@ -158,6 +143,24 @@
 /* Style links on hover */
 .blog a:hover {
   color: var(--green-700); /* Lighten links on hover */
+}
+
+/* Code Block */
+
+/* Style pre tags */
+.blog pre {
+  font-family: monospace; /* Use a monospace font for code */
+  padding: 15px 15px 15px 15px; /* Add some padding */
+  border-radius: 4px; /* Add rounded corners */
+  margin-bottom: 1rem; /* Add space below pre tags */
+}
+
+.blog pre code {
+  background-color: transparent; /* Remove background color from code */
+  padding: 0; /* Remove padding from code */
+  border-radius: 0; /* Remove border radius from code */
+  white-space: pre-wrap; /* Allow pre tags to wrap */
+  word-break: break-all; /* Allow long words to break */
 }
 
 .copy-code {
@@ -172,10 +175,6 @@
   border-radius: 0.25rem 0 0 0.25rem;
 }
 
-.copy-code:hover {
-  background-color: #fff;
-}
-
 .code-lang {
   position: absolute;
   top: 0;
@@ -186,4 +185,22 @@
   font-size: 0.75rem;
   line-height: 1rem;
   border-radius: 0 0 0.25rem 0.25rem;
+}
+
+@supports (selector(:has(*))) {
+  .blog pre:has(.code-lang) {
+    padding-top: 30px;
+  }
+}
+
+@supports not (selector(:has(*))) {
+  .blog pre {
+    padding: 30px 15px 15px 15px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .blog ul {
+    margin-left: 0;
+  }
 }
