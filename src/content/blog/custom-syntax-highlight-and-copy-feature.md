@@ -46,17 +46,17 @@ countSheep(100)
 // 100 sheep 🐑
 ```
 
-Bisa dilihat, akan lebih mudah kita mencari mana yang berupa `string`, `number`, `function` maupun `comment` karena warna-warna tersebut sudah mempresentasikan tiap kode tersebut.
+Jika dibandingkan, kita akan lebih mudah kita mencari mana yang berupa `string`, `number`, `function` maupun `comment` menggunakan tampilan sintaks yang dibawah, karena warna-warna-nya sudah mempresentasikan tiap kode tersebut.
 
 # Penggunaan di Astro
 
-Secara default, [Astro](https://astro.build/) sudah memberikan [built-in support](https://docs.astro.build/en/guides/markdown-content/#syntax-highlighting) sintaks highlighting untuk [Shiki](https://shiki.matsu.io/) dan [Prism](https://prismjs.com/) dengan Shiki sebagai opsi defaultnya. Dengan begitu kita bisa men-*highlight* kode-kode yang terdapat di  `fenced code (```)` yang digunakan di dalam file markdown atau `MDX`.
+Secara default, [Astro](https://astro.build/) sudah memberikan [built-in support](https://docs.astro.build/en/guides/markdown-content/#syntax-highlighting) sintaks highlighting menggunakan [Shiki](https://shiki.matsu.io/) dan [Prism](https://prismjs.com/) dengan Shiki sebagai opsi defaultnya.  Dengan begitu, jika kita menggunakan file markdown atau `MDX` kita bisa langsung men-*highlight* kode-kode yang terdapat di dalam `fenced code (```)`.
 
 Contoh saat kita menggunakan Shiki pada markdown yang kita buat adalah seperti ini.
 
 ![syntax highlight using shiki](https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-shiki.png)
 
-Jika dilihat, kode-nya sudah terhighlight sehingga memudahkan bagi kita untuk membacanya, tetapi masih ada yang kurang, yaitu pembaca yang awam mungkin tidak tahu, bahasa pemrograman apa yang sudah ditulis di baris kode tersebut.
+Baris baris kode tersebut sudah terhighlight sehingga memudahkan bagi kita untuk membacanya, tetapi menurutku masih ada yang kurang, yaitu pembaca yang awam mungkin tidak tahu, bahasa pemrograman apa yang sudah ditulis di baris kode tersebut.
 
 Kita bisa saja membuat sebuah baris komentar yang menunjukan bahasa apa yang kita tulis seperti `// javascript` di awal kode, tetapi hal tersebut mungkin bagi sebagian orang agak merepotkan karena sebetulnya kita sudah menulisnya saat membuat `fenced code`.
 
@@ -151,9 +151,9 @@ Hasilnya akan seperti ini.
 
 # Fitur Copy Code
 
-Agar memudahkan user yang ingin menggunakan sintaks yang ada di website, lebih baik ditambahkan sebuah fitur untuk menyalin kode tersebut.
+Agar memudahkan pembaca yang ingin menggunakan sintaks yang ada di website kita, lebih baik ditambahkan sebuah fitur untuk menyalin kode tersebut.
 
-Flow-nya sama seperti diatas, kita perlu untuk mencari elemen pre yang ada di halaman milik kita, lalu render tombol salin.
+Untuk flow-nya sendiri sama seperti diatas, kita perlu untuk mencari elemen pre yang ada di halaman milik kita, lalu render tombol salin, kemudian buat fungsi untuk menyalin kode yang ditampilkan.
 
 ```js
 const copyImg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M9 18q-.825 0-1.413-.588T7 16V4q0-.825.588-1.413T9 2h9q.825 0 1.413.588T20 4v12q0 .825-.588 1.413T18 18H9Zm0-2h9V4H9v12Zm-4 6q-.825 0-1.413-.588T3 20V7q0-.425.288-.713T4 6q.425 0 .713.288T5 7v13h10q.425 0 .713.288T16 21q0 .425-.288.713T15 22H5Zm4-6V4v12Z"/></svg>`
@@ -184,7 +184,7 @@ function renderCopyBtn(preBlock) {
 }
 ```
 
-Fungsi salin akan mencari elemen `code` lalu menyalin teks yang ada di dalamnya.
+Fungsi salin akan mencari elemen `code` lalu menyalin teks-teks yang ada di dalamnya.
 
 ```js
 async function copyCode(block, button) {
@@ -232,6 +232,6 @@ Tampilan hasil akhirnya adalah sebagai berikut.
 
 # Penutup
 
-Kita sudah berhasil membuat sebuah kustomisasi untuk sintaks highlight yang ada di Astro, dengan begini user yang melihat potongan kode yang ada di website kita akan lebih terbantu jika ingin menyalinnya.
+Kita sudah berhasil membuat sebuah kustomisasi untuk sintaks highlight yang ada di Astro, dengan begini pembaca yang melihat potongan kode yang ada di website kita akan lebih terbantu jika ingin menyalinnya.
 
-*Feel free* untuk memberi masukan atau jangan malu bertanya jika ada hal yang masih belum paham ya 😉.
+*Feel free* untuk memberi masukan dan jangan malu bertanya jika ada hal yang masih belum paham ya 😉.

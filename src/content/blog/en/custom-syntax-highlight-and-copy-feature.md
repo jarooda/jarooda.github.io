@@ -59,7 +59,7 @@ An example of when we use Shiki in the markdown we create is like this.
 
 If you look, the code is already highlighted, making it easier for us to read. However, there is still something missing, which is that a novice reader might not know which programming language is written in that code line.
 
-We could add a comment line indicating the programming language we're using, such as `// javascript` at the beginning of the code. However, this may be a bit inconvenient for some people because we've actually already specified it when creating the `fenced code`.
+We could add a comment line indicating the programming language we're using, such as `// javascript` at the beginning of the code. However, this may be a bit redundant for some people because we've actually already specified it when creating the `fenced code`.
 
 # Displaying the Programming Language
 
@@ -128,7 +128,7 @@ function renderCodeLang(preBlock) {
 }
 ```
 
-If we don't provide syntax highlighting for the fenced block, the *class* name will be `language-plaintext`, so we need to validate it to prevent the "plaintext" text from appearing.
+If we don't provide syntax highlighting for the fenced block, the *class* name will be `language-plaintext`, so we need to validate it to prevent the `plaintext` text from appearing.
 
 Then, we need to add styling to the code we create.
 
@@ -154,7 +154,7 @@ The result will be like this.
 
 To make it easier for users who want to use the syntax on the website, it's better to add a feature to copy the code.
 
-The flow is the same as above; we need to find the `pre` elements on our page, and then render a copy button.
+The flow is the same as above; we need to find the `pre` elements on our page, then render a copy button and handle a function to copy the text inside of `code` block.
 
 ```js
 const copyImg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M9 18q-.825 0-1.413-.588T7 16V4q0-.825.588-1.413T9 2h9q.825 0 1.413.588T20 4v12q0 .825-.588 1.413T18 18H9Zm0-2h9V4H9v12Zm-4 6q-.825 0-1.413-.588T3 20V7q0-.425.288-.713T4 6q.425 0 .713.288T5 7v13h10q.425 0 .713.288T16 21q0 .425-.288.713T15 22H5Zm4-6V4v12Z"/></svg>`
@@ -235,4 +235,4 @@ The final result appears as follows.
 
 We have successfully created a customization for syntax highlighting in Astro, so users viewing code snippets on our website will find it easier to copy them.
 
-Feel free to provide feedback or don't hesitate to ask if there's anything you don't understand 😉.
+Feel free to provide feedback and don't hesitate to ask if there's anything you don't understand 😉.
