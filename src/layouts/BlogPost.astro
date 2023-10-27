@@ -21,7 +21,7 @@ interface Props extends AstroProps {
   }[]
 }
 
-const { title, description, pubDate, updatedDate, heroImage, metaImage, remark, headings } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, metaImage, remark, headings, tags, otherUrl } = Astro.props;
 const headerTitle = title + ' - ' + SITE_TITLE
 
 const removeSRLabel = (text: string) => {
@@ -32,6 +32,8 @@ const removeSRLabel = (text: string) => {
 const calculateMarginLeft = (depth: number) => {
   return `${2 * (depth - 1)}rem`
 }
+
+const isEnglish = tags.includes('english')
 ---
 
 <html lang="en">
@@ -52,7 +54,16 @@ const calculateMarginLeft = (depth: number) => {
 				</div>
 				<div class=" font-inter w-full lg:w-224 mx-auto p-4">
 					<div class=" flex flex-col">
-            <h1 class=" text-4xl font-bold text-center my-1 md:my-10">{title}</h1>
+            <h1 class=" text-4xl font-bold text-center mt-1 md:mt-5">{title}</h1>
+            <div class=" flex justify-center gap-2 my-2">
+              {
+                tags.map((tag: string) => (
+                  <a href={ `/tags/${ tag }` } class="text-xs md:text-sm hover:underline underline-offset-2">
+                    #{ tag }
+                  </a>
+                ))
+              }
+            </div>
 						<div class=" mt-2 gap2 flex flex-col">
               <div class=" flex gap-1 items-center">
                 <Icon name="mdi:calendar-multiselect" class="h-4 max-w-10" />
@@ -68,6 +79,30 @@ const calculateMarginLeft = (depth: number) => {
                   }</span>
                 </p>
               </div>
+              {
+                otherUrl && !isEnglish && (
+                  <div class=" flex gap-1 items-center">
+                    <p>✨</p>
+                    <a
+                      href={ otherUrl }
+                      class=" text-sm md:text-base text-green-900 font-semibold underline underline-offset-2 hover:text-green-700"
+                    >🇬🇧 Read in English</a>
+                    <p>✨</p>
+                  </div>
+                )
+              }
+              {
+                otherUrl && isEnglish && (
+                  <div class=" flex gap-1 items-center">
+                    <p>✨</p>
+                    <a
+                      href={ otherUrl }
+                      class=" text-sm md:text-base text-green-900 font-semibold underline underline-offset-2 hover:text-green-700"
+                    >🇮🇩 Read in Indonesian</a>
+                    <p>✨</p>
+                  </div>
+                )
+              }
 						</div>
 						<hr class=" my-3" />
 					</div>
