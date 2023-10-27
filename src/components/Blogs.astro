@@ -1,9 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
-import { sortPosts } from '../utils/sort-posts';
+import { sortPosts, filterDraftAndEn } from '../utils/posts-helper';
 import Anchor from './Anchor.astro';
 
-const posts = sortPosts(await getCollection('blog'))
+const collections = await getCollection('blog');
+const filtered = filterDraftAndEn(collections);
+const posts = sortPosts(filtered)
 
 ---
 
@@ -20,6 +22,15 @@ const posts = sortPosts(await getCollection('blog'))
               <h2 class=" font-semibold text-md md:text-2xl mb-2 group-hover:underline underline-offset-4">{ post.data.title }</h2>
               <p class=" text-base md:text-sm"> { post.data.description }</p>
             </a>
+            <div class=" flex gap-2 my-2">
+              {
+                post.data.tags.map((tag: string) => (
+                  <a href={ `/tags/${ tag }` } class="text-xs md:text-sm hover:underline underline-offset-2">
+                    #{ tag }
+                  </a>
+                ))
+              }
+            </div>
           </div>
         ))
       }
