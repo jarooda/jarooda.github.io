@@ -5,7 +5,7 @@ pubDate: '27 Oct 2023'
 heroImage: 'https://cdn.jaluwibowo.id/assets/blog/syntax-highlight.webp'
 metaImage: 'https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-300-255.png'
 tags: ['web', 'javascript', 'astro', 'css']
-enVersion: true
+otherUrl: '/blog/en/custom-syntax-highlight-and-copy-feature'
 ---
 
 # Syntax Highlighting
