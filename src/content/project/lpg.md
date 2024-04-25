@@ -2,10 +2,10 @@
 title: 'Learning Pronunciation Game'
 pubDate: 'Jan 23 2021'
 heroImage: 'https://cdn.jaluwibowo.id/assets/projects/lpg-game.png'
-repo: 'https://github.com/Learn-Pronounciation-Game-Team'
-demo: 'https://lpg-h8.web.app/'
+repo: 'https://pndek.in/lpg-gh'
+demo: 'https://pndek.in/lpg'
 isFeatured: true
-featuredOrder: 1
+featuredOrder: 2
 stacks: ['React', 'Tailwind', 'MongoDB', 'P5.js', 'Express.js', 'Jest', 'Web Speech API']
 ---
 

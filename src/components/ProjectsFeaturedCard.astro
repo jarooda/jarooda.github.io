@@ -32,7 +32,7 @@ switch (index) {
 <a
   href={ demo || repo }
   target="_blank"
-  class={ ` w-full md:w-2/5 xl:w-96 bg-white border border-gray-200 rounded-lg shadow-lg group xl:rotate-6 xl:hover:rotate-0 transform transition-all xl:absolute ${ dynamicClasses }` }
+  class={ ` w-full md:w-2/5 xl:w-96 bg-white border border-gray-200 rounded-lg shadow-lg group xl:rotate-6 z-0 xl:hover:z-10 xl:hover:rotate-0 transform transition-all xl:absolute ${ dynamicClasses }` }
 >
   <Image
     src={ heroImage }
@@ -48,7 +48,7 @@ switch (index) {
     <div class=" flex gap-2 px-4 pb-4 justify-center flex-wrap">
       {
         featuredStacks.map((stack) => (
-          <Tag dark icon={ getIcon(stack) }>
+          <Tag icon={ getIcon(stack) }>
             <p class="text-xs md:text-sm">
               { stack }
             </p>
