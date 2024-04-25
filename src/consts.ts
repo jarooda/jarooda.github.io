@@ -51,6 +51,7 @@ const icons: Dictionary = {
   sass: 'logos:sass',
   sequelize: 'logos:sequelize',
   tailwind: 'logos:tailwindcss-icon',
+  telegrambot: 'logos:telegram',
   typescript: 'logos:typescript-icon',
   vercel: 'logos:vercel-icon',
   vuejs: 'logos:vue',
