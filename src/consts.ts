@@ -44,6 +44,7 @@ const icons: Dictionary = {
   reactnative: 'logos:react',
   redis: 'logos:redis',
   redux: 'logos:redux',
+  remix: 'logos:remix-icon',
   ruby: 'logos:ruby',
   rubygems: 'logos:rubygems',
   rubyonrails: 'logos:rails',
