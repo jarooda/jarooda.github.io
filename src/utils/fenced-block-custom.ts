@@ -36,7 +36,6 @@ function renderCopyBtn(preBlock: HTMLPreElement): void {
   copyButton.setAttribute("title", "Copy code to clipboard");
   copyButton.innerHTML = copyImg;
 
-  preBlock.setAttribute("tabindex", "0");
   preBlock.appendChild(copyButton);
 
   copyButton.addEventListener("click", async () => {

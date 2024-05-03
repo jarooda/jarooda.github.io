@@ -2,7 +2,7 @@
 import { ViewTransitions } from 'astro:transitions';
 import { Image } from "astro:assets"
 import type { CollectionEntry } from 'astro:content';
-import { Icon } from 'astro-icon'
+import { Icon } from 'astro-icon/components'
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -50,7 +50,7 @@ const isEnglish = tags.includes('english')
 		<main class=" pt-16">
 			<article>
 				<div>
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="hero" class=" w-full max-h-96 object-cover object-center" />}
+					{heroImage && <Image width={1020} height={510} src={heroImage} alt="hero" class=" w-full max-h-96 object-cover object-center" loading="eager" />}
 				</div>
 				<div class=" font-inter w-full lg:w-224 mx-auto p-4">
 					<div class=" flex flex-col">

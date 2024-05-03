@@ -2,6 +2,7 @@
 title: 'Kustom Sintaks Highlight dan Fitur Salin Kode Pada Astro'
 description: 'Menambahkan fitur melihat bahasa apa yang digunakan dalam sintaks highlight dan fitur salin kodingan menggunakan javascript dan css.'
 pubDate: '27 Oct 2023'
+updatedDate: '3 May 2024'
 heroImage: 'https://cdn.jaluwibowo.id/assets/blog/syntax-highlight.webp'
 metaImage: 'https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-300-255.png'
 tags: ['web', 'javascript', 'astro', 'css']
@@ -54,7 +55,7 @@ Secara default, [Astro](https://astro.build/) sudah memberikan [built-in support
 
 Contoh saat kita menggunakan Shiki pada markdown yang kita buat adalah seperti ini.
 
-![syntax highlight using shiki](https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-shiki.png)
+<img src="https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-shiki.png" alt="syntax highlight using shiki" loading="lazy" />
 
 Baris baris kode tersebut sudah terhighlight sehingga memudahkan bagi kita untuk membacanya, tetapi menurutku masih ada yang kurang, yaitu pembaca yang awam mungkin tidak tahu, bahasa pemrograman apa yang sudah ditulis di baris kode tersebut.
 
@@ -147,7 +148,7 @@ Kemudian, kita perlu menambahkan *styling* pada kode yang kita buat,
 
 Hasilnya akan seperti ini.
 
-![syntax highlight using custom prism](https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-prism-custom.png)
+<img src="https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-prism-custom.png" alt="syntax highlight using custom prism" loading="lazy" />
 
 # Fitur Copy Code
 
@@ -175,7 +176,6 @@ function renderCopyBtn(preBlock) {
   copyButton.setAttribute("title", "Copy code to clipboard");
   copyButton.innerHTML = copyImg;
 
-  preBlock.setAttribute("tabindex", "0");
   preBlock.appendChild(copyButton);
 
   copyButton.addEventListener("click", async () => {
@@ -228,7 +228,7 @@ Kemudian kita akan *styling* kode ini agar berada di kanan atas setiap elemen `k
 
 Tampilan hasil akhirnya adalah sebagai berikut.
 
-![syntax highlight using shiki](https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-copy.png)
+<img src="https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-copy.png" alt="syntax highlight using shiki" loading="lazy" />
 
 # Penutup
 

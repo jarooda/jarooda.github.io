@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
+import icon from "astro-icon";
 import sitemap from '@astrojs/sitemap';
 import tailwind from "@astrojs/tailwind";
 import autolinkHeadings from 'rehype-autolink-headings'
@@ -12,6 +13,7 @@ import { autolinkConfig } from './src/utils/rehype-auto-link';
 export default defineConfig({
   site: 'https://jaluwibowo.id',
   integrations: [
+    icon(),
     mdx(),
     sitemap(),
     tailwind({

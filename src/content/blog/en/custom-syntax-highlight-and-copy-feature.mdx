@@ -2,6 +2,7 @@
 title: 'Custom Syntax Highlighting and Code Copy Feature in Astro'
 description: 'Adding a feature to see which language is used in syntax highlighting and a code copying feature using JavaScript and CSS.'
 pubDate: '27 Oct 2023'
+updatedDate: '3 May 2024'
 heroImage: 'https://cdn.jaluwibowo.id/assets/blog/syntax-highlight.webp'
 metaImage: 'https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-300-255.png'
 tags: ['web', 'javascript', 'astro', 'css', 'english']
@@ -55,7 +56,7 @@ By default, [Astro](https://astro.build/) already provides [built-in support](ht
 
 An example of when we use Shiki in the markdown we create is like this.
 
-![syntax highlight using shiki](https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-shiki.png)
+<img src="https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-shiki.png" alt="syntax highlight using shiki" loading="lazy" />
 
 If you look, the code is already highlighted, making it easier for us to read. However, there is still something missing, which is that a novice reader might not know which programming language is written in that code line.
 
@@ -148,7 +149,7 @@ Then, we need to add styling to the code we create.
 
 The result will be like this.
 
-![syntax highlight using custom prism](https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-prism-custom.png)
+<img src="https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-prism-custom.png" alt="syntax highlight using custom prism" loading="lazy" />
 
 # Copy Code Feature
 
@@ -176,7 +177,6 @@ function renderCopyBtn(preBlock) {
   copyButton.setAttribute("title", "Copy code to clipboard");
   copyButton.innerHTML = copyImg;
 
-  preBlock.setAttribute("tabindex", "0");
   preBlock.appendChild(copyButton);
 
   copyButton.addEventListener("click", async () => {
@@ -229,7 +229,7 @@ Then, we will style this code so that it appears in the upper right corner of ea
 
 The final result appears as follows.
 
-![syntax highlight using shiki](https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-copy.png)
+<img src="https://cdn.jaluwibowo.id/assets/blog/syntax-highlight-copy.png" alt="syntax highlight using shiki" loading="lazy" />
 
 # Conclusion
 
