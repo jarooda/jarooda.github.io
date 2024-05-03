@@ -1,19 +1,18 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
-import { sortPosts, filterDraft } from '../../utils/posts-helper';
+import { sortPosts } from '../../utils/posts-helper';
 import BlogList from '../../layouts/BlogList.astro';
 
 export async function getStaticPaths() {
 	const collections = await getCollection('blog');
-  const filtered = filterDraft(collections)
   let tags: string[] = []
-  filtered.forEach((post) => {
+  collections.forEach((post) => {
     tags = [...tags, ...post.data.tags]
   })
   tags = [...new Set(tags)]
 
   return tags.map((tag) => {
-    const posts = [...filtered].filter((post) => post.data.tags.includes(tag))
+    const posts = [...collections].filter((post) => post.data.tags.includes(tag))
     
     return {
       params: { slug: tag },

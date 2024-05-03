@@ -1,10 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
-import { sortPosts, filterDraftAndEn } from '../utils/posts-helper';
+import { sortPosts, filterEnPost } from '../utils/posts-helper';
 import Anchor from './Anchor.astro';
 
 const collections = await getCollection('blog');
-const filtered = filterDraftAndEn(collections);
+const filtered = filterEnPost(collections);
 const posts = sortPosts(filtered)
 
 ---
