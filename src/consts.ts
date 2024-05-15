@@ -9,6 +9,7 @@ export const SITE_DESCRIPTION: string = "Passionate web developer with a strong 
 const icons: Dictionary = {
   astro: 'astro',
   aws: 'logos:aws',
+  awss3: 'logos:aws-s3',
   bootstrap: 'logos:bootstrap',
   css: 'logos:css-3',
   dart: 'logos:dart',
@@ -33,6 +34,7 @@ const icons: Dictionary = {
   mongodb: 'mongodb',
   nodejs: 'logos:nodejs-icon',
   npm: 'logos:npm',
+  next: 'logos:nextjs-icon',
   nuxt: 'logos:nuxt-icon',
   p5js: 'p5js',
   parcel: 'logos:parcel-icon',
@@ -50,6 +52,7 @@ const icons: Dictionary = {
   rubyonrails: 'logos:rails',
   sass: 'logos:sass',
   sequelize: 'logos:sequelize',
+  supabase: 'logos:supabase-icon',
   tailwind: 'logos:tailwindcss-icon',
   telegrambot: 'logos:telegram',
   typescript: 'logos:typescript-icon',
