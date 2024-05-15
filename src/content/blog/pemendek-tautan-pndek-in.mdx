@@ -1,0 +1,66 @@
+---
+title: 'Pemendek Tautan, pndek.in'
+description: 'Mencoba kembali menggunakan React dengan memakai Framework Remix dan membuat sebuah pemendek tautan.'
+pubDate: '15 May 2024'
+heroImage: 'https://cdn.jaluwibowo.id/assets/blog/pndekin.png'
+metaImage: 'https://cdn.jaluwibowo.id/assets/blog/pndekin-300-225.png'
+tags: ['web', 'javascript', 'react', 'remix', 'telegram', 'product-development']
+---
+
+# Bertanya-tanya
+
+Pernah ga sih kalian ngasih link ke orang lain, tapi penasaran apakah link tersebut udah dibuka atau belum. Nah pertanyaan ini tuh sering aku pikirkan kalau ada recruiter yang minta resume/cv punyaku. Di situ aku menulis beberapa project / portofolio dan juga link menuju demo project tersebut, tapi apakah iya mereka akan sempat buka link tersebut?
+
+Untuk itu, aku coba untuk membuat sebuah link shortener agar aku bisa mengecek apakah link tersebut sudah dikunjungi atau belum. Kenapa tidak memakai link shortener yang sudah ada, seperti [s.id](https://home.s.id/) atau [bit.ly](https://bitly.com/)? Ya karena aku ingin membuatnya sebagai portofolio ku sendiri, dengan begitu aku bisa kustomisasi fitur-fitur yang memang aku ingin pakai.
+
+Karena ini adalah pemendek tautan, aku memutuskan untuk memberi nama project ini `pndek.in` yang artinya memendekkan.
+
+<img src="https://cdn.jaluwibowo.id/assets/pndekin/pndekin_meta.png" alt="pndek.in logo" loading="lazy" />
+
+# Penyegaran
+
+Setelah 3 tahun menggunakan `Vue.js`, aku memutuskan untuk menggunakan framework lain untuk membuat link shortener ini. Untuk menyegarkan kembali ingatan tentang `React`, aku memilih [Remix](https://remix.run/) sebagai framework untuk main web app yang berisi landing page, auth page, dan dashboard.
+
+Kemudian untuk redirect service, aku menggunakan [Parcel](https://parceljs.org/) sebagai bundler file `HTML`, `CSS`, dan `JavaScript` karena aku membayangkan kode yang diperlukan tidaklah terlalu kompleks dan membutuhkan banyak komponen hingga harus memakai sebuah framework JavaScript.
+
+Untuk backend, aku memutuskan menggunakan `Node.js` dan `Express.js` sebagai framework-nya karena aku sudah cukup familiar dengan `Express.js`.
+
+# Planning
+
+Hal pertama yang kulakukan adalah membuat sebuah product requirement menggunakan `Notion`, seperti latar belakang mengapa aku membuat fitur A, kira-kira `OKR` (Objective & Key Result) apa saja, User Acceptance Criteria-nya apa saja, dan apakah fitur tersebut punya limitasi atau tidak dan jika iya kira-kira apa saja workaround-nya. Setelah itu aku breakdown kembali ke sebuah fitur-fitur kecil yang nantinya akan aku gunakan sebagai tiket yang akan aku tulis di [Github Projects](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects).
+
+Kemudian untuk layout, aku mencoba untuk menggunakan sebuah generative `AI` dari Vercel yaitu [v0](https://vercel.com/blog/announcing-v0-generative-ui). Menggunakan AI tersebut aku bisa dapat gambaran kira-kira layout web app-ku akan seperti apa nantinya.
+
+<img src="https://cdn.jaluwibowo.id/assets/blog/pndekin-v0.png" alt="db scheme using drawsql" loading="lazy" />
+
+Setelah semua requirement dan design sudah jadi, kemudian aku mulai untuk membuat skema database menggunakan [DrawSQL](https://drawsql.app/). Menggunakan 3 tabel yaitu `User` untuk auth, `Link` untuk URL-URL yang akan disimpan, dan `Click` untuk menyimpan event saat user redirect menggunakan link pendek yang aku buat.
+
+<img src="https://cdn.jaluwibowo.id/assets/blog/pndekin-db-scheme.png" alt="db scheme using drawsql" loading="lazy" />
+
+# MVP
+
+## Pemendek Tautan
+
+Untuk pembuatan link shortener, pendekatan yang aku ambil adalah setiap user yang generate memendekkan tautannya akan mendapat balikan berupa 5 karakter acak sebagai tautan pendeknya. Misal yang ingin dipendekkan adalah `https://jaluwibowo.id/blog/pemendek-tautan-pndek-in` maka hasil generate-nya bisa jadi adalah `pndek.in/qwe78`.
+
+Saat user meng-generate link pendek, untuk tambahan keamanan, aku menggunakan [Safe Browsing API](https://developers.google.com/safe-browsing/v4). Dengan API tersebut memungkinkan untuk pengecekan URL yang telah di-input untuk mengetahui apakah ada potensi situs yang berbahaya seperti `phishing` ataupun `malware`.
+
+Untuk redirect service, aku hanya perlu untuk mengirimkan `User Agent` dan juga `referrer` dimana kita bisa mendapatkan data device dan juga asal dari link yang telah dikunjungi tersebut.
+
+## Analitik
+
+Ketika user mengunjungi dashboard, maka user bisa melihat analitik dari link yang telah dia buat, user bisa melihat jenis device, sistem operasi, maupun peramban yang pengunjung gunakan ketika mengakses link tersebut, karena hal tersebut bisa didapatkan dengan memparsing `User Agent`. Untuk menambah varian dari analitik, aku menggunakan [IP Geolocation API](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data) untuk mendapatkan negara dan kota pengunjung.
+
+## Bot Telegram
+
+Pemilihan penggunaan `Telegram bot` alih-alih sebuah aplikasi Android yaitu agar user bisa lebih cepat untuk memendekkan dan membagikan URL tersebut. Menggunakan [Telegram Bot API](https://core.telegram.org/bots) karena dokumentasinya yang bagus dan juga gratis.
+
+Aku memanfaatkan `Redis` sebagai penyimpanan untuk autentikasi pengguna `pndek.in` mana yang terhubung dengan user Telegram yang sedang aktif menggunakan bot tersebut.
+
+# Penutup
+
+Setelah semua jadi, kira-kira seperti inilah flow dari `pndek.in`.
+
+<img src="https://cdn.jaluwibowo.id/assets/blog/pndekin-flow.png" alt="flow of pndek.in" loading="lazy" />
+
+Cukup sekian untuk sharing tentang project pemendek tautan ini. Semoga bisa menjadi inspirasi kalau kalian ingin membuat project yang sejenis. Jika ada yang ingin ditanyakan, silakan komentar di bawah.
