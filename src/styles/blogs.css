@@ -147,6 +147,14 @@
 
 /* Code Block */
 
+.blog code {
+  font-family: monospace; /* Use a monospace font for code */
+  background-color: var(--sky-300); /* Add a grey background color */
+  padding: 1px 4px; /* Add some padding */
+  border-radius: 4px; /* Add rounded corners */
+  word-break: break-all;
+}
+
 /* Style pre tags */
 .blog pre {
   font-family: monospace; /* Use a monospace font for code */
