@@ -1,6 +1,7 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import '../styles/base.css';
 
@@ -14,8 +15,9 @@ const title = '404 | ' + SITE_TITLE + ' - Frontend Developer'
 	</head>
 	<body class=" bg-gray-200 font-inter">
     <Header />
-    <main class=" w-screen h-screen flex justify-center items-center">
-      <h1 class=" text-6xl text-black">404 - Not Found</h1>
+    <main class=" w-screen h-[calc(100vh-104px)] md:h-[calc(100vh-80px)] flex justify-center items-center">
+      <h1 class=" text-3xl md:text-6xl text-black">404 - Not Found</h1>
     </main>
+    <Footer />
 	</body>
 </html>
