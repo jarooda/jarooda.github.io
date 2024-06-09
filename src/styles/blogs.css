@@ -171,6 +171,23 @@
   word-break: break-all; /* Allow long words to break */
 }
 
+/* SPOILER */
+span[data-spoiler] {
+  background: black;
+  color: transparent;
+  cursor: help;
+  user-select: none;
+
+  transition: background 0.3s ease 0.2s, color 0.2s ease 0.25s;
+
+}
+
+span[data-spoiler]:hover,
+span[data-spoiler]:focus {
+  background: #e8e8e8;
+  color: inherit;
+}
+
 .copy-code {
   position: absolute;
   top: 10px;
