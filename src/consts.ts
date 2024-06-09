@@ -90,5 +90,6 @@ export const languages: Dictionary = {
   shell: 'Shell',
   sql: 'SQL',
   ts: 'TypeScript',
+  tsx: 'TypeScript',
   yaml: 'YAML'
 }
