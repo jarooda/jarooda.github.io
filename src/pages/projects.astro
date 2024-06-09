@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from "astro:transitions"
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -20,6 +21,11 @@ const title = `Projects - ${ SITE_TITLE }`
 <html lang="en">
 	<head>
 		<BaseHead title={ title } description={ SITE_DESCRIPTION } />
+    <script is:inline src="./scripts/flicking.min.js" />
+    <script is:inline src="./scripts/flicking-plugin.min.js" />
+    <ViewTransitions />
+    <link rel="stylesheet" href="/styles/flicking.css" />
+    <link rel="stylesheet" href="/styles/flicking-plugin.css" />
 	</head>
 	<body class=" font-inter">
 		<Header />
