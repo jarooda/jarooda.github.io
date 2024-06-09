@@ -1,28 +1,26 @@
-<script>
-  import Flicking from '@egjs/flicking'
-  import { AutoPlay, Arrow, Fade } from "@egjs/flicking-plugins"
-  import '@egjs/flicking/dist/flicking.css'
-  import "@egjs/flicking-plugins/dist/flicking-plugins.css"
-  import "@egjs/flicking-plugins/dist/arrow.css";
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const flicking = new Flicking("#flick", {
+      circular: true,
+      align: "center",
+      adaptive: false,
+      horizontal: true
+    })
 
-  const flicking = new Flicking("#flick", {
-    circular: true,
-    align: 'center',
-    adaptive: false,
-    horizontal: true
-  })
-
-  flicking.addPlugins(new AutoPlay({ duration: 10000, direction: "NEXT", stopOnHover: false }))
-  flicking.addPlugins(new Fade())
-  flicking.addPlugins(new Arrow())
+    flicking.addPlugins(
+      new Flicking.Plugins.AutoPlay({ duration: 10000, direction: "NEXT", stopOnHover: false })
+    )
+    flicking.addPlugins(new Flicking.Plugins.Fade())
+    flicking.addPlugins(new Flicking.Plugins.Arrow())
+  }, { once: true })
 </script>
 
 <div id="flick" class="flicking-viewport">
   <div class="flicking-camera">
     <slot />
   </div>
-  <span class="flicking-arrow-prev" />
-  <span class="flicking-arrow-next" />
+  <span class="flicking-arrow-prev"></span>
+  <span class="flicking-arrow-next"></span>
 </div>
 
 <style>
@@ -35,17 +33,20 @@
     .flicking-viewport:hover > .flicking-arrow-prev {
       animation: fadeIn 0.3s ease-in-out forwards;
     }
-  
+
     .flicking-arrow-prev,
     .flicking-arrow-next {
       opacity: 0;
     }
   }
 
-
   @keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 
   .flicking-arrow-prev::before,
