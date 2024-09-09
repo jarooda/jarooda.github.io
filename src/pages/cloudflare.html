@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo Cloudflare</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+      async
+      defer
+    ></script>
+  </head>
+  <body>
+    <div>
+      Hello Cloudflare
+      <div
+        class="my-5 bg-green-500 flex flex-col p-4 w-96 gap-4 mx-auto rounded-lg"
+      >
+        <input
+          id="user"
+          type="text"
+          placeholder="user"
+          class="p-2 rounded-lg"
+        />
+        <input
+          id="password"
+          type="password"
+          placeholder="password"
+          class="p-2 rounded-lg"
+        />
+        <input type="hidden" id="token" />
+        <label for="success">
+          <input type="checkbox" id="success" checked />
+          Captcha Success
+        </label>
+        <p class="p-4 bg-red-400">
+          Turnstile token = <span id="token-preview"></span>
+        </p>
+        <div
+          class="cf-turnstile"
+          data-sitekey="0x4AAAAAAAir0lvXY9YZLhJI"
+          data-size="flexible"
+          data-callback="jajalCallback"
+          data-error-callback="jajalErrorCallback"
+        ></div>
+        <!-- data-appearance="interaction-only" -->
+        <button
+          id="login"
+          class="p-2 rounded-lg border-white border bg-violet-400 disabled:cursor-block disabled:bg-slate-900"
+          disabled
+        >
+          Login
+        </button>
+      </div>
+    </div>
+    <script>
+      function jajalCallback(token) {
+        console.log(token, " <- token from cloudflare")
+        // set token to hidden form input
+        document.getElementById("token").value = token
+        document.getElementById("token-preview").innerText = token
+        // enable login button
+        document.getElementById("login").removeAttribute("disabled")
+      }
+
+      function jajalErrorCallback(error) {
+        console.error(error, " <- error from cloudflare")
+        document.getElementById("token-preview").innerText =
+          "Error:" + JSON.stringify(error)
+      }
+
+      document.getElementById("login").addEventListener("click", async () => {
+        const user = document.getElementById("user").value
+        const password = document.getElementById("password").value
+        const token = document.getElementById("token").value
+        const success = document.getElementById("success").checked
+
+        const data = {
+          message: `User: ${user}, Password: ${password}, Token: ${token}, Success: ${success}`
+        }
+
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: data.message
+        })
+      })
+    </script>
+  </body>
+</html>
