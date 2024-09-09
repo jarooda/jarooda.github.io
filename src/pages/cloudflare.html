@@ -31,10 +31,6 @@
           class="p-2 rounded-lg"
         />
         <input type="hidden" id="token" />
-        <label for="success">
-          <input type="checkbox" id="success" checked />
-          Captcha Success
-        </label>
         <p class="p-4 bg-red-400">
           Turnstile token = <span id="token-preview"></span>
         </p>
@@ -75,10 +71,9 @@
         const user = document.getElementById("user").value
         const password = document.getElementById("password").value
         const token = document.getElementById("token").value
-        const success = document.getElementById("success").checked
 
         const data = {
-          message: `User: ${user}, Password: ${password}, Token: ${token}, Success: ${success}`
+          message: `User: ${user}, Password: ${password}, Token: ${token}`
         }
 
         Swal.fire({
