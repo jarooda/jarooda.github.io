@@ -34,14 +34,28 @@
         <p class="p-4 bg-red-400">
           Turnstile token = <span id="token-preview"></span>
         </p>
-        <div
-          class="cf-turnstile"
-          data-sitekey="0x4AAAAAAAir0lvXY9YZLhJI"
-          data-size="flexible"
-          data-callback="jajalCallback"
-          data-error-callback="jajalErrorCallback"
+
+        <div>
+          Contoh cloudflare non-interactive
+          <div
+            class="cf-turnstile"
+            data-sitekey="0x4AAAAAAAir0lvXY9YZLhJI"
+            data-size="flexible"
+            data-callback="callbackNonInteractive"
+            data-error-callback="errCbNonInteractive"
           ></div>
-          <!-- data-appearance="interaction-only" -->
+        </div>
+
+        <div>
+          Contoh cloudflare managed
+          <div
+            class="cf-turnstile"
+            data-sitekey="0x4AAAAAAAi_73T9hRyQMmTR"
+            data-size="flexible"
+            data-callback="callbackManaged"
+            data-error-callback="errCbManaged"
+          ></div>
+        </div>
         <button
           id="login"
           class="p-2 rounded-lg border-white border bg-violet-400 disabled:cursor-block disabled:bg-slate-900"
@@ -52,19 +66,34 @@
       </div>
     </div>
     <script>
-      function jajalCallback(token) {
-        console.log(token, " <- token from cloudflare")
+      function cb(token, log) {
+        console.log(token, log)
         // set token to hidden form input
-        document.getElementById("token").value = token
-        document.getElementById("token-preview").innerText = token
+        document.getElementById("token-preview").innerText = "check console"
         // enable login button
         document.getElementById("login").removeAttribute("disabled")
       }
 
-      function jajalErrorCallback(error) {
-        console.error(error, " <- error from cloudflare")
+      function errCb(error, log) {
+        console.error(error, log)
         document.getElementById("token-preview").innerText =
           "Error:" + JSON.stringify(error)
+      }
+
+      function callbackNonInteractive(token) {
+        cb(token, " <- token from non-interactive")
+      }
+
+      function errCbNonInteractive(error) {
+        errCb(error, " <- error from non-interactive")
+      }
+
+      function callbackManaged(token) {
+        cb(token, " <- token from managed")
+      }
+
+      function errCbManaged(error) {
+        errCb(error, " <- error from managed")
       }
 
       document.getElementById("login").addEventListener("click", async () => {
