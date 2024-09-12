@@ -44,6 +44,8 @@
             data-callback="callbackManaged"
             data-error-callback="errCbManaged"
             data-appearance="interaction-only"
+            data-before-interactive-callback="beforeInteractive"
+            data-after-interactive-callback="afterInteractive"
           ></div>
         </div>
         <button
@@ -56,6 +58,14 @@
       </div>
     </div>
     <script>
+      function beforeInteractive () {
+        console.log('halo saya before interactive')
+      }
+
+      function afterInteractive () {
+        console.log('halo saya after interactive')
+      }
+
       function cb(token, log) {
         console.log(token, log)
         // set token to hidden form input
