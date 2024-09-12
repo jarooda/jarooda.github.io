@@ -13,50 +13,26 @@
     ></script>
   </head>
   <body>
-    <div>
-      Hello Cloudflare
-      <div
-        class="my-5 bg-green-500 flex flex-col p-4 w-96 gap-4 mx-auto rounded-lg"
-      >
-        <input
-          id="user"
-          type="text"
-          placeholder="user"
-          class="p-2 rounded-lg"
-        />
-        <input
-          id="password"
-          type="password"
-          placeholder="password"
-          class="p-2 rounded-lg"
-        />
-        <input type="hidden" id="token" />
-        <p class="p-4 bg-red-400">
-          Turnstile token = <span id="token-preview"></span>
-        </p>
-
-        <div>
-          Contoh cloudflare non-interactive
-          <div
-            class="cf-turnstile"
-            data-sitekey="0x4AAAAAAAir0lvXY9YZLhJI"
-            data-size="flexible"
-            data-callback="callbackNonInteractive"
-            data-error-callback="errCbNonInteractive"
-            data-appearance="interaction-only"
-          ></div>
-        </div>
-
-        <button
-          id="login"
-          class="p-2 rounded-lg border-white border bg-violet-400 disabled:cursor-block disabled:bg-slate-900"
-          disabled
-        >
-          Login
-        </button>
-      </div>
-    </div>
+    <div
+      class="cf-turnstile"
+      data-sitekey="0x4AAAAAAAi_73T9hRyQMmTR"
+      data-size="flexible"
+      data-callback="callbackManaged"
+      data-error-callback="errCbManaged"
+      data-appearance="interaction-only"
+      data-before-interactive-callback="beforeInteractive"
+      data-after-interactive-callback="afterInteractive"
+      data-unsupported-callback="errCbManaged"
+    ></div>
     <script>
+      function beforeInteractive() {
+        console.log("halo saya before interactive")
+      }
+
+      function afterInteractive() {
+        console.log("halo saya after interactive")
+      }
+
       function cb(token, log) {
         console.log(token, log)
         // set token to hidden form input
