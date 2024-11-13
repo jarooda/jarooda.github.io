@@ -7,7 +7,7 @@ export const SITE_TITLE: string = 'Jalu Wibowo';
 export const SITE_DESCRIPTION: string = "Passionate web developer with a strong focus on frontend expertise. Crafting visually stunning and user-friendly interfaces using a diverse range of frameworks and languages. Meticulous attention to detail and a commitment to excellence in every project. Let's collaborate to create outstanding web experiences!";
 
 const icons: Dictionary = {
-  astro: 'astro',
+  astro: 'logos:astro',
   aws: 'logos:aws',
   awss3: 'logos:aws-s3',
   bootstrap: 'logos:bootstrap',
@@ -31,15 +31,15 @@ const icons: Dictionary = {
   jwt: 'logos:jwt-icon',
   markdown: 'logos:markdown',
   mdx: 'logos:mdx',
-  mongodb: 'mongodb',
+  mongodb: 'logos:mongodb',
   nodejs: 'logos:nodejs-icon',
   npm: 'logos:npm',
   next: 'logos:nextjs-icon',
   nuxt: 'logos:nuxt-icon',
-  p5js: 'p5js',
+  p5js: 'logos:p5js',
   parcel: 'logos:parcel-icon',
-  pinia: 'pinia',
-  pnpm: 'pnpm',
+  pinia: 'logos:pinia',
+  pnpm: 'logos:pnpm',
   postgresql: 'logos:postgresql',
   prettier: 'logos:prettier',
   react: 'logos:react',
@@ -60,7 +60,7 @@ const icons: Dictionary = {
   vuejs: 'logos:vue',
   vscode: 'logos:visual-studio-code',
   yarn: 'logos:yarn',
-  yaml: 'yaml'
+  yaml: 'logos:yaml'
 } as const;
 
 export const getIcon = (title: string):string => {
