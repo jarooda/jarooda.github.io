@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <title>GSAP Stacking Cards</title>
+    <style>
+      :root {
+        --black: #000000;
+        --white: #ffffff;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--black);
+        color: var(----black);
+      }
+      .cardStacking {
+        overflow: hidden;
+        padding: 60px 0;
+
+        .stackCard {
+          border-radius: 30px;
+          position: relative;
+          width: 100%;
+          min-height: 450px;
+          padding: 60px 35px;
+          transform-origin: 50% -160%;
+        }
+      }
+
+      .spacer {
+        height: 1000px;
+        background: white;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="spacer"></section>
+
+    <section class="cardStacking">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12">
+            <div class="cardStacking__cards">
+              <div
+                class="stackCard d-flex align-items-center justify-content-between"
+                style="background-color: #fc88c6"
+              >
+                <div
+                  class="stackCard__body w-100 d-flex align-items-center justify-content-between"
+                >
+                  <span class="stackCard__body-content-header d-block"
+                    >Header 3</span
+                  >
+                </div>
+              </div>
+
+              <div
+                class="stackCard d-flex align-items-center justify-content-between"
+                style="background-color: #bf72fd"
+              >
+                <div
+                  class="stackCard__body w-100 d-flex align-items-center justify-content-between"
+                >
+                  <span class="stackCard__body-content-header d-block"
+                    >Header 2</span
+                  >
+                </div>
+              </div>
+
+              <div
+                class="stackCard d-flex align-items-center justify-content-between"
+                style="background-color: #8314f9"
+              >
+                <div
+                  class="stackCard__body w-100 d-flex align-items-center justify-content-between"
+                >
+                  <span class="stackCard__body-content-header d-block"
+                    >Header 1</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="spacer">
+      <h1>test</h1>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+      let cards = gsap.utils.toArray(".stackCard")
+
+      let stickDistance = 0
+
+      let firstCardST = ScrollTrigger.create({
+        trigger: cards[0],
+        start: "top top+=100"
+      })
+
+      let lastCardST = ScrollTrigger.create({
+        trigger: cards[cards.length - 1],
+        start: "top top+=100"
+      })
+
+      cards.forEach((card, index) => {
+        var scale = 1 - (cards.length - index) * 0.025
+        let scaleDown = gsap.to(card, {
+          scale: scale,
+          "transform-origin": '"50% ' + (lastCardST.start + stickDistance) + '"'
+        })
+
+        ScrollTrigger.create({
+          trigger: card,
+          start: "top top+=100",
+          end: () => lastCardST.start + stickDistance,
+          pin: true,
+          markers: true,
+          pinSpacing: false,
+          ease: "none",
+          animation: scaleDown,
+          toggleActions: "restart none none reverse"
+        })
+      })
+
+    </script>
+  </body>
+</html>

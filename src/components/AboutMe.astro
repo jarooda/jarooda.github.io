@@ -1,28 +1,75 @@
 ---
-import { SITE_TITLE } from '../consts';
-import Anchor from './Anchor.astro';
+import Anchor from "./Anchor.astro"
+import JaluLogo from "../assets/icons/jalu-logo.svg"
+
+const firstWords = ["Halo,", "I", "am"]
+const secondWords = ["Jalu", "Wibowo", "Aji"]
 ---
 
-<section class=" min-h-screen justify-center flex flex-col text-gray-700 bg-gray-200">
-  <div class=" mx-auto w-full md:w-192 p-4">
-    <div class=" w-max flex flex-col md:flex-row gap-0 md:gap-4 text-2xl md:text-5xl font-semibold">
-      <h1 class=" ">Halo, I am</h1>
-      <h1 class=" text-green-700 animate-typing md:animate-typing_md overflow-hidden whitespace-nowrap border-r-2 md:border-r-4 border-r-green-700 pr-1 md:pr-3" aria-label={SITE_TITLE}>{ SITE_TITLE }.</h1>
-    </div>
-    <content class=" text-sm md:text-xl mt-5 md:mt-10 flex flex-col gap-3 md:gap-8">
-      <p>I'm passionate about <mark>web development</mark>. While I'm skilled in <mark>fullstack development</mark>, my true specialization lies in <mark>frontend development</mark>.</p>
-      
-      <p>I thrive on crafting intuitive and visually appealing user interfaces. With an extensive toolbox of <mark>frameworks</mark> and <mark>programming languages</mark>, I bring <mark>creative</mark> and <mark>functional solutions</mark> to life.</p>
+<div class="w-full bg-gradient-to-b from-gray-700 to-slate-200">
+  <section
+    class="max-w-screen-2xl mx-auto min-h-screen justify-center flex flex-col relative perspective-1000"
+  >
+    <img
+      id="jl-logo"
+      src={JaluLogo.src}
+      alt="Logo"
+      class="hidden md:block w-96 lg:w-160 right-10 lg:right-20 top-52 lg:top-32 rotate-12 absolute drop-shadow-xl transform sm:transform-gpu the-logo"
+    />
   
-      <p>My approach to work is characterized by meticulous <mark>attention to detail</mark>. I believe that the small things make a big difference, and I ensure that every aspect of my projects meets the <mark>highest standards</mark>.</p>
-        
-      <p>Let's collaborate and create exceptional web experiences together.</p>
-    </content>
-    <aside class=" flex justify-center flex-wrap gap-4 mt-5 md:mt-10">
-      <Anchor href="#blog">#Blog</Anchor>
-      <Anchor href="#techstacks">#TechStacks</Anchor>
-      <Anchor href="#projects">#Projects</Anchor>
-      <Anchor href="#contactme">#ContactMe</Anchor>
-    </aside>
-  </div>
-</section>
+    <img
+      id="jl-logo-mobile"
+      src={JaluLogo.src}
+      alt="Logo"
+      class="block md:hidden w-60 drop-shadow-xl mx-auto"
+    />
+  
+    <div class="w-full lg:w-256 px-16 lg:px-6 mx-auto text-white">
+      <div
+        class="w-full flex flex-col items-center md:items-start text-2xl md:text-5xl font-black gap-1"
+      >
+        <div class="hero-text overflow-hidden flex gap-1 md:gap-4">
+          {
+            firstWords.map((word) => (
+              <h1 class="opacity-0 leading-tight word">{word}</h1>
+            ))
+          }
+        </div>
+        <div class="hero-text overflow-hidden flex gap-1 md:gap-4">
+          {
+            secondWords.map((word) => (
+              <h1 class="opacity-0 leading-tight word">{word}</h1>
+            ))
+          }
+        </div>
+      </div>
+  
+      <div class="mt-8 lg:mt-12 text-base font-normal md:font-medium hero-text text-center md:text-left">
+        <h2 id="about-me" class="opacity-0 word">
+          Software Engineer with more than three years of experience.
+        </h2>
+        <h2 class="opacity-0 word">
+          I <mark id="changing-text">do Frontend Magic.</mark>
+        </h2>
+      </div>
+  
+      <aside id="end-about-me" class="flex justify-center flex-wrap gap-4 mt-8 lg:mt-24">
+        <Anchor href="#blog">#Blog</Anchor>
+        <Anchor href="#techstacks">#TechStacks</Anchor>
+        <Anchor href="#projects">#Projects</Anchor>
+        <Anchor href="#contactme">#ContactMe</Anchor>
+      </aside>
+    </div>
+  </section>
+</div>
+
+<style>
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .the-logo {
+    will-change: transform;
+    transform-style: preserve-3d;
+  }
+</style>

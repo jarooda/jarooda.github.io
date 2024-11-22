@@ -20,6 +20,9 @@ dependencies:
   astro-icon:
     specifier: ^1.1.2
     version: 1.1.2
+  gsap:
+    specifier: ^3.12.5
+    version: 3.12.5
   sass:
     specifier: ^1.80.7
     version: 1.80.7
@@ -46,6 +49,9 @@ devDependencies:
   '@types/html-escaper':
     specifier: ^3.0.2
     version: 3.0.2
+  '@types/toastify-js':
+    specifier: ^1.12.3
+    version: 1.12.3
   astro:
     specifier: ^4.16.11
     version: 4.16.11(sass@1.80.7)(typescript@5.6.3)
@@ -1414,6 +1420,10 @@ packages:
       minipass: 4.2.8
     dev: false
 
+  /@types/toastify-js@1.12.3:
+    resolution: {integrity: sha512-9RjLlbAHMSaae/KZNHGv19VG4gcLIm3YjvacCXBtfMfYn26h76YP5oxXI8k26q4iKXCB9LNfv18lsoS0JnFPTg==}
+    dev: true
+
   /@types/unist@2.0.11:
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
     dev: true
@@ -2387,6 +2397,10 @@ packages:
       section-matter: 1.0.0
       strip-bom-string: 1.0.0
     dev: true
+
+  /gsap@3.12.5:
+    resolution: {integrity: sha512-srBfnk4n+Oe/ZnMIOXt3gT605BX9x5+rh/prT2F1SsNJsU1XuMiP0E2aptW481OnonOGACZWBqseH5Z7csHxhQ==}
+    dev: false
 
   /hasown@2.0.2:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}

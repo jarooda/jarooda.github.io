@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GSAP Flip Example</title>
+  <style>
+    body {
+      height: 200vh; /* Makes the page scrollable */
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      margin-top: 150vh; /* Pushes the target element down the page */
+    }
+
+    .target {
+      width: 200px;
+      height: 100px;
+      background-color: lightblue;
+      margin: auto;
+      position: relative;
+    }
+
+    .floating-box {
+      width: 100px;
+      height: 50px;
+      background-color: orange;
+      position: fixed;
+      right: 20px;
+      top: 50%; /* Center vertically */
+      transform: translateY(-50%); /* Adjust for box height */
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-box">I'm Floating</div>
+  <div class="container">
+    <div class="target"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Flip.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const floatingBox = document.querySelector('.floating-box');
+      const target = document.querySelector('.target');
+
+      // Set up Intersection Observer
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const flyingDuration = 0.5;
+            if (entry.isIntersecting) {
+              // When the target is visible
+              const state = Flip.getState(floatingBox); // Save initial state
+              target.appendChild(floatingBox); // Move box to target container
+              floatingBox.style.position = 'relative'; // Update position to relative
+              floatingBox.style.right = '0';
+              floatingBox.style.top = '0';
+              floatingBox.style.transform = 'none'; // Remove translate for relative positioning
+
+              // Animate to the new position
+              Flip.from(state, {
+                duration: flyingDuration,
+                ease: 'power1.inOut',
+              });
+            } else {
+              // When the target is not visible
+              const state = Flip.getState(floatingBox); // Save initial state
+              document.body.appendChild(floatingBox); // Move box back to body
+              floatingBox.style.position = 'fixed'; // Update position to fixed
+              floatingBox.style.right = '20px';
+              floatingBox.style.top = '50%'; // Center vertically
+              floatingBox.style.transform = 'translateY(-50%)'; // Adjust for box height
+
+              // Animate to the new position
+              Flip.from(state, {
+                duration: flyingDuration,
+                ease: 'power1.inOut',
+              });
+            }
+          });
+        },
+        { threshold: 0.1 } // Trigger when 50% of the target is visible
+      );
+
+      observer.observe(target); // Start observing the target
+    });
+  </script>
+</body>
+</html>
