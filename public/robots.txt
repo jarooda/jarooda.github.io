@@ -2,4 +2,4 @@
 # Full syntax: https://developers.google.com/search/docs/advanced/robots/create-robots-txt
 User-agent: *
 Disallow: /404.html
-Disallow: /demo/cloudflare
+Disallow: /demo/

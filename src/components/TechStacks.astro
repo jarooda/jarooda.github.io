@@ -1,65 +1,499 @@
 ---
-import TechStacksCard from './TechStacksCard.astro';
-
+import { Icon } from 'astro-icon/components'
 const stacks = [
   {
-    title: 'Languages',
-    lists: ['Javascript', 'Typescript', 'Ruby']
+    title: "Languages",
+    lists: ["Javascript", "Typescript", "Ruby"]
   },
   {
-    title: 'Frameworks & Libraries',
-    lists: ['Vue.js', 'Nuxt', 'React', 'Next', 'Remix', 'Astro', 'jQuery', 'React Native', 'Expo', 'Express.js', 'Ruby on Rails']
+    title: "Frameworks & Libraries",
+    lists: [
+      "Vue.js",
+      "Nuxt",
+      "React",
+      "Next",
+      "Remix",
+      "Astro",
+      "jQuery",
+      "React Native",
+      "Expo",
+      "Express.js",
+      "Ruby on Rails"
+    ]
   },
   {
-    title: 'Markup Languages',
-    lists: ['HTML', 'Markdown', 'MDX', 'YAML']
+    title: "Markup Languages",
+    lists: ["HTML", "Markdown", "MDX", "YAML"]
   },
   {
-    title: 'Stylings',
-    lists: ['CSS', 'Sass', 'Tailwind', 'Bootstrap']
+    title: "Stylings",
+    lists: ["CSS", "Sass", "Tailwind", "Bootstrap"]
   },
   {
-    title: 'State Managements',
-    lists: ['Pinia', 'Redux', 'Vuex']
+    title: "State Managements",
+    lists: ["Pinia", "Redux", "Vuex"]
   },
   {
-    title: 'Databases & Caches',
-    lists: ['Postgresql', 'MongoDB', 'Redis', 'Firebase']
+    title: "Databases & Caches",
+    lists: ["Postgresql", "MongoDB", "Redis", "Firebase"]
   },
   {
-    title: 'API Developments',
-    lists: ['RESTful', 'GraphQL']
+    title: "API Developments",
+    lists: ["RESTful", "GraphQL"]
   },
   {
-    title: 'Server & Deployments',
-    lists: ['AWS', 'Railway', 'Firebase', 'Vercel', 'Heroku']
+    title: "Server & Deployments",
+    lists: ["AWS", "Railway", "Firebase", "Vercel", "Heroku"]
   },
   {
-    title: 'Testings & Lintings',
-    lists: ['Jest', 'ESLint', 'Prettier']
+    title: "Testings & Lintings",
+    lists: ["Jest", "ESLint", "Prettier"]
   },
   {
-    title: 'Package Managers',
-    lists: ['npm', 'pnpm', 'yarn', 'rubygems']
+    title: "Package Managers",
+    lists: ["npm", "pnpm", "yarn", "rubygems"]
   },
   {
-    title: 'Development Tools',
-    lists: ['Git', 'Github', 'Gitlab', 'VSCode', 'Jira', 'Figma']
-  },
+    title: "Development Tools",
+    lists: ["Git", "Github", "Gitlab", "VSCode", "Jira", "Figma"]
+  }
 ]
 ---
 
-<section id="techstacks" class=" min-h-screen justify-center flex flex-col bg-gray-200 text-gray-700">
-  <div class=" mx-auto w-full md:w-192 py-4 px-4 md:py-12">
-    <div class=" w-max flex flex-col md:flex-row gap-0 md:gap-4 text-2xl md:text-5xl font-semibold">
-      <h1 class=" ">#TechStacks</h1>
-    </div>
-    <content class=" text-md md:text-xl mt-5 md:mt-10 flex flex-col gap-2">
-      {
-        stacks.map((stack) => (
-          <TechStacksCard {...stack} />
-        ))
+<script is:inline>
+  document.addEventListener(
+    "astro:page-load",
+    () => {
+      let Engine = Matter.Engine,
+        Render = Matter.Render,
+        Runner = Matter.Runner,
+        MouseConstraint = Matter.MouseConstraint,
+        Mouse = Matter.Mouse,
+        Composite = Matter.Composite,
+        Bodies = Matter.Bodies
+
+      // create engine
+      const engine = Engine.create(),
+        world = engine.world
+
+      const container = document.getElementById("matter-js")
+      const containerWidth = container.offsetWidth
+      const containerHeight = container.offsetHeight
+
+      let wireframes = false
+      // create renderer
+      const render = Render.create({
+        element: container,
+        engine: engine,
+        options: {
+          width: containerWidth,
+          height: containerHeight,
+          wireframes,
+          // showAngleIndicator: true,
+          background: "transparent"
+          // showIds: true
+        }
+      })
+
+      // create runner
+      const runner = Runner.create()
+      Runner.run(runner, engine)
+
+      function getRandomX() {
+        return containerWidth / 2
+        // return Math.floor(Math.random() * (containerWidth - 100))
       }
-    </content>
+
+      function getY() {
+        return Math.floor(
+          containerHeight * 0.05 + Math.random() * containerHeight * 0.2
+        )
+      }
+
+      function createIcon(texture, type, option = {}) {
+        const width = option.width || 40
+        const height = option.height || 40
+        const radius = option.radius || 20
+        const scale = option.scale || 3
+        const slope = option.slope || 0.5
+        const sides = option.sides || 5
+
+        const options = {
+          render: {
+            sprite: {
+              texture,
+              xScale: scale,
+              yScale: scale
+            }
+          }
+        }
+
+        switch (type) {
+          case "circle":
+            return Bodies.circle(getRandomX(), getY(), radius, options)
+          case "trapezoid":
+            return Bodies.trapezoid(
+              getRandomX(),
+              getY(),
+              width,
+              height,
+              slope,
+              options
+            )
+          case "polygon":
+            return Bodies.polygon(getRandomX(), getY(), sides, radius, options)
+          default:
+            return Bodies.rectangle(
+              getRandomX(),
+              getY(),
+              width,
+              height,
+              options
+            )
+        }
+      }
+
+      function generateUrl(filename) {
+        return `https://res.cloudinary.com/dpcjjs0wg/image/upload/v1731991834/${filename}.svg`
+      }
+      const icons = [
+        {
+          url: generateUrl("logos--vue_xvrlr9"),
+          shape: "trapezoid",
+          options: { width: 6, height: 50, slope: -10 }
+        },
+        {
+          url: generateUrl("logos--react_bl3k6d"),
+          shape: "polygon",
+          options: { sides: 12, radius: 32 }
+        },
+        {
+          url: generateUrl("logos--astro-icon_vjwx9z"),
+          shape: "trapezoid",
+          options: { width: 40, height: 50, slope: 0.3 }
+        },
+        {
+          url: generateUrl("logos--aws_fgyb8m"),
+          shape: "rectangle",
+          options: { width: 55, height: 40, scale: 2 }
+        },
+        {
+          url: generateUrl("logos--cloudflare-icon_mdfvde"),
+          shape: "trapezoid",
+          options: { width: 70, height: 35, slope: 0.5, scale: 2 }
+        },
+        {
+          url: generateUrl("logos--css-3_ldlex2"),
+          shape: "rectangle",
+          options: { width: 30, height: 48 }
+        },
+        {
+          url: generateUrl("logos--html-5_syoy4b"),
+          shape: "rectangle",
+          options: { width: 30, height: 48 }
+        },
+        {
+          url: generateUrl("logos--javascript_kpeloj"),
+          shape: "rectangle",
+          options: { width: 48, height: 48 }
+        },
+        {
+          url: generateUrl("logos--typescript-icon_jey5r1"),
+          shape: "rectangle",
+          options: { width: 48, height: 48 }
+        },
+        {
+          url: generateUrl("logos--tailwindcss-icon_kmcoki"),
+          shape: "rectangle",
+          options: { width: 55, height: 35, scale: 2 }
+        },
+        {
+          url: generateUrl("logos--firebase_i9whnq"),
+          shape: "polygon",
+          options: { sides: 4, radius: 29 }
+        },
+        {
+          url: generateUrl("logos--google-cloud_gtpb5b"),
+          shape: "trapezoid",
+          options: { width: 70, height: 45, slope: 0.5 }
+        },
+        {
+          url: generateUrl("logos--mongodb-icon_ja5hur"),
+          shape: "rectangle",
+          options: { width: 25, height: 45 }
+        },
+        {
+          url: generateUrl("logos--postgresql_olcugm"),
+          shape: "polygon",
+          options: { sides: 12, radius: 25 }
+        },
+        {
+          url: generateUrl("logos--remix-icon_v8fk6t"),
+          shape: "rectangle",
+          options: { width: 38, height: 45 }
+        },
+        // {
+        //   url: generateUrl("logos--rust_qyuou3"),
+        //   shape: "circle",
+        //   options: { radius: 25 }
+        // },
+        {
+          url: generateUrl("logos--express_agc18f"),
+          shape: "rectangle",
+          options: { width: 110, height: 35, scale: 2 }
+        },
+        {
+          url: generateUrl("logos--pinia_jdqmfc"),
+          shape: "rectangle",
+          options: { width: 40, height: 45 }
+        },
+        {
+          url: generateUrl("logos--nodejs-icon_oywclz"),
+          shape: "polygon",
+          options: { sides: 6, radius: 25 }
+        },
+        {
+          url: generateUrl("logos--npm-icon_me451n"),
+          shape: "rectangle",
+          options: { width: 48, height: 48 }
+        },
+        {
+          url: generateUrl("logos--yarn_qwtrtq"),
+          shape: "circle",
+          options: { radius: 25 }
+        },
+        {
+          url: generateUrl("logos--visual-studio-code_lhvv6b"),
+          shape: "rectangle",
+          options: { width: 48, height: 48 }
+        },
+        {
+          url: generateUrl("logos--jest_rbzrdy"),
+          shape: "rectangle",
+          options: { width: 48, height: 48 }
+        },
+        {
+          url: generateUrl("logos--graphql_k5yi7x"),
+          shape: "polygon",
+          options: { sides: 6, radius: 25 }
+        },
+        {
+          url: generateUrl("logos--vercel-icon_imodls"),
+          shape: "trapezoid",
+          options: { width: 60, height: 50, slope: 1 }
+        },
+        {
+          url: generateUrl("logos--sass_zljcvh"),
+          shape: "rectangle",
+          options: { width: 55, height: 45 }
+        },
+        {
+          url: generateUrl("logos--gitlab_dbhr4c"),
+          shape: "circle",
+          options: { radius: 28 }
+        },
+        {
+          url: generateUrl("logos--ruby_ur5lpa"),
+          shape: "rectangle",
+          options: { width: 48, height: 48 }
+        },
+        {
+          url: generateUrl("logos--github-icon_vdzn05"),
+          shape: "circle",
+          options: { radius: 25 }
+        },
+        {
+          url: generateUrl("logos--redis_ixfulj"),
+          shape: "rectangle",
+          options: { width: 60, height: 48 }
+        },
+        {
+          url: generateUrl("logos--bootstrap_plhgmx"),
+          shape: "rectangle",
+          options: { width: 57, height: 48 }
+        },
+        {
+          url: generateUrl("logos--git-icon_gtlej6"),
+          shape: "polygon",
+          options: { sides: 6, radius: 28 }
+        },
+        {
+          url: generateUrl("logos--figma_x8aqqc"),
+          shape: "rectangle",
+          options: { width: 35, height: 50 }
+        },
+        {
+          url: generateUrl("logos--pnpm_ayeayi"),
+          shape: "rectangle",
+          options: { width: 70, height: 50 }
+        }
+      ]
+
+      const stack = Composite.create()
+
+      icons.forEach((icon) => {
+        const createdIcon = createIcon(icon.url, icon.shape, icon.options)
+        Composite.add(stack, createdIcon)
+      })
+
+      function getWall (wallWidth, wallHeight, wallThickness) {
+        const topWall = Bodies.rectangle(
+          wallWidth / 2,
+          0,
+          wallWidth,
+          wallThickness,
+          {
+            isStatic: true,
+            render: { fillStyle: "transparent" }
+          }
+        )
+        const bottomWall = Bodies.rectangle(
+          wallWidth / 2,
+          wallHeight,
+          wallWidth,
+          wallThickness / 10,
+          { isStatic: true }
+        )
+        const rightWall = Bodies.rectangle(
+          wallWidth,
+          wallHeight / 2,
+          wallThickness,
+          wallHeight,
+          {
+            isStatic: true,
+            render: { fillStyle: "transparent" }
+          }
+        )
+        const leftWall = Bodies.rectangle(
+          0,
+          wallHeight / 2,
+          wallThickness,
+          wallHeight,
+          {
+            isStatic: true,
+            render: { fillStyle: "transparent" }
+          }
+        )
+
+        return { topWall, bottomWall, rightWall, leftWall }
+      }
+
+      const { topWall, bottomWall, rightWall, leftWall } = getWall(containerWidth, containerHeight, 100)
+      Composite.add(world, [
+        // walls
+        topWall,
+        bottomWall,
+        rightWall,
+        leftWall
+      ])
+
+      // add mouse control
+      const mouse = Mouse.create(render.canvas),
+        mouseConstraint = MouseConstraint.create(engine, {
+          mouse: mouse,
+          constraint: {
+            stiffness: 0.2,
+            render: {
+              visible: false
+            }
+          }
+        })
+      mouseConstraint.mouse.element.removeEventListener(
+        "wheel",
+        mouseConstraint.mouse.mousewheel
+      )
+      mouseConstraint.mouse.element.removeEventListener(
+        "DOMMouseScroll",
+        mouseConstraint.mouse.mousewheel
+      )
+      mouseConstraint.mouse.element.removeEventListener(
+        "touchmove",
+        mouseConstraint.mouse.mousemove
+      )
+      mouseConstraint.mouse.element.removeEventListener(
+        "touchstart",
+        mouseConstraint.mouse.mousedown
+      )
+      mouseConstraint.mouse.element.removeEventListener(
+        "touchend",
+        mouseConstraint.mouse.mouseup
+      )
+      Composite.add(world, mouseConstraint)
+      // keep the mouse in sync with rendering
+      render.mouse = mouse
+
+      function addStacks() {
+        const randomIcon = icons[Math.floor(Math.random() * icons.length)]
+        const createdIcon = createIcon(
+          randomIcon.url,
+          randomIcon.shape,
+          randomIcon.options
+        )
+        Composite.add(stack, createdIcon)
+      }
+
+      // using window observer, if id techstacks is visible, then run the render
+      let observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              Composite.add(world, stack)
+              Render.run(render)
+              observer.unobserve(entry.target)
+            }
+          })
+        },
+        { threshold: 0.6 }
+      )
+      const techstacksSection = container
+      observer.observe(techstacksSection)
+
+      const addButton = document.getElementById("add")
+      if (addButton) {
+        addButton.addEventListener("click", () => {
+          addStacks()
+        })
+      }
+
+      window.addEventListener("resize", () => {
+        render.options.width = container.offsetWidth
+        render.options.height = container.offsetHeight
+        render.canvas.width = container.offsetWidth
+        render.canvas.height = container.offsetHeight
+
+        const { topWall, bottomWall, rightWall, leftWall } = getWall(container.offsetWidth - 2, container.offsetHeight - 2, 100)
+
+        Composite.add(world, [
+          // walls
+          topWall,
+          bottomWall,
+          rightWall,
+          leftWall
+        ])
+      })
+    },
+    { once: true }
+  )
+</script>
+
+<section
+  id="techstacks"
+  class="min-h-screen max-w-screen-2xl mx-auto justify-center flex flex-col bg-gray-200 text-gray-700"
+>
+  <div class="mx-auto w-full lg:w-256 py-4 px-4 md:py-12">
+    <div
+      class="w-full flex flex-col md:flex-row justify-between gap-0 md:gap-4 text-2xl md:text-5xl font-semibold"
+    >
+      <h1>#TechStacks</h1>
+      <div class="flex w-full justify-center">
+        <button id="add" class="p-0 m-0 flex h-min w-fit items-center">
+          <Icon name="mdi:shape-add" class=" w-full" />
+          <span class=" min-w-fit ml-2">Add Stack</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="w-full h-128">
+    <div id="matter-js" class="w-full h-full cursor-grab"></div>
   </div>
 </section>

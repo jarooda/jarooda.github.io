@@ -3,7 +3,7 @@
 
 import type { Dictionary } from './types';
 
-export const SITE_TITLE: string = 'Jalu Wibowo';
+export const SITE_TITLE: string = 'Jalu Wibowo Aji';
 export const SITE_DESCRIPTION: string = "Passionate web developer with a strong focus on frontend expertise. Crafting visually stunning and user-friendly interfaces using a diverse range of frameworks and languages. Meticulous attention to detail and a commitment to excellence in every project. Let's collaborate to create outstanding web experiences!";
 
 const icons: Dictionary = {

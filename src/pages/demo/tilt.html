@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #282c34;
+        color: #fff;
+        font-family: Arial, sans-serif;
+      }
+
+      .tilt-container {
+        perspective: 1000px;
+      }
+
+      .tilt-box {
+        width: 200px;
+        height: 200px;
+        background: linear-gradient(135deg, #ff7eb3, #ff758c);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
+        border-radius: 15px;
+        transform-style: preserve-3d;
+        will-change: transform;
+        rotate: 50deg;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tilt-container">
+      <div class="tilt-box">Hover Me</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+      const tiltBox = document.querySelector(".tilt-box")
+
+      window.addEventListener("mousemove", (e) => {
+        const { innerWidth, innerHeight } = window
+
+        // Calculate the position of the mouse relative to the screen's center
+        const centerX = innerWidth / 2
+        const centerY = innerHeight / 2
+
+        const deltaX = e.clientX - centerX
+        const deltaY = e.clientY - centerY
+
+        // Tilt intensity
+        const tiltIntensity = 90
+        const rotateX = (deltaY / innerHeight) * tiltIntensity
+        const rotateY = -(deltaX / innerWidth) * tiltIntensity
+
+        // Animate the tilt effect
+        gsap.to(tiltBox, {
+          duration: 0.3,
+          rotateX: rotateX,
+          rotateY: rotateY,
+          ease: "power1.out"
+        })
+      })
+    </script>
+  </body>
+</html>

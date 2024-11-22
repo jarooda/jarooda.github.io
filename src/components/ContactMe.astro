@@ -1,80 +1,91 @@
 ---
-import { Icon } from 'astro-icon/components'
+import { Icon } from "astro-icon/components"
 
 const url = import.meta.env.PUBLIC_CONTACT_ME_API
 const socials = [
   {
-    label: 'github',
-    icon: 'logos:github-icon',
-    url: 'https://github.com/jarooda'
+    label: "github",
+    icon: "logos:github-icon",
+    url: "https://github.com/jarooda"
   },
   {
-    label: 'linkedin',
-    icon: 'logos:linkedin-icon',
-    url: 'https://linkedin.com/in/jaluwibowoaji'
+    label: "linkedin",
+    icon: "logos:linkedin-icon",
+    url: "https://linkedin.com/in/jaluwibowoaji"
   },
   {
-    label: 'upwork',
-    icon: 'logos:upwork',
-    url: 'https://www.upwork.com/freelancers/~010774d4112be0d77f?mp_source=share'
+    label: "upwork",
+    icon: "logos:upwork",
+    url: "https://www.upwork.com/freelancers/~010774d4112be0d77f?mp_source=share"
   },
   {
-    label: 'stackoverflow',
-    icon: 'logos:stackoverflow-icon',
-    url: 'https://stackoverflow.com/users/14604582/jalu-wibowo'
+    label: "stackoverflow",
+    icon: "logos:stackoverflow-icon",
+    url: "https://stackoverflow.com/users/14604582/jalu-wibowo"
   },
   {
-    label: 'google developers',
-    icon: 'logos:google-developers',
-    url: 'https://g.dev/jaluwibowo'
+    label: "google developers",
+    icon: "logos:google-developers",
+    url: "https://g.dev/jaluwibowo"
   },
   {
-    label: 'twitter',
-    icon: 'logos:twitter',
-    url: 'https://twitter.com/jaluwibowoaji'
+    label: "twitter",
+    icon: "logos:twitter",
+    url: "https://twitter.com/jaluwibowoaji"
   },
   {
-    label: 'bluesky',
-    icon: 'logos:bluesky',
-    url: 'https://bsky.app/profile/jaluwibowo.id'
+    label: "bluesky",
+    icon: "logos:bluesky",
+    url: "https://bsky.app/profile/jaluwibowo.id"
   }
 ]
 ---
+
 <script>
-  import Toastify from 'toastify-js'
+  import Toastify from "toastify-js"
   import "toastify-js/src/toastify.css"
   class ContactMe extends HTMLElement {
     constructor() {
-      super();
+      super()
 
       // Read the message from the data attribute.
-      const url = this.dataset.url;
-      const sendMsgBtn = document.getElementById('send-msg-btn')
-      
-      sendMsgBtn.addEventListener('click', async () => {
-        try {
-          sendMsgBtn?.setAttribute('disabled', 'disabled')
-          sendMsgBtn?.classList.add('cursor-not-allowed')
-          sendMsgBtn?.classList.add('opacity-50')
+      const url = this.dataset.url
+      const sendMsgBtn = document.getElementById("send-msg-btn")
 
-          const email = document.getElementById('email').value
-          const name = document.getElementById('name').value
-          const message = document.getElementById('message').value
+      if (!sendMsgBtn) return
+
+      sendMsgBtn.addEventListener("click", async () => {
+        try {
+          sendMsgBtn?.setAttribute("disabled", "disabled")
+          sendMsgBtn?.classList.add("cursor-not-allowed")
+          sendMsgBtn?.classList.add("opacity-50")
+
+          const email = (document.getElementById("email") as HTMLInputElement)
+            ?.value
+          const name = (document.getElementById("name") as HTMLInputElement)
+            ?.value
+          const message = (
+            document.getElementById("message") as HTMLInputElement
+          )?.value
 
           if (!email) {
-            throw new Error('Email is required!')
+            throw new Error("Email is required!")
           }
           if (!name) {
-            throw new Error('Name is required!')
+            throw new Error("Name is required!")
           }
           if (!message) {
-            throw new Error('Message is required!')
+            throw new Error("Message is required!")
+          }
+
+          if (!url) {
+            throw new Error("API is not ready")
           }
 
           const response = await fetch(url, {
-            method: 'POST',
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json'
+              "Content-Type": "application/json"
             },
             body: JSON.stringify({
               email,
@@ -85,9 +96,16 @@ const socials = [
           const data = await response.json()
 
           if (response.status === 200) {
-            document.getElementById('email').value = ''
-            document.getElementById('name').value = ''
-            document.getElementById('message').value = ''
+            const emailElement = document.getElementById("email")
+            const nameElement = document.getElementById("name")
+            const messageElement = document.getElementById("message")
+
+            if (emailElement instanceof HTMLInputElement)
+              emailElement.value = ""
+            if (nameElement instanceof HTMLInputElement) nameElement.value = ""
+            if (messageElement instanceof HTMLTextAreaElement)
+              messageElement.value = ""
+
             Toastify({
               text: data.message,
               duration: 2000,
@@ -101,7 +119,7 @@ const socials = [
           } else {
             throw new Error(data.message)
           }
-        } catch (error) {
+        } catch (error: any) {
           Toastify({
             text: error.message,
             duration: 2000,
@@ -113,63 +131,124 @@ const socials = [
             }
           }).showToast()
         } finally {
-          sendMsgBtn?.removeAttribute('disabled')
-          sendMsgBtn?.classList.remove('cursor-not-allowed')
-          sendMsgBtn?.classList.remove('opacity-50')
+          sendMsgBtn?.removeAttribute("disabled")
+          sendMsgBtn?.classList.remove("cursor-not-allowed")
+          sendMsgBtn?.classList.remove("opacity-50")
         }
       })
     }
   }
 
-  customElements.define('contact-me', ContactMe)
+  customElements.define("contact-me", ContactMe)
 </script>
 
-<contact-me data-url={ url }>
-  <section id="contactme" class=" min-h-screen justify-center flex flex-col bg-gray-200 text-gray-700">
-    <div class=" mx-auto w-full md:w-192 py-4 px-4 md:py-12">
-      <div class=" w-max flex flex-col md:flex-row gap-0 md:gap-4 text-2xl md:text-5xl font-semibold">
-        <h1 class=" ">#ContactMe</h1>
+<contact-me data-url={url}>
+  <section
+    id="contactme"
+    class="min-h-screen justify-center flex flex-col bg-gray-200 text-gray-700 z-[2]"
+  >
+    <div class="mx-auto w-full md:w-192 py-4 px-4 md:py-12">
+      <div
+        class="w-max flex flex-col md:flex-row gap-0 md:gap-4 text-2xl md:text-5xl font-semibold"
+      >
+        <h1 class="">#ContactMe</h1>
       </div>
-      <content class=" text-md md:text-xl mt-5 md:mt-10 flex flex-col gap-2">
-        <h2 class=" text-xl md:text-2xl">You can find me on these platforms,</h2>
-        <div class=" flex flex-wrap gap-8 my-8">
+      <content class="text-md md:text-xl mt-5 md:mt-10 flex flex-col gap-2">
+        <h2 id="social-target" class="text-xl md:text-2xl">
+          You can find me on these platforms,
+        </h2>
+        <div
+          id="social-floating"
+          class="floating flex flex-wrap float-start md:flex-col gap-8 my-8"
+        >
           {
-            socials.map(social => (
-              <a href={social.url} target="_blank" class=" flex flex-row gap-2 items-center hover:drop-shadow-md" aria-label={social.label}>
-                <Icon name={social.icon} class=" w-10 h-10 md:w-14 md:h-14" />
+            socials.map((social) => (
+              <a
+                href={social.url}
+                target="_blank"
+                class=" flex flex-row gap-2 hover:drop-shadow-md w-10 h-10 md:w-12 md:h-12 items-center justify-center"
+                aria-label={social.label}
+              >
+                <Icon
+                  name={social.icon}
+                  class=" w-8 h-8 md:w-10 md:h-10 hover:w-10 hover:h-10 hover:md:w-12 hover:md:h-12"
+                />
               </a>
             ))
           }
         </div>
-        <h2 class=" text-xl md:text-2xl">Or reach me using form below,</h2>
-        <form method="POST" class=" mt-8 text-base">
-          <div class=" bg-white p-6 rounded-lg w-full flex flex-wrap gap-1">
+        <h2 class="text-xl md:text-2xl">Or reach me using form below,</h2>
+        <form method="POST" class="mt-8 text-base">
+          <div class="bg-white p-6 rounded-lg w-full flex flex-wrap gap-1">
             <div class="relative z-0 w-full md:w-1/2 mb-4 group">
-              <input type="email" name="email" id="email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer" placeholder=" " required />
-              <label for="email" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Your Email</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer"
+                placeholder=" "
+                required
+              />
+              <label
+                for="email"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Your Email</label
+              >
             </div>
             <div class="relative z-0 w-full md:w-1/2 mb-4 group">
-              <input type="text" name="name" id="name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer" placeholder=" " required />
-              <label for="name" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Your Name</label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer"
+                placeholder=" "
+                required
+              />
+              <label
+                for="name"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Your Name</label
+              >
             </div>
             <div class="relative z-0 w-full group">
-              <textarea name="message" rows="5" id="message" class=" resize-none block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer" placeholder=" " required />
-              <label for="message" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Your Message</label>
+              <textarea
+                name="message"
+                rows="5"
+                id="message"
+                class="resize-none block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer"
+                placeholder=" "
+                required></textarea>
+              <label
+                for="message"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Your Message</label
+              >
             </div>
           </div>
-          
-          <div class=" flex justify-end w-full mt-4">
+
+          <div class="flex justify-end w-full mt-4">
             <button
               id="send-msg-btn"
               type="button"
-              class=" relative px-4 py-2 overflow-hidden font-semibold text-gray-700 bg-white shadow-md rounded-sm group text-sm md:text-base w-max"
+              class="relative px-4 py-2 overflow-hidden font-semibold text-gray-700 bg-white shadow-md rounded-sm group text-sm md:text-base w-max"
             >
-              <span class=" group-hover:w-full w-0 absolute h-0 transition-all duration-300 border-t-2 border-gray-700 ease top-0 left-0" />
-              <span class=" group-hover:w-full w-0 absolute h-0 transition-all duration-300 border-b-2 border-gray-700 ease bottom-0 right-0" />
-              <span class=" group-hover:h-full h-0 absolute w-0 transition-all duration-300 border-r-2 border-gray-700 ease top-0 right-0" />
-              <span class=" group-hover:h-full h-0 absolute w-0 transition-all duration-300 border-l-2 border-gray-700 ease bottom-0 left-0" />
-              <div id="send-msg-btn-title" class=" flex justify-center items-center gap-2">
-                <Icon name="ri:mail-send-fill" class=" h-5 max-w-20" />
+              <span
+                class="group-hover:w-full w-0 absolute h-0 transition-all duration-300 border-t-2 border-gray-700 ease top-0 left-0"
+              ></span>
+              <span
+                class="group-hover:w-full w-0 absolute h-0 transition-all duration-300 border-b-2 border-gray-700 ease bottom-0 right-0"
+              ></span>
+              <span
+                class="group-hover:h-full h-0 absolute w-0 transition-all duration-300 border-r-2 border-gray-700 ease top-0 right-0"
+              ></span>
+              <span
+                class="group-hover:h-full h-0 absolute w-0 transition-all duration-300 border-l-2 border-gray-700 ease bottom-0 left-0"
+              ></span>
+              <div
+                id="send-msg-btn-title"
+                class="flex justify-center items-center gap-2"
+              >
+                <Icon name="ri:mail-send-fill" class="h-5 max-w-20" />
                 Send Message!
               </div>
             </button>
@@ -179,3 +258,25 @@ const socials = [
     </div>
   </section>
 </contact-me>
+
+<style>
+  .floating {
+    @media screen and (min-width: 768px) {
+      position: fixed;
+      top: 0;
+      right: 1rem;
+      /* transform: translateY(-50%); */
+      flex-direction: column;
+      z-index: 3;
+    }
+  }
+
+  .stay {
+    position: relative;
+    top: 0;
+    right: 0;
+    /* transform: translateY(0); */
+    flex-direction: row;
+    z-index: 1;
+  }
+</style>
