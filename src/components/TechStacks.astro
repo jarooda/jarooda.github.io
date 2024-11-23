@@ -1,5 +1,5 @@
 ---
-import { Icon } from 'astro-icon/components'
+import { Icon } from "astro-icon/components"
 const stacks = [
   {
     title: "Languages",
@@ -89,9 +89,7 @@ const stacks = [
           width: containerWidth,
           height: containerHeight,
           wireframes,
-          // showAngleIndicator: true,
           background: "transparent"
-          // showIds: true
         }
       })
 
@@ -101,13 +99,28 @@ const stacks = [
 
       function getRandomX() {
         return containerWidth / 2
-        // return Math.floor(Math.random() * (containerWidth - 100))
       }
 
       function getY() {
         return Math.floor(
           containerHeight * 0.05 + Math.random() * containerHeight * 0.2
         )
+      }
+
+      function getOption(scale, unit) {
+        if (container.offsetWidth < 425) {
+          const newScale = scale - 1
+
+          return {
+            scale: newScale,
+            unit: Math.ceil(unit / scale) * newScale
+          }
+        }
+
+        return {
+          scale,
+          unit
+        }
       }
 
       function createIcon(texture, type, option = {}) {
@@ -122,32 +135,43 @@ const stacks = [
           render: {
             sprite: {
               texture,
-              xScale: scale,
-              yScale: scale
+              xScale: getOption(scale, scale).scale,
+              yScale: getOption(scale, scale).scale
             }
           }
         }
 
         switch (type) {
           case "circle":
-            return Bodies.circle(getRandomX(), getY(), radius, options)
+            return Bodies.circle(
+              getRandomX(),
+              getY(),
+              getOption(scale, radius).unit,
+              options
+            )
           case "trapezoid":
             return Bodies.trapezoid(
               getRandomX(),
               getY(),
-              width,
-              height,
+              getOption(scale, width).unit,
+              getOption(scale, height).unit,
               slope,
               options
             )
           case "polygon":
-            return Bodies.polygon(getRandomX(), getY(), sides, radius, options)
+            return Bodies.polygon(
+              getRandomX(),
+              getY(),
+              sides,
+              getOption(scale, radius).unit,
+              options
+            )
           default:
             return Bodies.rectangle(
               getRandomX(),
               getY(),
-              width,
-              height,
+              getOption(scale, width).unit,
+              getOption(scale, height).unit,
               options
             )
         }
@@ -336,12 +360,19 @@ const stacks = [
         Composite.add(stack, createdIcon)
       })
 
-      function getWall (wallWidth, wallHeight, wallThickness) {
+      function getWallThickness(thickness) {
+        if (container.offsetWidth < 425) {
+          return thickness / 10
+        }
+        return thickness
+      }
+
+      function getWall(wallWidth, wallHeight, wallThickness) {
         const topWall = Bodies.rectangle(
           wallWidth / 2,
           0,
           wallWidth,
-          wallThickness,
+          getWallThickness(wallThickness),
           {
             isStatic: true,
             render: { fillStyle: "transparent" }
@@ -357,7 +388,7 @@ const stacks = [
         const rightWall = Bodies.rectangle(
           wallWidth,
           wallHeight / 2,
-          wallThickness,
+          getWallThickness(wallThickness),
           wallHeight,
           {
             isStatic: true,
@@ -367,7 +398,7 @@ const stacks = [
         const leftWall = Bodies.rectangle(
           0,
           wallHeight / 2,
-          wallThickness,
+          getWallThickness(wallThickness),
           wallHeight,
           {
             isStatic: true,
@@ -378,7 +409,11 @@ const stacks = [
         return { topWall, bottomWall, rightWall, leftWall }
       }
 
-      const { topWall, bottomWall, rightWall, leftWall } = getWall(containerWidth, containerHeight, 100)
+      const { topWall, bottomWall, rightWall, leftWall } = getWall(
+        containerWidth,
+        containerHeight,
+        100
+      )
       Composite.add(world, [
         // walls
         topWall,
@@ -461,7 +496,11 @@ const stacks = [
         render.canvas.width = container.offsetWidth
         render.canvas.height = container.offsetHeight
 
-        const { topWall, bottomWall, rightWall, leftWall } = getWall(container.offsetWidth - 2, container.offsetHeight - 2, 100)
+        const { topWall, bottomWall, rightWall, leftWall } = getWall(
+          container.offsetWidth - 2,
+          container.offsetHeight - 2,
+          100
+        )
 
         Composite.add(world, [
           // walls
@@ -487,8 +526,8 @@ const stacks = [
       <h1>#TechStacks</h1>
       <div class="flex w-full md:justify-end justify-center">
         <button id="add" class="p-0 m-0 flex h-min w-fit items-center">
-          <Icon name="mdi:shape-add" class=" w-full" />
-          <span class=" min-w-fit ml-2">Add Stack</span>
+          <Icon name="mdi:shape-add" class="w-full" />
+          <span class="min-w-fit ml-2">Add Stack</span>
         </button>
       </div>
     </div>
