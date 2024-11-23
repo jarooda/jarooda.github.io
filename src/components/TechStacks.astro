@@ -1,63 +1,5 @@
 ---
-import { Icon } from "astro-icon/components"
-const stacks = [
-  {
-    title: "Languages",
-    lists: ["Javascript", "Typescript", "Ruby"]
-  },
-  {
-    title: "Frameworks & Libraries",
-    lists: [
-      "Vue.js",
-      "Nuxt",
-      "React",
-      "Next",
-      "Remix",
-      "Astro",
-      "jQuery",
-      "React Native",
-      "Expo",
-      "Express.js",
-      "Ruby on Rails"
-    ]
-  },
-  {
-    title: "Markup Languages",
-    lists: ["HTML", "Markdown", "MDX", "YAML"]
-  },
-  {
-    title: "Stylings",
-    lists: ["CSS", "Sass", "Tailwind", "Bootstrap"]
-  },
-  {
-    title: "State Managements",
-    lists: ["Pinia", "Redux", "Vuex"]
-  },
-  {
-    title: "Databases & Caches",
-    lists: ["Postgresql", "MongoDB", "Redis", "Firebase"]
-  },
-  {
-    title: "API Developments",
-    lists: ["RESTful", "GraphQL"]
-  },
-  {
-    title: "Server & Deployments",
-    lists: ["AWS", "Railway", "Firebase", "Vercel", "Heroku"]
-  },
-  {
-    title: "Testings & Lintings",
-    lists: ["Jest", "ESLint", "Prettier"]
-  },
-  {
-    title: "Package Managers",
-    lists: ["npm", "pnpm", "yarn", "rubygems"]
-  },
-  {
-    title: "Development Tools",
-    lists: ["Git", "Github", "Gitlab", "VSCode", "Jira", "Figma"]
-  }
-]
+import Anchor from "./Anchor.astro"
 ---
 
 <script is:inline>
@@ -98,12 +40,12 @@ const stacks = [
       Runner.run(runner, engine)
 
       function getRandomX() {
-        return containerWidth / 2
+        return container.offsetWidth / 2
       }
 
       function getY() {
         return Math.floor(
-          containerHeight * 0.05 + Math.random() * containerHeight * 0.2
+          container.offsetHeight * 0.05 + Math.random() * container.offsetHeight * 0.2
         )
       }
 
@@ -134,7 +76,7 @@ const stacks = [
         const options = {
           render: {
             sprite: {
-              texture,
+              texture: generateUrl(texture),
               xScale: getOption(scale, scale).scale,
               yScale: getOption(scale, scale).scale
             }
@@ -182,172 +124,172 @@ const stacks = [
       }
       const icons = [
         {
-          url: generateUrl("logos--vue_xvrlr9"),
+          url: "logos--vue_xvrlr9",
           shape: "trapezoid",
           options: { width: 6, height: 50, slope: -10 }
         },
         {
-          url: generateUrl("logos--react_bl3k6d"),
+          url: "logos--react_bl3k6d",
           shape: "polygon",
           options: { sides: 12, radius: 32 }
         },
         {
-          url: generateUrl("logos--astro-icon_vjwx9z"),
+          url: "logos--astro-icon_vjwx9z",
           shape: "trapezoid",
           options: { width: 40, height: 50, slope: 0.3 }
         },
         {
-          url: generateUrl("logos--aws_fgyb8m"),
+          url: "logos--aws_fgyb8m",
           shape: "rectangle",
           options: { width: 55, height: 40, scale: 2 }
         },
         {
-          url: generateUrl("logos--cloudflare-icon_mdfvde"),
+          url: "logos--cloudflare-icon_mdfvde",
           shape: "trapezoid",
           options: { width: 70, height: 35, slope: 0.5, scale: 2 }
         },
         {
-          url: generateUrl("logos--css-3_ldlex2"),
+          url: "logos--css-3_ldlex2",
           shape: "rectangle",
           options: { width: 30, height: 48 }
         },
         {
-          url: generateUrl("logos--html-5_syoy4b"),
+          url: "logos--html-5_syoy4b",
           shape: "rectangle",
           options: { width: 30, height: 48 }
         },
         {
-          url: generateUrl("logos--javascript_kpeloj"),
+          url: "logos--javascript_kpeloj",
           shape: "rectangle",
           options: { width: 48, height: 48 }
         },
         {
-          url: generateUrl("logos--typescript-icon_jey5r1"),
+          url: "logos--typescript-icon_jey5r1",
           shape: "rectangle",
           options: { width: 48, height: 48 }
         },
         {
-          url: generateUrl("logos--tailwindcss-icon_kmcoki"),
+          url: "logos--tailwindcss-icon_kmcoki",
           shape: "rectangle",
           options: { width: 55, height: 35, scale: 2 }
         },
         {
-          url: generateUrl("logos--firebase_i9whnq"),
+          url: "logos--firebase_i9whnq",
           shape: "polygon",
           options: { sides: 4, radius: 29 }
         },
         {
-          url: generateUrl("logos--google-cloud_gtpb5b"),
+          url: "logos--google-cloud_gtpb5b",
           shape: "trapezoid",
           options: { width: 70, height: 45, slope: 0.5 }
         },
         {
-          url: generateUrl("logos--mongodb-icon_ja5hur"),
+          url: "logos--mongodb-icon_ja5hur",
           shape: "rectangle",
           options: { width: 25, height: 45 }
         },
         {
-          url: generateUrl("logos--postgresql_olcugm"),
+          url: "logos--postgresql_olcugm",
           shape: "polygon",
           options: { sides: 12, radius: 25 }
         },
         {
-          url: generateUrl("logos--remix-icon_v8fk6t"),
+          url: "logos--remix-icon_v8fk6t",
           shape: "rectangle",
           options: { width: 38, height: 45 }
         },
         // {
-        //   url: generateUrl("logos--rust_qyuou3"),
+        //   url: "logos--rust_qyuou3",
         //   shape: "circle",
         //   options: { radius: 25 }
         // },
         {
-          url: generateUrl("logos--express_agc18f"),
+          url: "logos--express_agc18f",
           shape: "rectangle",
           options: { width: 110, height: 35, scale: 2 }
         },
         {
-          url: generateUrl("logos--pinia_jdqmfc"),
+          url: "logos--pinia_jdqmfc",
           shape: "rectangle",
           options: { width: 40, height: 45 }
         },
         {
-          url: generateUrl("logos--nodejs-icon_oywclz"),
+          url: "logos--nodejs-icon_oywclz",
           shape: "polygon",
           options: { sides: 6, radius: 25 }
         },
         {
-          url: generateUrl("logos--npm-icon_me451n"),
+          url: "logos--npm-icon_me451n",
           shape: "rectangle",
           options: { width: 48, height: 48 }
         },
         {
-          url: generateUrl("logos--yarn_qwtrtq"),
+          url: "logos--yarn_qwtrtq",
           shape: "circle",
           options: { radius: 25 }
         },
         {
-          url: generateUrl("logos--visual-studio-code_lhvv6b"),
+          url: "logos--visual-studio-code_lhvv6b",
           shape: "rectangle",
           options: { width: 48, height: 48 }
         },
         {
-          url: generateUrl("logos--jest_rbzrdy"),
+          url: "logos--jest_rbzrdy",
           shape: "rectangle",
           options: { width: 48, height: 48 }
         },
         {
-          url: generateUrl("logos--graphql_k5yi7x"),
+          url: "logos--graphql_k5yi7x",
           shape: "polygon",
           options: { sides: 6, radius: 25 }
         },
         {
-          url: generateUrl("logos--vercel-icon_imodls"),
+          url: "logos--vercel-icon_imodls",
           shape: "trapezoid",
           options: { width: 60, height: 50, slope: 1 }
         },
         {
-          url: generateUrl("logos--sass_zljcvh"),
+          url: "logos--sass_zljcvh",
           shape: "rectangle",
           options: { width: 55, height: 45 }
         },
         {
-          url: generateUrl("logos--gitlab_dbhr4c"),
+          url: "logos--gitlab_dbhr4c",
           shape: "circle",
           options: { radius: 28 }
         },
         {
-          url: generateUrl("logos--ruby_ur5lpa"),
+          url: "logos--ruby_ur5lpa",
           shape: "rectangle",
           options: { width: 48, height: 48 }
         },
         {
-          url: generateUrl("logos--github-icon_vdzn05"),
+          url: "logos--github-icon_vdzn05",
           shape: "circle",
           options: { radius: 25 }
         },
         {
-          url: generateUrl("logos--redis_ixfulj"),
+          url: "logos--redis_ixfulj",
           shape: "rectangle",
           options: { width: 60, height: 48 }
         },
         {
-          url: generateUrl("logos--bootstrap_plhgmx"),
+          url: "logos--bootstrap_plhgmx",
           shape: "rectangle",
           options: { width: 57, height: 48 }
         },
         {
-          url: generateUrl("logos--git-icon_gtlej6"),
+          url: "logos--git-icon_gtlej6",
           shape: "polygon",
           options: { sides: 6, radius: 28 }
         },
         {
-          url: generateUrl("logos--figma_x8aqqc"),
+          url: "logos--figma_x8aqqc",
           shape: "rectangle",
           options: { width: 35, height: 50 }
         },
         {
-          url: generateUrl("logos--pnpm_ayeayi"),
+          url: "logos--pnpm_ayeayi",
           shape: "rectangle",
           options: { width: 70, height: 50 }
         }
@@ -521,13 +463,14 @@ const stacks = [
 >
   <div class="mx-auto w-full lg:w-256 py-4 px-4 md:py-12">
     <div
-      class="w-full flex flex-col md:flex-row justify-between gap-0 md:gap-4 text-2xl md:text-5xl font-semibold"
+      class="w-full text-center flex flex-col md:flex-row justify-between gap-0 md:gap-4 text-2xl md:text-5xl font-semibold"
     >
       <h1>#TechStacks</h1>
       <div class="flex w-full md:justify-end justify-center">
-        <button id="add" class="p-0 m-0 flex h-min w-fit items-center">
-          <Icon name="mdi:shape-add" class="w-full" />
-          <span class="min-w-fit ml-2">Add Stack</span>
+        <button id="add" class="p-0 m-0 flex h-min w-fit items-center mt-3 md:mt-0">
+          <Anchor href="javascript:void(0)" icon="mdi:shape-add">
+            Add Stack
+          </Anchor>
         </button>
       </div>
     </div>
