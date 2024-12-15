@@ -19,6 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PUBLIC_CONTACT_ME_API: ${{ secrets.CONTACT_ME_API }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN}}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
