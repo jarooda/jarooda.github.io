@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config"
+import { loadEnv } from "vite"
 import mdx from "@astrojs/mdx"
 import icon from "astro-icon"
 import sitemap from "@astrojs/sitemap"
@@ -10,6 +11,13 @@ import sentry from "@sentry/astro"
 
 import { remarkReadingTime } from "./src/utils/remark-reading-time"
 import { autolinkConfig } from "./src/utils/rehype-auto-link"
+
+const nodeEnv = process.env.NODE_ENV || "development"
+const { SENTRY_DSN, SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT } = loadEnv(
+  nodeEnv,
+  process.cwd(),
+  ""
+)
 
 // https://astro.build/config
 export default defineConfig({
@@ -24,10 +32,12 @@ export default defineConfig({
       applyBaseStyles: false
     }),
     sentry({
-      dsn: process.env.SENTRY_DSN,
+      dsn: SENTRY_DSN,
       sourceMapsUploadOptions: {
-        project: "javascript-astro",
-        authToken: process.env.SENTRY_AUTH_TOKEN
+        org: SENTRY_ORG,
+        project: SENTRY_PROJECT,
+        authToken: SENTRY_AUTH_TOKEN,
+        telemetry: false
       },
       enabled: process.env.NODE_ENV === "production"
     })
