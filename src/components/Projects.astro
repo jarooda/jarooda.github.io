@@ -26,7 +26,7 @@ const posts = (await getCollection("project"))
             <div class="card w-full min-h-128 relative origin-[50%_-160%] px-8">
               <ProjectsFeaturedCard
                 {...post.data}
-                render={post.render}
+                post={post}
                 index={index}
               />
             </div>
