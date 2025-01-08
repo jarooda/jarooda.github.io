@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions"
+import { ClientRouter } from "astro:transitions"
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -22,7 +22,7 @@ const title = `Projects - ${ SITE_TITLE }`
 	<head>
 		<BaseHead title={ title } description={ SITE_DESCRIPTION } />
     <script is:inline async src="/scripts/flicking.min.js" />
-    <ViewTransitions />
+    <ClientRouter />
     <link rel="stylesheet" href="/styles/flicking.css" />
     <link rel="stylesheet" href="/styles/flicking-plugin.css" />
 	</head>
@@ -34,7 +34,7 @@ const title = `Projects - ${ SITE_TITLE }`
         <FlickingComponent>
           {
             posts.map((post) => (
-              <ProjectsCard { ...post.data } render={ post.render } />
+              <ProjectsCard { ...post.data } post={post} />
             ))
           }
         </FlickingComponent>

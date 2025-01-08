@@ -15,7 +15,7 @@ export async function getStaticPaths() {
     const posts = [...collections].filter((post) => post.data.tags.includes(tag))
     
     return {
-      params: { slug: tag },
+      params: { id: tag },
       props: {
         posts: sortPosts(posts),
         tag

@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 import { Image } from "astro:assets"
 import type { CollectionEntry } from 'astro:content';
 import { Icon } from 'astro-icon/components'
@@ -42,7 +42,7 @@ const isEnglish = tags.includes('english')
     <link href="/themes/prism.css" rel="stylesheet" />
 		<BaseHead title={ headerTitle } description={description} image={ metaImage || heroImage } />
     <BlogHead />
-    <ViewTransitions />
+    <ClientRouter />
 	</head>
 
 	<body>
@@ -150,12 +150,14 @@ const isEnglish = tags.includes('english')
           }
           <script
             src="https://utteranc.es/client.js"
-            repo="jarooda/jarooda.github.io"
-            issue-term="pathname"
-            label="blog-comment"
-            theme="github-light"
-            crossorigin="anonymous"
-            async
+            {...{
+              repo: "jarooda/jarooda.github.io",
+              "issue-term": "pathname",
+              label: "blog-comment",
+              theme: "github-light",
+              crossorigin: "anonymous",
+              async: true,
+            } as any }
           />
 				</div>
 			</article>

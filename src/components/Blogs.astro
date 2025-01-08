@@ -25,7 +25,7 @@ const restPosts = newestPosts.slice(1)
         <div
           class="flex flex-col justify-end md:text-gray-200 p-0 md:p-4 pb-4 h-full md:rounded-lg md:backdrop-brightness-50 md:group-hover:backdrop-blur-sm border-b border-white md:border-b-0"
         >
-          <a href={`/blog/${firstPost.slug}/`} class="group w-full">
+          <a href={`/blog/${firstPost.id}/`} class="group w-full">
             <h2
               class="font-semibold text-md md:text-2xl mb-2 group-hover:underline underline-offset-4"
             >
@@ -53,7 +53,7 @@ const restPosts = newestPosts.slice(1)
         {
           restPosts.map((post) => (
             <div class="post border-b border-white pb-4 opacity-0">
-              <a href={`/blog/${post.slug}/`} class="group w-full">
+              <a href={`/blog/${post.id}/`} class="group w-full">
                 <h2 class="font-semibold text-md md:text-2xl mb-2 group-hover:underline underline-offset-4">
                   {post.data.title}
                 </h2>

@@ -2,18 +2,19 @@
 import Tag from './Tag.astro';
 import Anchor from './Anchor.astro';
 import { getIcon } from '../consts';
+import { render } from 'astro:content';
 
 interface Props {
   title: string
   repo?: string
   demo?: string
   heroImage?: string
-  stacks: string[]
-  render: any
+  stacks: string[],
+  post: any
 }
 
-const { title, heroImage, stacks = [], render, repo = '', demo = '' } = Astro.props;
-const { Content } = await render();
+const { title, heroImage, stacks = [], repo = '', demo = '', post } = Astro.props;
+const { Content } = await render(post);
 
 ---
 
