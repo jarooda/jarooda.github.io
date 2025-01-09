@@ -1,0 +1,125 @@
+---
+title: 'Tahun Baru, Versi Baru'
+description: 'New Year, New Me? Bukan, ini tentang upgrade Astro v4 ke v5, dan sedikit keinginan di tahun 2025 ini.'
+pubDate: '9 Jan 2025'
+heroImage: 'https://cdn.jaluwibowo.id/assets/blog/upgrade-to-v5.webp'
+metaImage: 'https://cdn.jaluwibowo.id/assets/blog/upgrade-to-v5.webp'
+tags: ['web', 'javascript', 'astro']
+---
+
+# Intro
+
+Jadi sebelumnya aku sudah me-revamp website ini dari yang awalnya [Vue.js menjadi Astro](https://www.jaluwibowo.id/blog/hello-world-revamp-dan-astro/). Saat itu versi astro yang ku gunakan masih versi `3.0.10`, kemudian pada [Mei 2024](https://github.com/jarooda/jarooda.github.io/commit/46686550e6a0c2c28f0965aeced5584994282368#diff-7ae45ad102eab3b6d7e7896acd08c427a9b25b346470d7bc6507b6481575d519L27), aku menaikkan versinya menjadi `4.7.1` karena tidak terlalu banyak perubahan yang bersifat *breaking changes*.
+
+Satu tahun menggunakan [Astro](https://www.jaluwibowo.id/tags/astro/) sangat mengasyikan, untuk konten blog, aku hanya perlu membuat sebuah file `mdx`, sedangkan untuk fitur, penggunaan *vanilla* Javascript pun cukup untuk web ini. Web ini tidak memerlukan manajemen state yang kompleks hingga membutuhkan *library* atau *framework* lain seperti [React](https://www.jaluwibowo.id/tags/react/) maupun [Vue](https://www.jaluwibowo.id/tags/vue/).
+
+# Mengapa Memilih Upgrade ke Astro 5.0?
+
+Fitur unggulan di [Astro 5.0](https://astro.build/blog/astro-5/) yang menarik perhatianku adalah `Content Layer`. Fitur ini memudahkan kita membuat konten menggunakan sumber eksternal seperti database Notion atau CMS lainnya, alih-alih hanya membuat banyak file markdown di repository. Dengan ini, pengelolaan konten menjadi jauh lebih mudah, terutama jika jumlah konten terus bertambah.
+
+Selain itu, `Content Collections API v2.0`, yang kini telah [menjadi legacy](https://docs.astro.build/en/guides/upgrade-to/v5/#legacy-v20-content-collections-api), membuatku merasa harus segera meng-*upgrade*. Fitur ini sangat berguna untuk `type-safety` saat menggunakan `markdown` sebagai konten. Karena ada perubahan struktur pada fitur `Content Collections` yang baru, penting untuk segera memperbarui sebelum web berkembang lebih besar.
+
+# Proses & *Challenge* Waktu Upgrade
+
+TLDR; kalian bisa cek perubahan di [Pull Request ini](https://github.com/jarooda/jarooda.github.io/pull/48).
+
+Untuk proses upgrade, cukup mudah. Jalankan perintah berikut:
+
+```
+pnpm dlx @astrojs/upgrade
+```
+
+Setelah itu, Astro akan menunjukkan `package` mana saja yang dapat langsung diperbarui dan mana yang akan mengalami *breaking changes*.
+
+<img src="https://cdn.jaluwibowo.id/assets/blog/upgrade-astro.jpg" alt="astro upgrade warning" loading="lazy" />
+
+Beberapa breaking changes yang aku temui
+
+1. Merubah nama komponen `<ViewTransitions />`[^1]
+
+Sebelumnya, aku menggunakan `<ViewTransitions />` untuk membuat perpindahan antar halaman lebih seamless. Pada Astro 5.0, komponen ini perlu di-rename menjadi `<ClientRouter />`.
+
+```js
+// Before
+import { ViewTransitions } from "astro:transitions"
+
+// After
+import { ClientRouter } from "astro:transitions"
+```
+
+2. Perubahan di Collections API[^2]
+
+Pada versi baru, `src/content/config.ts` perlu diubah menjadi `src/content.config.ts`. Selain itu, perlu menambahkan properti `loader` saat mendefinisikan *collection*.
+
+```js
+const blog = defineCollection({
+  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: "./src/content/blog" }), // adding this piece of code
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z
+      .string()
+      .or(z.date())
+      .transform((val) => new Date(val)),
+    // ... rest of code
+  }),
+});
+```
+
+Dengan ini, file konten bisa diambil dari folder mana saja, tidak harus berada dalam `src/content`.
+
+3. Perubahan dari `slug` ke `id`
+
+Pada Content Layer yang baru, `slug` digantikan dengan `id`. Semua tempat yang menggunakan `collections` perlu menyesuaikan.
+
+```js
+const posts = await getCollection('blog');
+
+// Before
+return posts.map((post) => ({
+  params: { slug: post.slug },
+  props: post,
+}));
+
+// After
+return posts.map((post) => ({
+  params: { id: post.id },
+  props: post,
+}));
+```
+
+4. Perubahan Fungsi `render()`
+
+Fungsi render kini harus diambil dari `astro:content`, bukan dari dalam `collections`.
+
+```js
+import { type CollectionEntry, getCollection } from 'astro:content';
+import { render } from 'astro:content'; // tambahkan kode ini
+import BlogPost from '../../layouts/BlogPost.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts.map((post) => ({
+		params: { slug: post.slug },
+		props: post,
+	}));
+}
+type Props = CollectionEntry<'blog'>;
+const post = Astro.props;
+
+// Before
+const { Content, remarkPluginFrontmatter, headings } = await post.render();
+
+// After
+const { Content, remarkPluginFrontmatter, headings } = await render(post);
+
+```
+
+# Afterword
+
+Dengan *upgrade* ini selesai, aku semakin bersemangat menulis artikel baru dan menambahkan fitur-fitur baru yang dapat memanfaatkan `Content Layer`. Rencananya, artikel blog akan tetap disimpan di repository agar aku bisa melacak *history* perubahannya lewat `git`, sedangkan konten lainnya bisa menggunakan CMS eksternal.
+
+Ada ide fitur atau CMS eksternal yang sebaiknya aku coba? Masukkan kalian sangat berharga! *Ciao!*
+
+[^1]: [Rename ViewTransitions Component](https://docs.astro.build/en/guides/upgrade-to/v5/#renamed-viewtransitions--component)
+[^2]: [Updating Existing Collections](https://docs.astro.build/en/guides/upgrade-to/v5/#updating-existing-collections)
