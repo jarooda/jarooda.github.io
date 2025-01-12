@@ -1,0 +1,39 @@
+---
+import GTag from "../GTag.astro"
+
+import { SITE_TITLE } from "../../consts"
+const today = new Date()
+---
+
+<footer class="text-center p-4 font-semibold">
+  <p>
+    <span>&copy; {today.getFullYear()} |</span>
+    <a
+      href="/about"
+      class="text-green-900 underline underline-offset-2 hover:text-green-700 font-bold"
+      >{SITE_TITLE}</a
+    >
+    <span class="ml-1">🇮🇩</span>
+    |
+    <a
+      href="https://status.jaluwibowo.id/"
+      target="_blank"
+      class="text-green-900 underline underline-offset-2 hover:text-green-700 font-bold"
+      >Status Page</a
+    >
+  </p>
+  <p>
+    Website code: <a
+      href="https://github.com/jarooda/jarooda.github.io?tab=MIT-1-ov-file"
+      target="_blank"
+      class="text-green-900 underline underline-offset-2 hover:text-green-700 font-bold"
+      >MIT License</a
+    > | Blog content: <a
+      href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+      target="_blank"
+      class="text-green-900 underline underline-offset-2 hover:text-green-700 font-bold"
+      >CC BY-NC-SA 4.0</a
+    >
+  </p>
+</footer>
+<GTag />

@@ -1,21 +1,44 @@
-<script is:inline>
-  document.addEventListener("astro:page-load", () => {
-    const flicking = new Flicking("#flick", {
-      circular: true,
-      align: "center",
-      adaptive: false,
-      horizontal: true
-    })
+---
+import { Icon } from "astro-icon/components"
+---
 
-    flicking.addPlugins(
-      new Flicking.Plugins.AutoPlay({ duration: 10000, direction: "NEXT", stopOnHover: false })
-    )
-    flicking.addPlugins(new Flicking.Plugins.Fade())
-    flicking.addPlugins(new Flicking.Plugins.Arrow())
-  }, { once: true })
+<script is:inline>
+  document.addEventListener(
+    "astro:page-load",
+    () => {
+      const loadingState = document.getElementById("loading-state")
+      const flickElement = document.getElementById("flick")
+
+      const flicking = new Flicking("#flick", {
+        circular: true,
+        align: "center",
+        adaptive: false,
+        horizontal: true
+      })
+
+      flicking.addPlugins(
+        new Flicking.Plugins.AutoPlay({
+          duration: 10000,
+          direction: "NEXT",
+          stopOnHover: false
+        })
+      )
+      flicking.addPlugins(new Flicking.Plugins.Fade())
+      flicking.addPlugins(new Flicking.Plugins.Arrow())
+
+      flicking.on("ready", () => {
+        loadingState.remove()
+        flickElement.classList.remove("hidden")
+      })
+    },
+    { once: true }
+  )
 </script>
 
-<div id="flick" class="flicking-viewport">
+<div id="loading-state" class="flex justify-center items-center">
+  <Icon name="mdi:loading" class="animate-spin text-slate-900 w-10 h-10" />
+</div>
+<div id="flick" class="flicking-viewport hidden">
   <div class="flicking-camera">
     <slot />
   </div>

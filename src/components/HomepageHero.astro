@@ -1,5 +1,5 @@
 ---
-import Anchor from "./Anchor.astro"
+import Anchor from "./shared/Anchor.astro"
 import JaluLogo from "../assets/icons/jalu-logo.svg"
 
 const firstWords = ["Halo,", "I", "am"]
@@ -54,6 +54,7 @@ const secondWords = ["Jalu", "Wibowo", "Aji"]
       </div>
   
       <aside id="end-about-me" class="flex justify-center flex-wrap gap-4 mt-8 lg:mt-24">
+        <Anchor href="/about">#AboutMe</Anchor>
         <Anchor href="#blog">#Blog</Anchor>
         <Anchor href="#techstacks">#TechStacks</Anchor>
         <Anchor href="#projects">#Projects</Anchor>

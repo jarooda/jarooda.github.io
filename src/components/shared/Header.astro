@@ -1,6 +1,6 @@
 ---
-import HeaderLink from './HeaderLink.astro';
-import '../styles/index.css';
+import HeaderLink from '../HeaderLink.astro';
+import '../../styles/index.css';
 
 interface Props {
 	hasSeparator?: boolean
@@ -27,6 +27,7 @@ const { hasSeparator = true } = Astro.props
 	<nav class=" flex items-center justify-center md:justify-end p-4 w-full h-16 ">
 		<div class=" flex gap-3">
 			<HeaderLink href="/">#Home</HeaderLink>
+      <HeaderLink href="/about">#About</HeaderLink>
 			<HeaderLink href="/projects">#Projects</HeaderLink>
 			<HeaderLink href="/blog">#Blog</HeaderLink>
 		</div>
