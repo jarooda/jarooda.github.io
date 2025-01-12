@@ -6,6 +6,10 @@ import Anchor from "./shared/Anchor.astro"
   document.addEventListener(
     "astro:page-load",
     () => {
+      if (!Matter) {
+        return
+      }
+
       let Engine = Matter.Engine,
         Render = Matter.Render,
         Runner = Matter.Runner,
