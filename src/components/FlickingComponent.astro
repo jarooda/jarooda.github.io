@@ -9,6 +9,10 @@ import { Icon } from "astro-icon/components"
       const loadingState = document.getElementById("loading-state")
       const flickElement = document.getElementById("flick")
 
+      if (!loadingState || !flickElement) {
+        return
+      }
+
       const flicking = new Flicking("#flick", {
         circular: true,
         align: "center",
