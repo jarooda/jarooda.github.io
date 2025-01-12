@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content"
 import ProjectsFeaturedCard from "./ProjectsFeaturedCard.astro"
-import Anchor from "./Anchor.astro"
+import Anchor from "./shared/Anchor.astro"
 
 // Filter featured posts and sort by date
 const posts = (await getCollection("project"))

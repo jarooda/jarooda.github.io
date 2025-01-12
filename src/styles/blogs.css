@@ -171,6 +171,15 @@
   word-break: break-all; /* Allow long words to break */
 }
 
+.blog details {
+  margin-bottom: 0.5rem;
+}
+
+.blog summary {
+  font-weight: 600;
+  cursor: pointer;
+}
+
 /* SPOILER */
 span[data-spoiler] {
   background: black;
