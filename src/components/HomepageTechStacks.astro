@@ -6,6 +6,10 @@ import Anchor from "./shared/Anchor.astro"
   document.addEventListener(
     "astro:page-load",
     () => {
+      if (!Matter) {
+        return
+      }
+
       let Engine = Matter.Engine,
         Render = Matter.Render,
         Runner = Matter.Runner,
@@ -19,6 +23,9 @@ import Anchor from "./shared/Anchor.astro"
         world = engine.world
 
       const container = document.getElementById("matter-js")
+      if (!container) {
+        return
+      }
       const containerWidth = container.offsetWidth
       const containerHeight = container.offsetHeight
 
