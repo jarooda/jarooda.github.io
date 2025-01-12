@@ -19,6 +19,9 @@ import Anchor from "./shared/Anchor.astro"
         world = engine.world
 
       const container = document.getElementById("matter-js")
+      if (!container) {
+        return
+      }
       const containerWidth = container.offsetWidth
       const containerHeight = container.offsetHeight
 
