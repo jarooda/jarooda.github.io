@@ -7,9 +7,10 @@ interface Props {
   icon?: string
   block?: boolean
   isContrast?: boolean
+  test?: string
 }
 
-const { href, rel, target, icon, block, isContrast } = Astro.props;
+const { href, rel, target, icon, block, isContrast, test } = Astro.props;
 ---
 
 <a
@@ -17,6 +18,7 @@ const { href, rel, target, icon, block, isContrast } = Astro.props;
   rel={ rel }
   target={ target }
   class={ `relative px-4 py-2 overflow-hidden font-semibold ${ isContrast ? 'text-white bg-gray-700' : 'text-gray-700 bg-white shadow-md'} rounded-sm group text-sm md:text-base ${ block ? 'w-full text-center' : 'w-max' }` }
+  data-test={ test }
 >
   <span class={ `${isContrast ? 'border-gray-500 w-full' : 'border-gray-700 group-hover:w-full w-0'} absolute h-0 transition-all duration-300 border-t-2 border-gray-700 ease top-0 left-0` } />
   {

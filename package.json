@@ -8,7 +8,9 @@
     "start": "astro dev",
     "build": "SENTRY_LOG_LEVEL=error astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "cypress:run": "cypress run",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@iconify-json/fluent": "^1.2.7",
@@ -30,6 +32,7 @@
     "@types/html-escaper": "^3.0.2",
     "@types/toastify-js": "^1.12.3",
     "astro": "^5.1.2",
+    "cypress": "^13.17.0",
     "hast-util-to-string": "^3.0.1",
     "hastscript": "^9.0.0",
     "html-escaper": "^3.0.3",

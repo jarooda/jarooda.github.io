@@ -168,6 +168,7 @@ const socials = [
                 target="_blank"
                 class=" flex flex-row gap-2 hover:drop-shadow-md w-10 h-10 md:w-12 md:h-12 items-center justify-center"
                 aria-label={social.label}
+                data-test={`social-${social.label}`}
               >
                 <Icon
                   name={social.icon}
@@ -185,6 +186,7 @@ const socials = [
                 type="email"
                 name="email"
                 id="email"
+                data-test="input-email"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer"
                 placeholder=" "
                 required
@@ -200,6 +202,7 @@ const socials = [
                 type="text"
                 name="name"
                 id="name"
+                data-test="input-name"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer"
                 placeholder=" "
                 required
@@ -215,6 +218,7 @@ const socials = [
                 name="message"
                 rows="5"
                 id="message"
+                data-test="input-message"
                 class="resize-none block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer"
                 placeholder=" "
                 required></textarea>
@@ -229,6 +233,7 @@ const socials = [
           <div class="flex justify-end w-full mt-4">
             <button
               id="send-msg-btn"
+              data-test="send-msg-btn"
               type="button"
               class="relative px-4 py-2 overflow-hidden font-semibold text-gray-700 bg-white shadow-md rounded-sm group text-sm md:text-base w-max"
             >
