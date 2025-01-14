@@ -52,7 +52,8 @@ import Anchor from "./shared/Anchor.astro"
 
       function getY() {
         return Math.floor(
-          container.offsetHeight * 0.05 + Math.random() * container.offsetHeight * 0.2
+          container.offsetHeight * 0.05 +
+            Math.random() * container.offsetHeight * 0.2
         )
       }
 
@@ -304,9 +305,41 @@ import Anchor from "./shared/Anchor.astro"
 
       const stack = Composite.create()
 
+      function shuffle(array) {
+        let currentIndex = array.length,
+          randomIndex
+
+        while (currentIndex != 0) {
+          randomIndex = Math.floor(Math.random() * currentIndex)
+          currentIndex--
+          ;[array[currentIndex], array[randomIndex]] = [
+            array[randomIndex],
+            array[currentIndex]
+          ]
+        }
+
+        return array
+      }
+
+      shuffle(icons)
+
+      function loadImg(url, onSuccess) {
+        const imgUrl = generateUrl(url)
+        const img = new Image()
+        img.onload = () => {
+          onSuccess()
+        }
+        img.onerror = () => {
+          console.info(`Image not rendered: ${imgUrl}, check your connection`)
+        }
+        img.src = imgUrl
+      }
+
       icons.forEach((icon) => {
-        const createdIcon = createIcon(icon.url, icon.shape, icon.options)
-        Composite.add(stack, createdIcon)
+        loadImg(icon.url, () => {
+          const createdIcon = createIcon(icon.url, icon.shape, icon.options)
+          Composite.add(stack, createdIcon)
+        })
       })
 
       function getWallThickness(thickness) {
@@ -408,12 +441,14 @@ import Anchor from "./shared/Anchor.astro"
 
       function addStacks() {
         const randomIcon = icons[Math.floor(Math.random() * icons.length)]
-        const createdIcon = createIcon(
-          randomIcon.url,
-          randomIcon.shape,
-          randomIcon.options
-        )
-        Composite.add(stack, createdIcon)
+        loadImg(randomIcon.url, () => {
+          const createdIcon = createIcon(
+            randomIcon.url,
+            randomIcon.shape,
+            randomIcon.options
+          )
+          Composite.add(stack, createdIcon)
+        })
       }
 
       // using window observer, if id techstacks is visible, then run the render
@@ -474,7 +509,10 @@ import Anchor from "./shared/Anchor.astro"
     >
       <h1>#TechStacks</h1>
       <div class="flex w-full md:justify-end justify-center">
-        <button id="add" class="p-0 m-0 flex h-min w-fit items-center mt-3 md:mt-0">
+        <button
+          id="add"
+          class="p-0 m-0 flex h-min w-fit items-center mt-3 md:mt-0"
+        >
           <Anchor href="javascript:void(0)" icon="mdi:shape-add">
             Add Stack
           </Anchor>
