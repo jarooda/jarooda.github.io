@@ -34,6 +34,7 @@ const iconStacks = stacks.filter((stack) => getIcon(stack)).reverse()
   href={demo || repo}
   target="_blank"
   class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col xl:flex-row p-4"
+  data-test={`featured-project-${index}`}
 >
   <Image
     src={heroImage}

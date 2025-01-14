@@ -2,7 +2,8 @@
   "extends": "astro/tsconfigs/base",
   "compilerOptions": {
     "strictNullChecks": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "types": ["cypress"]
   },
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist"]

@@ -326,6 +326,7 @@ import Anchor from "./shared/Anchor.astro"
       function loadImg(url, onSuccess) {
         const imgUrl = generateUrl(url)
         const img = new Image()
+        img.crossOrigin = "anonymous"
         img.onload = () => {
           onSuccess()
         }
@@ -511,6 +512,7 @@ import Anchor from "./shared/Anchor.astro"
       <div class="flex w-full md:justify-end justify-center">
         <button
           id="add"
+          data-test="add-stack-button"
           class="p-0 m-0 flex h-min w-fit items-center mt-3 md:mt-0"
         >
           <Anchor href="javascript:void(0)" icon="mdi:shape-add">
@@ -521,6 +523,6 @@ import Anchor from "./shared/Anchor.astro"
     </div>
   </div>
   <div class="w-full h-128">
-    <div id="matter-js" class="w-full h-full cursor-grab"></div>
+    <div id="matter-js" data-test="techstack-canvas" class="w-full h-full cursor-grab"></div>
   </div>
 </section>
