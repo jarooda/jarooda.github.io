@@ -23,7 +23,7 @@ interface Props extends AstroProps {
 }
 
 const { title, description, pubDate, updatedDate, heroImage, metaImage, remark, headings, tags, otherUrl } = Astro.props;
-const headerTitle = title + ' - ' + SITE_TITLE
+const headerTitle = title + ' - Article by ' + SITE_TITLE
 
 const removeSRLabel = (text: string) => {
   const labelStart = text.indexOf('Section titled')
