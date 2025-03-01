@@ -20,7 +20,7 @@ const posts = (await getCollection("project"))
       <h1 class="mb-4">#Projects</h1>
     </div>
     <section class="overflow-hidden py-16">
-      <div id="cards" class="mx-auto w-full">
+      <div id="cards" class="mx-auto w-10/12">
         {
           posts.slice(0, 3).map((post, index) => (
             <div class="card w-full min-h-128 relative origin-[50%_-160%] px-8">
@@ -32,7 +32,7 @@ const posts = (await getCollection("project"))
             </div>
           ))
         }
-        <div class="card w-full min-h-128 relative origin-[50%_-160%] px-8">
+        <div class="card w-full min-h-[26rem] relative origin-[50%_-160%] px-8">
           <div
             class="flex justify-center items-center text-md md:text-xl bg-white border border-gray-200 rounded-lg shadow-sm h-full"
           >
