@@ -1,3 +1,141 @@
-<h1>
-  Under Construction ...
-</h1>
+---
+import { ClientRouter } from "astro:transitions"
+import { Icon } from "astro-icon/components"
+
+import BaseHead from "../components/shared/BaseHead.astro"
+import Header from "../components/shared/Header.astro"
+import Footer from "../components/shared/Footer.astro"
+import FormattedDate from "../components/FormattedDate.astro"
+
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts"
+import "../styles/base.css"
+
+const title = `Talks - ${SITE_TITLE}`
+
+const topics = [
+  {
+    id: "chrome-extension",
+    title: "Extensions: Level Up Your Browser",
+    description:
+      "Learn how to build a Chrome Extension using HTML, CSS, and JavaScript and power up your browser experience."
+  },
+  {
+    id: 'unit-testing-in-front-end',
+    title: 'Unit Testing in Frontend Web',
+    description: 'Learn how to write unit tests for your Vue web applications using Jest.'
+  }
+]
+
+const talks = {
+  "chrome-extension": [
+    {
+      date: "2025-03-20",
+      venue: "Sekolah.mu Tech Talks",
+      venueLink: "https://www.youtube.com/@techinsekolahmu2926",
+      location: "Online (hosted by Sekolah.mu)",
+      slides: "https://talks.jaluwibowo.id/sekolahmu-talks-chrome-extension",
+      pdf: "",
+      video: ""
+    }
+  ],
+  "unit-testing-in-front-end": [
+    {
+      date: "2022-03-31",
+      venue: "Sekolah.mu Tech Talks",
+      venueLink: "https://www.youtube.com/@techinsekolahmu2926",
+      location: "Online (hosted by Sekolah.mu)",
+      slides: "",
+      pdf: "",
+      video: "https://www.youtube.com/watch?v=MbHpd0g2SVA&ab_channel=TechinSekolahmu"
+    }
+  ]
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={SITE_DESCRIPTION} />
+    <ClientRouter />
+  </head>
+  <body class="font-inter">
+    <Header />
+    <main class="bg-white pt-20">
+      <section class="mx-auto w-full lg:w-256 p-4 min-h-screen">
+        <h1 class="w-max text-2xl md:text-5xl font-semibold mb-8">#Talks</h1>
+        <section class="w-full flex flex-col gap-4">
+          {
+            topics.map((topic) => (
+              <article class=" w-full flex flex-col">
+                <h2 class=" text-xl font-semibold">{topic.title}</h2>
+                <p
+                  class=" text-base italic
+                  font-base text-gray-500"
+                >
+                  {topic.description}
+                </p>
+
+                <ul class="flex flex-col gap-4 mt-4">
+                  {talks[topic.id] &&
+                    talks[topic.id].map((talk) => (
+                      <li class="grid grid-cols-2 gap-4">
+                        <div>
+                          <a
+                            href={talk.venueLink}
+                            class="text-blue-500 font-semibold"
+                          >
+                            {talk.venue}
+                          </a>
+
+                          <p class="text-gray-500 text-sm">
+                            <FormattedDate date={new Date(talk.date)} /> ·{" "}
+                            {talk.location}
+                          </p>
+                        </div>
+                        <div class="flex flex-row-reverse gap-4">
+                          {talk.pdf && (
+                            <a
+                              href={talk.pdf}
+                              class="text-blue-500 font-semibold flex items-center"
+                            >
+                              <Icon name="mdi:file-pdf-box" class="h-5 mr-1" />
+                              PDF
+                            </a>
+                          )}
+                          {talk.slides && (
+                            <a
+                              href={talk.slides}
+                              class="text-blue-500 font-semibold flex items-center"
+                            >
+                              <Icon
+                                name="mdi:slideshow"
+                                class="h-5 mr-1"
+                              />
+                              Slides
+                            </a>
+                          )}
+
+                          {talk.video && (
+                            <a
+                              href={talk.video}
+                              class="text-blue-500 font-semibold flex items-center"
+                            >
+                              <Icon name="mdi:video-chat" class="h-5 mr-1" />
+                              Watch
+                            </a>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                </ul>
+
+                <div class=" w-2/3 border-b mx-auto my-4" />
+              </article>
+            ))
+          }
+        </section>
+      </section>
+      <Footer />
+    </main>
+  </body>
+</html>
