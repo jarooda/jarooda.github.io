@@ -8,48 +8,10 @@ import Footer from "../components/shared/Footer.astro"
 import FormattedDate from "../components/FormattedDate.astro"
 
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts"
+import { talks, venue, topics } from "../content/talks"
 import "../styles/base.css"
 
 const title = `Talks - ${SITE_TITLE}`
-
-const topics = [
-  {
-    id: "chrome-extension",
-    title: "Extensions: Level Up Your Browser",
-    description:
-      "Learn how to build a Chrome Extension using HTML, CSS, and JavaScript and power up your browser experience."
-  },
-  {
-    id: 'unit-testing-in-front-end',
-    title: 'Unit Testing in Frontend Web',
-    description: 'Learn how to write unit tests for your Vue web applications using Jest.'
-  }
-]
-
-const talks = {
-  "chrome-extension": [
-    {
-      date: "2025-03-20",
-      venue: "Sekolah.mu Tech Talks",
-      venueLink: "https://www.youtube.com/@techinsekolahmu2926",
-      location: "Online (hosted by Sekolah.mu)",
-      slides: "https://talks.jaluwibowo.id/sekolahmu-talks-chrome-extension",
-      pdf: "",
-      video: ""
-    }
-  ],
-  "unit-testing-in-front-end": [
-    {
-      date: "2022-03-31",
-      venue: "Sekolah.mu Tech Talks",
-      venueLink: "https://www.youtube.com/@techinsekolahmu2926",
-      location: "Online (hosted by Sekolah.mu)",
-      slides: "",
-      pdf: "",
-      video: "https://www.youtube.com/watch?v=MbHpd0g2SVA&ab_channel=TechinSekolahmu"
-    }
-  ]
-}
 ---
 
 <!doctype html>
@@ -81,15 +43,16 @@ const talks = {
                       <li class="grid grid-cols-2 gap-4">
                         <div>
                           <a
-                            href={talk.venueLink}
+                            href={venue[talk.venue].link}
                             class="text-blue-500 font-semibold"
+                            target="_blank"
                           >
-                            {talk.venue}
+                            {venue[talk.venue].name}
                           </a>
 
                           <p class="text-gray-500 text-sm">
-                            <FormattedDate date={new Date(talk.date)} /> ·{" "}
-                            {talk.location}
+                            <FormattedDate date={new Date(talk.date)} lang="en" /> ·{" "}
+                            {venue[talk.venue].location}
                           </p>
                         </div>
                         <div class="flex flex-row-reverse gap-4">
@@ -97,6 +60,8 @@ const talks = {
                             <a
                               href={talk.pdf}
                               class="text-blue-500 font-semibold flex items-center"
+                              download
+                              target="_blank"
                             >
                               <Icon name="mdi:file-pdf-box" class="h-5 mr-1" />
                               PDF
@@ -119,6 +84,7 @@ const talks = {
                             <a
                               href={talk.video}
                               class="text-blue-500 font-semibold flex items-center"
+                              target="_blank"
                             >
                               <Icon name="mdi:video-chat" class="h-5 mr-1" />
                               Watch
