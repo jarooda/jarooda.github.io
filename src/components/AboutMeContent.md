@@ -2,7 +2,7 @@
 
 😼 Hey there! I’m **Jalu Wibowo Aji**, but you can just call me **`Jalu`**.
 
-🧑‍💻 I’m a software engineer with over **3** years of experience building cool stuff for the web. Right now, I’m part of the awesome team at [Sekolah.mu](https://sekolah.mu), where I dive deep into Vue.js magic every day. My coding adventure started at [Hacktiv8 Bootcamp](https://www.hacktiv8.com/), and the learning hasn’t stopped since—I’m currently working on my Bachelor’s degree at [Universitas Terbuka](https://www.ut.ac.id/en/).
+🧑‍💻 I’m a software engineer with over **4** years of experience building cool stuff for the web. Right now, I’m part of the awesome team at [Sekolah.mu](https://sekolah.mu), where I dive deep into Vue.js magic every day. My coding adventure started at [Hacktiv8 Bootcamp](https://www.hacktiv8.com/), and the learning hasn’t stopped since—I’m currently working on my Bachelor’s degree at [Universitas Terbuka](https://www.ut.ac.id/en/).
 
 🤝 When I’m not typing away at my keyboard, you’ll probably find me geeking out with fellow devs at `Semarang`-based tech community meetups. Wanna chat or collab? Let’s connect [online](/#contactme)—I’d love to hear from you!
 
