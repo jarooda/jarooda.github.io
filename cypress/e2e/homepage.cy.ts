@@ -8,7 +8,7 @@ describe("Homepage", () => {
   it("ensure hero text animation is working", () => {
     cy.get(getElement("hero-text")).should(
       "contain.text",
-      "Software Engineer with more than three years of experience."
+      "Software Engineer with more than four years of experience."
     )
 
     cy.get(getElement("changing-text")).then((el) => {
