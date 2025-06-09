@@ -1,3 +1,4 @@
+import 'cypress-wait-until';
 import { baseUrl, getElement } from "../helper"
 
 describe("Homepage", () => {
@@ -50,16 +51,19 @@ describe("Homepage", () => {
 
       const initialImage = canvas.toDataURL()
       cy.get(getElement("add-stack-button")).click()
-      cy.wait(500)
 
-      cy.get(getElement("techstack-canvas") + " canvas").should(
-        ($updatedCanvas) => {
-          const updatedCanvas = $updatedCanvas[0] as HTMLCanvasElement
-          const updatedImage = updatedCanvas.toDataURL()
-
-          expect(updatedImage).not.to.equal(initialImage)
-        }
-      )
+      cy.waitUntil(() => {
+        return cy
+          .get(getElement("techstack-canvas") + " canvas")
+          .then(($updatedCanvas) => {
+            const updatedCanvas = $updatedCanvas[0] as HTMLCanvasElement
+            const updatedImage = updatedCanvas.toDataURL()
+            return updatedImage !== initialImage
+          })
+      }, {
+        timeout: 3000,
+        interval: 200
+      })
     })
   })
 
