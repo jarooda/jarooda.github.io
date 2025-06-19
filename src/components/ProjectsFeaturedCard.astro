@@ -33,22 +33,18 @@ const iconStacks = stacks.filter((stack) => getIcon(stack)).reverse()
 <a
   href={demo || repo}
   target="_blank"
-  class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col xl:flex-row p-4"
+  class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col xl:flex-row p-4 hover:scale-105 transition-transform duration-300 ease-in-out"
   data-test={`featured-project-${index}`}
 >
-  <Image
-    src={heroImage}
-    class="rounded-lg object-cover w-full h-64 xl:w-[600px] xl:h-[338px]"
-    alt={title}
-    width={600}
-    height={338}
-    loading="lazy"
-  />
+  <div style={{
+    backgroundImage: `url(${heroImage})`
+  }}
+  class="relative flex-1 rounded-lg overflow-hidden bg-cover bg-center h-[500px]">
 
-  <div class="flex flex-col justify-between">
+  <div class="flex flex-col justify-between absolute bottom-0 bg-gray-50/50 text-black backdrop-blur-sm w-full p-4">
     <div class="flex flex-col justify-end px-4">
       <h2
-        class="md:text-xl text-base font-bold tracking-tight text-center sm:text-left text-gray-700 my-4"
+        class="md:text-xl text-base font-bold tracking-tight text-center sm:text-left mb-4"
       >
         {title}
       </h2>
@@ -57,7 +53,7 @@ const iconStacks = stacks.filter((stack) => getIcon(stack)).reverse()
       </div>
     </div>
 
-    <div class="hidden xl:flex relative h-full">
+    <!-- <div class="hidden xl:flex relative h-full">
       {
         iconStacks.map((stack, index) => (
           <div class="absolute bottom-0" style={{ right: `${index * 45}px` }}>
@@ -65,7 +61,9 @@ const iconStacks = stacks.filter((stack) => getIcon(stack)).reverse()
           </div>
         ))
       }
-    </div>
+    </div> -->
+  </div>
+
   </div>
 </a>
 

@@ -5,3 +5,15 @@
     @apply flex items-center gap-2 scroll-mt-20;
   }
 }
+
+@theme {
+  --font-display: "Inter", sans-serif;
+  --spacing-128: 32rem;
+  --spacing-160: 40rem;
+  --spacing-192: 48rem;
+  --spacing-224: 56rem;
+  --spacing-256: 64rem;
+  --spacing-288: 72rem;
+  --spacing-320: 80rem;
+  --max-width-20: 20px;
+}
