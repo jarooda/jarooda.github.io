@@ -36,17 +36,25 @@
         </p>
 
         <div>
-          Contoh cloudflare managed
+          Contoh cloudflare manual verification
+          <button
+            id="verify-button"
+            class="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 mb-4"
+          >
+            Click to Verify
+          </button>
           <div
+            id="turnstile-widget"
             class="cf-turnstile"
             data-sitekey="0x4AAAAAAAi_73T9hRyQMmTR"
             data-size="flexible"
-            data-callback="callbackManaged"
-            data-error-callback="errCbManaged"
-            data-appearance="always"
+            data-callback="callbackNonInteractive"
+            data-error-callback="errCbNonInteractive"
+            data-appearance="interaction-only"
             data-before-interactive-callback="beforeInteractive"
             data-after-interactive-callback="afterInteractive"
-            data-unsupported-callback="errCbManaged"
+            data-unsupported-callback="errCbNonInteractive"
+            style="display: none;"
           ></div>
         </div>
         <button
@@ -70,7 +78,8 @@
       function cb(token, log) {
         console.log(token, log)
         // set token to hidden form input
-        document.getElementById("token-preview").innerText = "check console"
+        document.getElementById("token").value = token
+        document.getElementById("token-preview").innerText = "Token received! Check console for details"
         // enable login button
         document.getElementById("login").removeAttribute("disabled")
       }
@@ -79,6 +88,8 @@
         console.error(error, log)
         document.getElementById("token-preview").innerText =
           "Error:" + JSON.stringify(error)
+        // disable login button on error
+        document.getElementById("login").setAttribute("disabled", "true")
       }
 
       function callbackNonInteractive(token) {
@@ -89,18 +100,29 @@
         errCb(error, " <- error from non-interactive")
       }
 
-      function callbackManaged(token) {
-        cb(token, " <- token from managed")
-      }
-
-      function errCbManaged(error) {
-        errCb(error, " <- error from managed")
-      }
+      // Manual verification button handler
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("verify-button").addEventListener("click", () => {
+          // Show the Turnstile widget when user clicks verify
+          document.getElementById("turnstile-widget").style.display = "block"
+          document.getElementById("verify-button").style.display = "none"
+          document.getElementById("token-preview").innerText = "Please complete the verification challenge"
+        })
+      })
 
       document.getElementById("login").addEventListener("click", async () => {
         const user = document.getElementById("user").value
         const password = document.getElementById("password").value
         const token = document.getElementById("token").value
+
+        if (!token) {
+          Swal.fire({
+            icon: "error",
+            title: "Verification Required",
+            text: "Please complete the verification challenge first"
+          })
+          return
+        }
 
         const data = {
           message: `User: ${user}, Password: ${password}, Token: ${token}`
