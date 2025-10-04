@@ -12,6 +12,7 @@ interface Props {
   ariaLabel?: string
   as?: "button" | "a"
   block?: boolean
+  dataCollection?: string
 }
 
 const {
@@ -26,7 +27,8 @@ const {
   rel,
   ariaLabel,
   as = href ? "a" : "button",
-  block = false
+  block = false,
+  dataCollection
 } = Astro.props
 
 import { Icon } from "astro-icon/components"
@@ -40,6 +42,7 @@ const baseClass = `cursor-pointer relative px-4 py-2 overflow-hidden font-semibo
   <a
     id={id}
     data-test={dataTest}
+    data-collection={dataCollection}
     href={href}
     target={target}
     rel={rel}

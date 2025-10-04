@@ -6,7 +6,8 @@ type Props = HTMLAttributes<'a'>;
 const { href, class: className, ...props } = Astro.props;
 
 const { pathname } = Astro.url;
-const isActive = href === pathname || href === pathname.replace(/\/$/, '');
+const hrefString = href?.toString() || '';
+const isActive = hrefString === pathname || hrefString === pathname.replace(/\/$/, '') || (hrefString && hrefString !== '/' && pathname.startsWith(hrefString));
 ---
 
 <a href={href} class:list={[className, { 'font-semibold pointer-events-none border-b-2 border-gray-700 dark:border-gray-300 text-gray-700': isActive }, { 'relative group font-semibold text-stroke-white text-lg': true }, { 'text-gray-700 hover:text-slate-900 hover:font-semibold': !isActive } ]} {...props}>

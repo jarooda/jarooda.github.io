@@ -9,9 +9,11 @@ interface Props {
   block?: boolean
   isContrast?: boolean
   test?: string
+  dataCollection?: string
+  class?: string
 }
 
-const { href, rel, target, icon, block, isContrast, test } = Astro.props;
+const { href, rel, target, icon, block, isContrast, test, dataCollection, class: className } = Astro.props;
 ---
 
 <AnimatedButton
@@ -20,8 +22,9 @@ const { href, rel, target, icon, block, isContrast, test } = Astro.props;
   target={target}
   iconName={icon}
   block={block}
-  isContrast={true}
   dataTest={test}
+  dataCollection={dataCollection}
+  class={className}
   as="a"
 >
   <slot />

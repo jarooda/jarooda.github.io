@@ -3,3 +3,4 @@
 User-agent: *
 Disallow: /404.html
 Disallow: /demo/
+Disallow: /about/collections

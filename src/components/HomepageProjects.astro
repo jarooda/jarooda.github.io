@@ -23,7 +23,7 @@ const posts = (await getCollection("project"))
       <div id="cards" class="mx-auto w-full">
         {
           posts.slice(0, 3).map((post, index) => (
-            <div class="card w-full min-h-80 relative origin-[50%_-160%] px-8">
+            <div class="card w-full min-h-100 relative origin-[50%_-160%] px-8">
               <ProjectsFeaturedCard
                 {...post.data}
                 post={post}
