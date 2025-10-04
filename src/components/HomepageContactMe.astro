@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components"
+import AnimatedButton from "./shared/AnimatedButton.astro"
 
 const url = import.meta.env.PUBLIC_CONTACT_ME_API
 const socials = [
@@ -145,11 +146,11 @@ const socials = [
 <contact-me data-url={url}>
   <section
     id="contactme"
-    class="min-h-screen justify-center flex flex-col bg-gray-200 text-gray-700 z-[2]"
+    class="min-h-screen justify-center flex flex-col bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 z-[2] transition-colors duration-200"
   >
-    <div class="mx-auto w-full md:w-192 py-4 px-4 md:py-12">
+    <div class="mx-auto w-full lg:w-256 py-4 px-4 md:py-12">
       <div
-        class="w-full text-center flex flex-col md:flex-row gap-0 md:gap-4 text-2xl md:text-5xl font-semibold"
+        class="w-full flex flex-col md:flex-row text-center gap-0 md:gap-4 text-2xl md:text-5xl font-semibold"
       >
         <h1 class="">#ContactMe</h1>
       </div>
@@ -159,20 +160,20 @@ const socials = [
         </h2>
         <div
           id="social-floating"
-          class="floating flex flex-wrap float-start md:flex-col gap-8 my-8"
+          class="floating flex flex-wrap justify-center md:justify-start float-start md:flex-col gap-8 my-8"
         >
           {
             socials.map((social) => (
               <a
                 href={social.url}
                 target="_blank"
-                class=" flex flex-row gap-2 hover:drop-shadow-md w-10 h-10 md:w-12 md:h-12 items-center justify-center"
+                class="flex flex-row gap-2 hover:drop-shadow-md w-10 h-10 md:w-12 md:h-12 items-center justify-center rounded-full bg-white dark:bg-gray-700 p-3 hover:scale-110 transition-all duration-200 shadow-sm dark:shadow-gray-900"
                 aria-label={social.label}
                 data-test={`social-${social.label}`}
               >
                 <Icon
                   name={social.icon}
-                  class=" w-8 h-8 md:w-10 md:h-10 hover:w-10 hover:h-10 hover:md:w-12 hover:md:h-12"
+                  class="w-full h-full"
                 />
               </a>
             ))
@@ -180,20 +181,20 @@ const socials = [
         </div>
         <h2 class="text-xl md:text-2xl">Or reach me using form below,</h2>
         <form method="POST" class="mt-8 text-base">
-          <div class="bg-white p-6 rounded-lg w-full flex flex-wrap gap-1">
+          <div class="bg-white dark:bg-gray-700 p-6 rounded-lg w-full flex flex-wrap gap-1 transition-colors duration-200">
             <div class="relative z-0 w-full md:w-1/2 mb-4 group">
               <input
                 type="email"
                 name="email"
                 id="email"
                 data-test="input-email"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 dark:text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-500 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 dark:focus:border-green-500 peer"
                 placeholder=" "
                 required
               />
               <label
                 for="email"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 dark:peer-focus:text-green-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >Your Email</label
               >
             </div>
@@ -203,13 +204,13 @@ const socials = [
                 name="name"
                 id="name"
                 data-test="input-name"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 dark:text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-500 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 dark:focus:border-green-500 peer"
                 placeholder=" "
                 required
               />
               <label
                 for="name"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 dark:peer-focus:text-green-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >Your Name</label
               >
             </div>
@@ -219,44 +220,25 @@ const socials = [
                 rows="5"
                 id="message"
                 data-test="input-message"
-                class="resize-none block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 peer"
+                class="resize-none block py-2.5 px-0 w-full text-sm text-gray-900 dark:text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-500 appearance-none focus:outline-none focus:ring-0 focus:border-green-700 dark:focus:border-green-500 peer"
                 placeholder=" "
                 required></textarea>
               <label
                 for="message"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-green-700 dark:peer-focus:text-green-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >Your Message</label
               >
             </div>
           </div>
 
-          <div class="flex justify-end w-full mt-4">
-            <button
+          <div class="flex justify-center md:justify-end w-full mt-4">
+            <AnimatedButton
               id="send-msg-btn"
-              data-test="send-msg-btn"
+              dataTest="send-msg-btn"
               type="button"
-              class="relative px-4 py-2 overflow-hidden font-semibold text-gray-700 bg-white shadow-md rounded-sm group text-sm md:text-base w-max"
-            >
-              <span
-                class="group-hover:w-full w-0 absolute h-0 transition-all duration-300 border-t-2 border-gray-700 ease top-0 left-0"
-              ></span>
-              <span
-                class="group-hover:w-full w-0 absolute h-0 transition-all duration-300 border-b-2 border-gray-700 ease bottom-0 right-0"
-              ></span>
-              <span
-                class="group-hover:h-full h-0 absolute w-0 transition-all duration-300 border-r-2 border-gray-700 ease top-0 right-0"
-              ></span>
-              <span
-                class="group-hover:h-full h-0 absolute w-0 transition-all duration-300 border-l-2 border-gray-700 ease bottom-0 left-0"
-              ></span>
-              <div
-                id="send-msg-btn-title"
-                class="flex justify-center items-center gap-2"
-              >
-                <Icon name="ri:mail-send-fill" class="h-5 max-w-20" />
-                Send Message!
-              </div>
-            </button>
+              iconName="ri:mail-send-fill"
+              text="Send Message!"
+            />
           </div>
         </form>
       </content>
@@ -268,7 +250,7 @@ const socials = [
   .floating {
     @media screen and (min-width: 768px) {
       position: fixed;
-      top: 0;
+      bottom: 0;
       right: 1rem;
       /* transform: translateY(-50%); */
       flex-direction: column;

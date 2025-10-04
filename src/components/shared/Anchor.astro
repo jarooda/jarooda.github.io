@@ -1,5 +1,6 @@
 ---
-import { Icon } from 'astro-icon/components'
+import AnimatedButton from './AnimatedButton.astro'
+
 interface Props {
   href: string
   rel?: string
@@ -13,31 +14,15 @@ interface Props {
 const { href, rel, target, icon, block, isContrast, test } = Astro.props;
 ---
 
-<a
-  href={ href }
-  rel={ rel }
-  target={ target }
-  class={ `relative px-4 py-2 overflow-hidden font-semibold ${ isContrast ? 'text-white bg-gray-700' : 'text-gray-700 bg-white shadow-md'} rounded-sm group text-sm md:text-base ${ block ? 'w-full text-center' : 'w-max' }` }
-  data-test={ test }
+<AnimatedButton
+  href={href}
+  rel={rel}
+  target={target}
+  iconName={icon}
+  block={block}
+  isContrast={true}
+  dataTest={test}
+  as="a"
 >
-  <span class={ `${isContrast ? 'border-gray-500 w-full' : 'border-gray-700 group-hover:w-full w-0'} absolute h-0 transition-all duration-300 border-t-2 border-gray-700 ease top-0 left-0` } />
-  {
-    isContrast && <span class="absolute z-10 h-0 transition-all duration-300 border-t-2 ease top-0 left-0 border-white group-hover:w-full w-0" />
-  }
-  <span class={ `${isContrast ? 'border-gray-500 w-full' : 'border-gray-700 group-hover:w-full w-0'} absolute h-0 transition-all duration-300 border-b-2 border-gray-700 ease bottom-0 right-0` } />
-  {
-    isContrast && <span class="absolute z-10 h-0 transition-all duration-300 border-b-2 ease bottom-0 right-0 border-white group-hover:w-full w-0" />
-  }
-  <span class={ `${isContrast ? 'border-gray-500 h-full' : 'border-gray-700 group-hover:h-full h-0'} absolute w-0 transition-all duration-300 border-r-2 border-gray-700 ease top-0 right-0` }></span>
-  {
-    isContrast && <span class="absolute z-10 w-0 transition-all duration-300 border-r-2 ease top-0 right-0 border-white group-hover:h-full h-0" />
-  }
-  <span class={ `${isContrast ? 'border-gray-500 h-full' : 'border-gray-700 group-hover:h-full h-0'} absolute w-0 transition-all duration-300 border-l-2 border-gray-700 ease bottom-0 left-0` }></span>
-  {
-    isContrast && <span class="absolute z-10 w-0 transition-all duration-300 border-l-2 ease bottom-0 left-0 border-white group-hover:h-full h-0" />
-  }
-  <div class=" flex justify-center items-center gap-2">
-    { icon && <Icon name={icon} class="h-5 max-w-20" /> }
-    <slot />
-  </div>
-</a>
+  <slot />
+</AnimatedButton>

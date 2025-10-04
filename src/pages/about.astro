@@ -21,10 +21,10 @@ const title = "About Me | " + SITE_TITLE + " - Frontend Developer"
     <script src="../utils/anchor-removal.ts" />
     <ClientRouter />
   </head>
-  <body class="bg-white font-inter">
+  <body class="bg-white dark:bg-gray-900 font-inter transition-colors duration-200">
     <Header hasSeparator={false} />
     <main
-      class="pt-20 mx-auto w-full lg:w-224 p-4 min-h-[calc(100vh-80px)] blog"
+      class="pt-20 mx-auto w-full lg:w-224 p-4 min-h-[calc(100vh-80px)] blog text-gray-700 dark:text-gray-300"
     >
       <astro-anchor-removal>
         <AboutMeContent />

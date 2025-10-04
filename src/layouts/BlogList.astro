@@ -24,15 +24,15 @@ const title = `${header} - ${SITE_TITLE}`
     <BaseHead title={title} description={SITE_DESCRIPTION} />
     <ClientRouter />
   </head>
-  <body>
+  <body class="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 transition-colors duration-200">
     <Header />
-    <main class="bg-white pt-20">
+    <main class="bg-white dark:bg-gray-900 pt-20">
       <section class="mx-auto w-full lg:w-224 p-4 min-h-screen">
         <h1 class="w-max text-2xl md:text-5xl font-semibold mb-8">#{header}</h1>
         <ul class="flex flex-col justify-center gap-4">
           {
             posts.map((post) => (
-              <li class=" w-full flex flex-col md:flex-row bg-white rounded-lg">
+              <li class="w-full flex flex-col md:flex-row bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-200">
                 <figure>
                   <Image
                     width={300}
@@ -43,7 +43,7 @@ const title = `${header} - ${SITE_TITLE}`
                     loading="lazy"
                   />
                 </figure>
-                <div class=" w-full p-4 flex flex-col gap-1 border-l md:border-l-0 md:border-t border-b border-r border-gray-400 md:rounded-tr-lg rounded-br-lg rounded-bl-lg md:rounded-bl-none">
+                <div class="w-full p-4 flex flex-col gap-1 border-l md:border-l-0 md:border-t border-b border-r border-gray-400 dark:border-gray-600 md:rounded-tr-lg rounded-br-lg rounded-bl-lg md:rounded-bl-none transition-colors duration-200">
                   <a href={`/blog/${post.id}/`}>
                     <h4 class=" text-xl font-bold hover:underline underline-offset-4">
                       {post.data.title}

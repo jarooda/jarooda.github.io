@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 @layer components {
   .blog *:is(h1, h2, h3, h4, h5, h6) {
     @apply flex items-center gap-2 scroll-mt-20;

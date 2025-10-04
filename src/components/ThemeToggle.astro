@@ -1,0 +1,89 @@
+---
+// Theme Toggle Component
+import { Icon } from "astro-icon/components"
+
+const theme = {
+  dark: "fluent:weather-sunny-20-filled",
+  light: "fluent:weather-moon-20-filled"
+}
+---
+
+<button
+  id="theme-toggle"
+  class="relative p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
+  aria-label="Toggle dark mode"
+  data-test="theme-toggle"
+>
+  <!-- Sun icon (visible in dark mode) -->
+  <Icon
+    id="sun-icon"
+    class="w-5 h-5 text-gray-700 dark:text-gray-200 hidden dark:block"
+    name={theme.dark}
+  />
+
+  <!-- Moon icon (visible in light mode) -->
+  <Icon
+    id="moon-icon"
+    class="w-5 h-5 text-gray-700 dark:text-gray-200 block dark:hidden"
+    name={theme.light}
+  />
+</button>
+
+<script>
+  // Theme toggle with proper cleanup for Astro page transitions
+  declare global {
+    interface Window {
+      themeToggleHandler?: (e: Event) => void;
+    }
+  }
+
+  function setupTheme() {
+    const themeToggle = document.getElementById("theme-toggle")
+
+    if (!themeToggle) {
+      return
+    }
+
+    // Remove old handler if exists
+    if (window.themeToggleHandler) {
+      themeToggle.removeEventListener('click', window.themeToggleHandler);
+    }
+
+    // Apply initial theme (already applied in BaseHead, but ensure it's correct)
+    const savedTheme = localStorage.getItem("theme")
+    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+    const initialTheme = savedTheme || (systemPrefersDark ? "dark" : "light")
+
+    if (initialTheme === "dark") {
+      document.documentElement.classList.add("dark")
+    } else {
+      document.documentElement.classList.remove("dark")
+    }
+
+    // Create new handler
+    window.themeToggleHandler = function (e: Event) {
+      e.preventDefault()
+      e.stopPropagation()
+
+      const html = document.documentElement
+      const currentlyDark = html.classList.contains("dark")
+
+      if (currentlyDark) {
+        html.classList.remove("dark")
+        localStorage.setItem("theme", "light")
+      } else {
+        html.classList.add("dark")
+        localStorage.setItem("theme", "dark")
+      }
+    }
+
+    // Add click handler
+    themeToggle.addEventListener('click', window.themeToggleHandler);
+  }
+
+  // Run setup
+  setupTheme()
+
+  // For Astro page transitions
+  document.addEventListener("astro:page-load", setupTheme)
+</script>

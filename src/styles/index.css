@@ -6,6 +6,25 @@
   --sky-300: #bae6fd;
   --white: #fff;
   --underline-offset: 2px;
+  
+  /* Light mode colors */
+  --bg-primary: #fff;
+  --bg-secondary: #f5f5f5;
+  --bg-gray: #e5e7eb;
+  --text-primary: #374151;
+  --text-secondary: #6b7280;
+  --border-color: #d1d5db;
+}
+
+.dark {
+  /* Dark mode colors */
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-gray: #374151;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --border-color: #4b5563;
+  --sky-300: #374151;
 }
 
 html {
@@ -36,6 +55,11 @@ mark:hover {
   text-decoration: none;
   background-color: var(--green-700);
   color: white;
+}
+
+.dark mark:hover {
+  background-color: var(--green-500);
+  color: black;
 }
 
 .text-stroke-white {

@@ -1,5 +1,7 @@
 ---
 import HeaderLink from '../HeaderLink.astro';
+import ThemeToggle from '../ThemeToggle.astro';
+import { Icon } from 'astro-icon/components';
 import '../../styles/index.css';
 
 interface Props {
@@ -7,33 +9,216 @@ interface Props {
 }
 
 const { hasSeparator = true } = Astro.props
+const isHomePage = Astro.url.pathname === '/';
 ---
-<script>
-  // after 60px of scroll, add fixed to header & remove separator
-  window.addEventListener('scroll', () => {
-    const separator = document.getElementById('web-header-separator');
-    
-    if (separator) {
-      if (window.scrollY > 64) {
-        separator.classList.add('hidden');
-      } else {
-        separator.classList.remove('hidden');
+
+<!-- Inline script to prevent flash - runs immediately -->
+{isHomePage && (
+  <script is:inline>
+    (function() {
+      if (window.innerWidth < 768) {
+        const style = document.createElement('style');
+        style.id = 'header-init-style';
+        style.textContent = '#main-header { transform: translateY(-100%); }';
+        document.head.appendChild(style);
       }
+    })();
+  </script>
+)}
+
+<script>
+  // Declare global type
+  declare global {
+    interface Window {
+      headerScrollListener?: () => void;
     }
-  });
+  }
+  
+  function initHeader() {
+    const header = document.querySelector('header');
+    const separator = document.getElementById('web-header-separator');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const hamburger = document.getElementById('hamburger-btn');
+    const closeMenu = document.getElementById('close-menu-btn');
+    const mobileMenuLinks = document.querySelectorAll('#mobile-menu a');
+    const isHomePage = window.location.pathname === '/';
+    const isMobile = window.innerWidth < 768;
+    
+    // Remove inline style once JS takes over
+    const initStyle = document.getElementById('header-init-style');
+    if (initStyle) {
+      initStyle.remove();
+    }
+    
+    // Mobile menu toggle handlers
+    const openMobileMenu = () => {
+      if (mobileMenu) {
+        mobileMenu.classList.remove('translate-x-full');
+        mobileMenu.classList.add('translate-x-0');
+        document.body.style.overflow = 'hidden';
+      }
+    };
+    
+    const closeMobileMenu = () => {
+      if (mobileMenu) {
+        mobileMenu.classList.remove('translate-x-0');
+        mobileMenu.classList.add('translate-x-full');
+        document.body.style.overflow = '';
+      }
+    };
+    
+    if (hamburger) {
+      hamburger.addEventListener('click', openMobileMenu);
+    }
+    
+    if (closeMenu) {
+      closeMenu.addEventListener('click', closeMobileMenu);
+    }
+    
+    // Close menu when clicking on a link
+    mobileMenuLinks.forEach(link => {
+      link.addEventListener('click', closeMobileMenu);
+    });
+    
+    // Close menu when clicking outside
+    if (mobileMenu) {
+      mobileMenu.addEventListener('click', (e) => {
+        if (e.target === mobileMenu) {
+          closeMobileMenu();
+        }
+      });
+    }
+    
+    // Initialize header position on page load
+    if (isHomePage && isMobile && header && window.scrollY <= window.innerHeight - 100) {
+      header.classList.add('-translate-y-full');
+    } else if (header) {
+      header.classList.remove('-translate-y-full');
+      header.classList.add('translate-y-0');
+    }
+    
+    // Remove old scroll listener if exists
+    if (window.headerScrollListener) {
+      window.removeEventListener('scroll', window.headerScrollListener);
+    }
+    
+    // Show/hide header based on scroll position and show separator after scrolling
+    window.headerScrollListener = () => {
+      const isHomePage = window.location.pathname === '/';
+      const isMobile = window.innerWidth < 768;
+      
+      if (isHomePage && isMobile) {
+        // Homepage mobile behavior - hide header until scrolled past hero
+        const heroHeight = window.innerHeight;
+        
+        if (header) {
+          if (window.scrollY > heroHeight - 100) {
+            // Show header with animation
+            header.classList.remove('-translate-y-full');
+            header.classList.add('translate-y-0');
+          } else {
+            // Hide header
+            header.classList.add('-translate-y-full');
+            header.classList.remove('translate-y-0');
+          }
+        }
+        
+        if (separator) {
+          if (window.scrollY > heroHeight) {
+            separator.classList.remove('hidden');
+          } else {
+            separator.classList.add('hidden');
+          }
+        }
+      } else {
+        // Desktop or other pages behavior - always show header, separator after scroll
+        if (header) {
+          header.classList.remove('-translate-y-full');
+          header.classList.add('translate-y-0');
+        }
+        
+        if (separator) {
+          const scrollThreshold = isHomePage ? window.innerHeight : 64;
+          if (window.scrollY > scrollThreshold) {
+            separator.classList.remove('hidden');
+          } else {
+            separator.classList.add('hidden');
+          }
+        }
+      }
+    };
+    
+    window.addEventListener('scroll', window.headerScrollListener);
+  }
+  
+  // Initialize on page load
+  initHeader();
+  
+  // Re-initialize on Astro page transitions
+  document.addEventListener('astro:page-load', initHeader);
 </script>
 
-<header class=" backdrop-blur-sm hover:backdrop-blur-xl font-inter flex flex-col items-end mb-4 w-full z-50 fixed">
-	<nav class=" flex items-center justify-center md:justify-end p-4 w-full h-16 ">
-		<div class=" flex gap-3">
+<header class="backdrop-blur-sm hover:backdrop-blur-xl font-inter flex flex-col items-end mb-4 w-full z-50 fixed bg-white/80 dark:bg-gray-900/80 transition-transform duration-300 ease-in-out" id="main-header">
+	<nav class="flex items-center justify-between px-4 py-4 w-full h-16">
+		<!-- Desktop Navigation -->
+		<div class="hidden md:flex gap-9">
 			<HeaderLink href="/">#Home</HeaderLink>
       <HeaderLink href="/about">#About</HeaderLink>
       <HeaderLink href="/talks">#Talks</HeaderLink>
 			<HeaderLink href="/projects">#Projects</HeaderLink>
 			<HeaderLink href="/blog">#Blog</HeaderLink>
 		</div>
+		
+		<!-- Mobile Hamburger Button -->
+		<button 
+			id="hamburger-btn"
+			class="md:hidden p-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+			aria-label="Open menu"
+		>
+			<Icon name="mdi:menu" class="w-6 h-6" />
+		</button>
+		
+    <ThemeToggle />
 	</nav>
   {
-    hasSeparator && <div id="web-header-separator" class=" border-b-gray-900 border-b-2 w-full md:w-3/5 rounded-md mb-4" />
+    hasSeparator && <div id="web-header-separator" class="border-b-gray-200 dark:border-b-gray-600 border-b w-full rounded-md hidden" />
   }
 </header>
+
+<!-- Mobile Menu Overlay -->
+<div 
+	id="mobile-menu"
+	class="fixed inset-0 bg-gray-200/50 backdrop-blur-sm z-[60] md:hidden translate-x-full transition-transform duration-300 ease-in-out"
+>
+	<div class="absolute right-0 top-0 h-full w-64 bg-white dark:bg-gray-900 shadow-2xl">
+		<!-- Close button -->
+		<div class="flex justify-end p-4">
+			<button 
+				id="close-menu-btn"
+				class="p-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+				aria-label="Close menu"
+			>
+				<Icon name="mdi:close" class="w-6 h-6" />
+			</button>
+		</div>
+		
+		<!-- Mobile Menu Links -->
+		<nav class="flex flex-col gap-2 px-2">
+			<a href="/" class="py-3 px-4 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+				#Home
+			</a>
+			<a href="/about" class="py-3 px-4 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+				#About
+			</a>
+			<a href="/talks" class="py-3 px-4 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+				#Talks
+			</a>
+			<a href="/projects" class="py-3 px-4 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+				#Projects
+			</a>
+			<a href="/blog" class="py-3 px-4 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+				#Blog
+			</a>
+		</nav>
+	</div>
+</div>

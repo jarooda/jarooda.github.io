@@ -5,7 +5,7 @@ import { SITE_TITLE } from "../../consts"
 const today = new Date()
 ---
 
-<footer class="text-center p-4 font-semibold">
+<footer class="text-center p-4 font-semibold bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 transition-colors duration-200">
   <p>
     <span>&copy; {today.getFullYear()} |</span>
     <a
@@ -23,12 +23,12 @@ const today = new Date()
     >
   </p>
   <p>
-    Website code: <a
+    <a
       href="https://github.com/jarooda/jarooda.github.io?tab=MIT-1-ov-file"
       target="_blank"
       class="text-green-900 underline underline-offset-2 hover:text-green-700 font-bold"
       >MIT License</a
-    > | Blog content: <a
+    > | <a
       href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
       target="_blank"
       class="text-green-900 underline underline-offset-2 hover:text-green-700 font-bold"

@@ -17,6 +17,52 @@ const { title, description, image = 'https://cdn.jaluwibowo.id/assets/logo-1600x
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="generator" content={Astro.generator} />
 
+<!-- Theme Script - Must be inline to prevent FOUC -->
+<script is:inline>
+  // Apply theme immediately to prevent flash on every page load
+  (function() {
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  })();
+  
+  // Persist theme during view transitions
+  document.addEventListener('astro:before-swap', (e) => {
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
+    
+    if (isDark) {
+      e.newDocument.documentElement.classList.add('dark');
+    } else {
+      e.newDocument.documentElement.classList.remove('dark');
+    }
+  });
+</script>
+
+<style is:inline>
+  /* Prevent flash during transitions by setting initial background colors */
+  html {
+    background-color: white;
+  }
+  
+  html.dark {
+    background-color: rgb(17, 24, 39); /* gray-900 */
+  }
+  
+  /* Ensure smooth transition without flash */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+</style>
+
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
 

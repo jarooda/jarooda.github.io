@@ -69,6 +69,10 @@
   margin-left: 0; /* Reset default margin for blockquotes */
 }
 
+.dark .blog blockquote {
+  border-left-color: #6b7280;
+}
+
 /* Style code */
 .blog > p > code {
   font-family: monospace; /* Use a monospace font for code */
@@ -92,9 +96,17 @@
   color: #fff; /* Lighten header row text */
 }
 
+.dark .blog thead {
+  background-color: #1f2937;
+}
+
 /* Style table tbody */
 .blog tbody {
   background-color: #fff; /* Add a background color to all table rows */
+}
+
+.dark .blog tbody {
+  background-color: #374151;
 }
 
 /* Style table th */
@@ -106,6 +118,10 @@
 .blog td {
   border: 1px solid #ccc; /* Add borders */
   padding: 10px 15px; /* Add padding */
+}
+
+.dark .blog td {
+  border-color: #4b5563;
 }
 
 /* Style unordered list */
@@ -130,6 +146,10 @@
 .blog abbr {
   text-decoration: none; /* Remove underline from abbreviations */
   border-bottom: 1px dotted #333; /* Add bottom border to abbreviations */
+}
+
+.dark .blog abbr {
+  border-bottom-color: #d1d5db;
 }
 
 /* Style link */
@@ -197,6 +217,11 @@ span[data-spoiler]:focus {
   color: inherit;
 }
 
+.dark span[data-spoiler]:hover,
+.dark span[data-spoiler]:focus {
+  background: #4b5563;
+}
+
 .copy-code {
   position: absolute;
   top: 10px;
@@ -209,6 +234,11 @@ span[data-spoiler]:focus {
   border-radius: 0.25rem 0 0 0.25rem;
 }
 
+.dark .copy-code {
+  background-color: #374151;
+  color: #d1d5db;
+}
+
 .code-lang {
   position: absolute;
   top: 0;
@@ -219,6 +249,11 @@ span[data-spoiler]:focus {
   font-size: 0.75rem;
   line-height: 1rem;
   border-radius: 0 0 0.25rem 0.25rem;
+}
+
+.dark .code-lang {
+  background-color: #374151;
+  color: #d1d5db;
 }
 
 @supports (selector(:has(*))) {

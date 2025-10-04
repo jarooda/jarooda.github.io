@@ -11,7 +11,7 @@ const firstPost = newestPosts[0]
 const restPosts = newestPosts.slice(1)
 ---
 
-<section id="blog" class="justify-center flex flex-col">
+<section id="blog" class="justify-center flex flex-col text-gray-700 dark:text-gray-300 transition-colors duration-200 pt-5">
   <div class="mx-auto w-full lg:w-256 py-4 px-4 md:py-12">
     <div
       class="w-full flex flex-col md:flex-row text-center gap-0 md:gap-4 text-2xl md:text-5xl font-semibold"
@@ -23,7 +23,7 @@ const restPosts = newestPosts.slice(1)
         class="post bg-no-repeat bg-cover rounded-lg group first-post opacity-0"
       >
         <div
-          class="flex flex-col justify-end md:text-gray-200 p-0 md:p-4 pb-4 h-full md:rounded-lg md:backdrop-brightness-50 md:group-hover:backdrop-blur-sm border-b border-white md:border-b-0"
+          class="flex flex-col justify-end md:text-gray-200 dark:md:text-gray-300 p-0 md:p-4 pb-4 h-full md:rounded-lg md:backdrop-brightness-50 dark:md:backdrop-brightness-[0.3] md:group-hover:backdrop-blur-sm border-b border-white dark:border-gray-600 md:border-b-0 transition-colors duration-200"
         >
           <a
             data-test="first-blog"
@@ -56,7 +56,7 @@ const restPosts = newestPosts.slice(1)
       <div class="grid grid-cols-1 gap-4">
         {
           restPosts.map((post) => (
-            <div class="post border-b border-white pb-4 opacity-0">
+            <div class="post border-b border-white dark:border-gray-600 pb-4 opacity-0 transition-colors duration-200">
               <a href={`/blog/${post.id}/`} class="group w-full">
                 <h2 class="font-semibold text-md md:text-2xl mb-2 group-hover:underline underline-offset-4">
                   {post.data.title}
