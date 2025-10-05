@@ -6,10 +6,12 @@ import BaseHead from "../components/shared/BaseHead.astro"
 import Header from "../components/shared/Header.astro"
 import Footer from "../components/shared/Footer.astro"
 import FormattedDate from "../components/FormattedDate.astro"
+import Anchor from "../components/shared/Anchor.astro"
 
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts"
 import { talks, venue, topics } from "../content/talks"
 import "../styles/base.css"
+import "../styles/blogs.css"
 
 const title = `Talks - ${SITE_TITLE}`
 ---
@@ -20,7 +22,9 @@ const title = `Talks - ${SITE_TITLE}`
     <BaseHead title={title} description={SITE_DESCRIPTION} />
     <ClientRouter />
   </head>
-  <body class="font-inter bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 transition-colors duration-200">
+  <body
+    class="font-inter bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 transition-colors duration-200"
+  >
     <Header />
     <main class="bg-white dark:bg-gray-900 pt-20">
       <section class="mx-auto w-full lg:w-256 p-4 min-h-screen">
@@ -29,10 +33,10 @@ const title = `Talks - ${SITE_TITLE}`
           {
             topics.map((topic) => (
               <article class=" w-full flex flex-col">
-                <h2 class=" text-xl font-semibold">{topic.title}</h2>
+                <h2 class=" text-xl font-semibold blog">{topic.title}</h2>
                 <p
                   class=" text-base italic
-                  font-base text-gray-500"
+                  font-base text-gray-500 blog"
                 >
                   {topic.description}
                 </p>
@@ -40,62 +44,63 @@ const title = `Talks - ${SITE_TITLE}`
                 <ul class="flex flex-col gap-4 mt-4">
                   {talks[topic.id] &&
                     talks[topic.id].map((talk) => (
-                      <li class="grid grid-cols-2 gap-4">
-                        <div>
+                      <li class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="blog">
                           <a
                             href={venue[talk.venue].link}
-                            class="text-blue-500 font-semibold"
+                            class="font-semibold"
                             target="_blank"
                           >
                             {venue[talk.venue].name}
                           </a>
 
-                          <p class="text-gray-500 text-sm">
-                            <FormattedDate date={new Date(talk.date)} lang="en" /> ·{" "}
-                            {venue[talk.venue].location}
-                          </p>
+                          <div class="text-gray-500 text-sm">
+                            <FormattedDate
+                              date={new Date(talk.date)}
+                              lang="en"
+                            />{" "}
+                            · {venue[talk.venue].location}
+                          </div>
                         </div>
-                        <div class="flex flex-row-reverse gap-4">
+                        <div class="flex flex-row md:flex-row-reverse flex-wrap gap-4">
                           {talk.pdf && (
-                            <a
+                            <Anchor
                               href={talk.pdf}
-                              class="text-blue-500 font-semibold flex items-center"
+                              class="font-semibold flex items-center"
                               download
                               target="_blank"
                             >
                               <Icon name="mdi:file-pdf-box" class="h-5 mr-1" />
                               PDF
-                            </a>
+                            </Anchor>
                           )}
                           {talk.slides && (
-                            <a
+                            <Anchor
                               href={talk.slides}
-                              class="text-blue-500 font-semibold flex items-center"
+                              class="font-semibold flex items-center"
+                              target="_blank"
                             >
-                              <Icon
-                                name="mdi:slideshow"
-                                class="h-5 mr-1"
-                              />
+                              <Icon name="mdi:slideshow" class="h-5 mr-1" />
                               Slides
-                            </a>
+                            </Anchor>
                           )}
 
                           {talk.video && (
-                            <a
+                            <Anchor
                               href={talk.video}
-                              class="text-blue-500 font-semibold flex items-center"
+                              class="font-semibold flex items-center"
                               target="_blank"
                             >
                               <Icon name="mdi:video-chat" class="h-5 mr-1" />
                               Watch
-                            </a>
+                            </Anchor>
                           )}
                         </div>
                       </li>
                     ))}
                 </ul>
 
-                <div class=" w-2/3 border-b mx-auto my-4" />
+                <div class="w-full md:w-2/3 border-b mx-auto my-4" />
               </article>
             ))
           }
