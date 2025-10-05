@@ -1,6 +1,6 @@
 ---
 import Anchor from "./shared/Anchor.astro"
-import JaluLogo from "../assets/icons/jalu-logo.svg"
+import JaluLogoIcon from "./JaluLogoIcon.astro"
 
 const firstWords = ["Halo,", "I", "am"]
 const secondWords = ["Jalu", "Wibowo", "Aji"]
@@ -10,19 +10,13 @@ const secondWords = ["Jalu", "Wibowo", "Aji"]
   <section
     class="max-w-screen-2xl mx-auto min-h-screen justify-center flex flex-col relative perspective-1000"
   >
-    <img
-      id="jl-logo"
-      src={JaluLogo.src}
-      alt="Logo"
-      class="hidden md:block w-96 lg:w-160 right-10 lg:right-20 top-52 lg:top-32 rotate-12 absolute drop-shadow-xl transform sm:transform-gpu the-logo dark:invert"
-    />
+    <div id="jl-logo" class="hidden md:block w-96 lg:w-160 right-10 lg:right-20 top-52 lg:top-32 rotate-12 absolute drop-shadow-xl transform sm:transform-gpu the-logo text-gray-900 dark:text-white">
+      <JaluLogoIcon class="w-full h-full" />
+    </div>
 
-    <img
-      id="jl-logo-mobile"
-      src={JaluLogo.src}
-      alt="Logo"
-      class="block md:hidden w-60 drop-shadow-xl mx-auto dark:invert"
-    />
+    <div id="jl-logo-mobile" class="block md:hidden w-60 drop-shadow-xl mx-auto text-gray-900 dark:text-white">
+      <JaluLogoIcon class="w-full h-full" />
+    </div>
 
     <div class="w-full lg:w-256 px-16 lg:px-6 mx-auto">
       <div

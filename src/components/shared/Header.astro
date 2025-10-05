@@ -2,6 +2,7 @@
 import HeaderLink from '../HeaderLink.astro';
 import ThemeToggle from '../ThemeToggle.astro';
 import { Icon } from 'astro-icon/components';
+import JaluLogoIcon from '../JaluLogoIcon.astro';
 import '../../styles/index.css';
 
 interface Props {
@@ -38,6 +39,8 @@ const isHomePage = Astro.url.pathname === '/';
     const header = document.querySelector('header');
     const separator = document.getElementById('web-header-separator');
     const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuSidebar = document.getElementById('mobile-menu-sidebar');
+    const mobileMenuOverlay = mobileMenu?.querySelector('.absolute.inset-0');
     const hamburger = document.getElementById('hamburger-btn');
     const closeMenu = document.getElementById('close-menu-btn');
     const mobileMenuLinks = document.querySelectorAll('#mobile-menu a');
@@ -52,17 +55,21 @@ const isHomePage = Astro.url.pathname === '/';
     
     // Mobile menu toggle handlers
     const openMobileMenu = () => {
-      if (mobileMenu) {
-        mobileMenu.classList.remove('translate-x-full');
-        mobileMenu.classList.add('translate-x-0');
+      if (mobileMenu && mobileMenuSidebar) {
+        mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+        mobileMenu.classList.add('opacity-100', 'pointer-events-auto');
+        mobileMenuSidebar.classList.remove('translate-x-full');
+        mobileMenuSidebar.classList.add('translate-x-0');
         document.body.style.overflow = 'hidden';
       }
     };
     
     const closeMobileMenu = () => {
-      if (mobileMenu) {
-        mobileMenu.classList.remove('translate-x-0');
-        mobileMenu.classList.add('translate-x-full');
+      if (mobileMenu && mobileMenuSidebar) {
+        mobileMenu.classList.remove('opacity-100', 'pointer-events-auto');
+        mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+        mobileMenuSidebar.classList.remove('translate-x-0');
+        mobileMenuSidebar.classList.add('translate-x-full');
         document.body.style.overflow = '';
       }
     };
@@ -80,13 +87,9 @@ const isHomePage = Astro.url.pathname === '/';
       link.addEventListener('click', closeMobileMenu);
     });
     
-    // Close menu when clicking outside
-    if (mobileMenu) {
-      mobileMenu.addEventListener('click', (e) => {
-        if (e.target === mobileMenu) {
-          closeMobileMenu();
-        }
-      });
+    // Close menu when clicking on the background overlay
+    if (mobileMenuOverlay) {
+      mobileMenuOverlay.addEventListener('click', closeMobileMenu);
     }
     
     // Initialize header position on page load
@@ -161,24 +164,40 @@ const isHomePage = Astro.url.pathname === '/';
 <header class="backdrop-blur-sm hover:backdrop-blur-xl font-inter flex flex-col items-end mb-4 w-full z-50 fixed bg-white/80 dark:bg-gray-900/80 transition-transform duration-300 ease-in-out" id="main-header">
 	<nav class="flex items-center justify-between px-4 py-4 w-full h-16">
 		<!-- Desktop Navigation -->
-		<div class="hidden md:flex gap-9">
-			<HeaderLink href="/">#Home</HeaderLink>
+		<div class="hidden md:flex gap-9 items-center">
+			<a href="/" class="inline-flex items-center text-gray-900 dark:text-white">
+				<JaluLogoIcon class="h-8 w-8" />
+			</a>
       <HeaderLink href="/about">#About</HeaderLink>
       <HeaderLink href="/talks">#Talks</HeaderLink>
 			<HeaderLink href="/projects">#Projects</HeaderLink>
 			<HeaderLink href="/blog">#Blog</HeaderLink>
 		</div>
 		
-		<!-- Mobile Hamburger Button -->
-		<button 
-			id="hamburger-btn"
-			class="md:hidden p-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-			aria-label="Open menu"
-		>
-			<Icon name="mdi:menu" class="w-6 h-6" />
-		</button>
+		<!-- Mobile Layout -->
+		<div class="md:hidden flex items-center justify-between w-full">
+			<!-- Mobile Hamburger Button -->
+			<button 
+				id="hamburger-btn"
+				class="p-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+				aria-label="Open menu"
+			>
+				<Icon name="mdi:menu" class="w-6 h-6" />
+			</button>
+			
+			<!-- Mobile Logo (centered) -->
+			<a href="/" class="absolute left-1/2 -translate-x-1/2 text-gray-900 dark:text-white">
+				<JaluLogoIcon class="h-8 w-8" />
+			</a>
+			
+			<!-- Theme Toggle (right side) -->
+			<ThemeToggle id="theme-toggle-mobile" />
+		</div>
 		
-    <ThemeToggle />
+		<!-- Desktop Theme Toggle -->
+		<div class="hidden md:block">
+			<ThemeToggle id="theme-toggle-desktop" />
+		</div>
 	</nav>
   {
     hasSeparator && <div id="web-header-separator" class="border-b-gray-200 dark:border-b-gray-600 border-b w-full rounded-md hidden" />
@@ -188,9 +207,13 @@ const isHomePage = Astro.url.pathname === '/';
 <!-- Mobile Menu Overlay -->
 <div 
 	id="mobile-menu"
-	class="fixed inset-0 bg-gray-200/50 backdrop-blur-sm z-[60] md:hidden translate-x-full transition-transform duration-300 ease-in-out"
+	class="fixed inset-0 z-[60] md:hidden opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out"
 >
-	<div class="absolute right-0 top-0 h-full w-64 bg-white dark:bg-gray-900 shadow-2xl">
+	<!-- Background overlay -->
+	<div class="absolute inset-0 bg-gray-900/30 backdrop-blur-sm"></div>
+	
+	<!-- Sidebar panel -->
+	<div class="absolute right-0 top-0 h-full w-64 bg-white dark:bg-gray-900 shadow-2xl translate-x-full transition-transform duration-300 ease-in-out" id="mobile-menu-sidebar">
 		<!-- Close button -->
 		<div class="flex justify-end p-4">
 			<button 
