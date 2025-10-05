@@ -1,0 +1,102 @@
+---
+interface Props {
+  id?: string
+  dataTest?: string
+  type?: "button" | "submit" | "reset"
+  class?: string
+  iconName?: string
+  text?: string
+  href?: string
+  target?: string
+  rel?: string
+  ariaLabel?: string
+  as?: "button" | "a"
+  block?: boolean
+  mobileBlock?: boolean
+  dataCollection?: string
+}
+
+const {
+  id,
+  dataTest,
+  type = "button",
+  class: className = "",
+  iconName,
+  text,
+  href,
+  target,
+  rel,
+  ariaLabel,
+  as = href ? "a" : "button",
+  block = false,
+  mobileBlock = false,
+  dataCollection
+} = Astro.props
+
+import { Icon } from "astro-icon/components"
+
+const getWidthClass = () => {
+  if (block) return 'w-full text-center'
+  if (mobileBlock) return 'w-full md:w-max text-center md:text-left'
+  return 'w-fit md:w-max'
+}
+
+const baseClass = `cursor-pointer relative px-4 py-2 overflow-hidden font-semibold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-600 shadow-md rounded-sm group text-sm md:text-base ${getWidthClass()} transition-colors duration-200 ${className}`
+---
+
+{as === "a" ? (
+  <a
+    id={id}
+    data-test={dataTest}
+    data-collection={dataCollection}
+    href={href}
+    target={target}
+    rel={rel}
+    aria-label={ariaLabel}
+    class={baseClass}
+  >
+    <span
+      class="group-hover:w-full w-0 absolute h-0 transition-all duration-300 border-t-2 dark:border-gray-100 border-gray-700 ease top-0 left-0"
+    ></span>
+    <span
+      class="group-hover:w-full w-0 absolute h-0 transition-all duration-300 border-b-2 dark:border-gray-100 border-gray-700 ease bottom-0 right-0"
+    ></span>
+    <span
+      class="group-hover:h-full h-0 absolute w-0 transition-all duration-300 border-r-2 dark:border-gray-100 border-gray-700 ease top-0 right-0"
+    ></span>
+    <span
+      class="group-hover:h-full h-0 absolute w-0 transition-all duration-300 border-l-2 dark:border-gray-100 border-gray-700 ease bottom-0 left-0"
+    ></span>
+    <div class="flex justify-center items-center gap-2">
+      {iconName && <Icon name={iconName} class="h-5 max-w-20" />}
+      {text}
+      <slot />
+    </div>
+  </a>
+) : (
+  <button
+    id={id}
+    data-test={dataTest}
+    type={type}
+    aria-label={ariaLabel}
+    class={baseClass}
+  >
+    <span
+      class="group-hover:w-full w-0 absolute h-0 transition-all duration-300 border-t-2 dark:border-gray-100 border-gray-700 ease top-0 left-0"
+    ></span>
+    <span
+      class="group-hover:w-full w-0 absolute h-0 transition-all duration-300 border-b-2 dark:border-gray-100 border-gray-700 ease bottom-0 right-0"
+    ></span>
+    <span
+      class="group-hover:h-full h-0 absolute w-0 transition-all duration-300 border-r-2 dark:border-gray-100 border-gray-700 ease top-0 right-0"
+    ></span>
+    <span
+      class="group-hover:h-full h-0 absolute w-0 transition-all duration-300 border-l-2 dark:border-gray-100 border-gray-700 ease bottom-0 left-0"
+    ></span>
+    <div class="flex justify-center items-center gap-2">
+      {iconName && <Icon name={iconName} class="h-5 max-w-20" />}
+      {text}
+      <slot />
+    </div>
+  </button>
+)}

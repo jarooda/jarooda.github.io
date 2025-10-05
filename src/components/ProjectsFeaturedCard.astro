@@ -2,7 +2,7 @@
 import { Image } from "astro:assets"
 import RoundIcon from "./RoundIcon.astro"
 import { getIcon } from "../consts"
-import { render } from 'astro:content';
+import { render } from "astro:content"
 
 interface Props {
   title: string
@@ -11,7 +11,7 @@ interface Props {
   heroImage: string
   stacks: string[]
   isFeatured?: boolean
-  index: number,
+  index: number
   post: any
 }
 
@@ -33,37 +33,43 @@ const iconStacks = stacks.filter((stack) => getIcon(stack)).reverse()
 <a
   href={demo || repo}
   target="_blank"
-  class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col xl:flex-row p-4 hover:scale-105 transition-transform duration-300 ease-in-out"
+  class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-sm transition-colors duration-200"
   data-test={`featured-project-${index}`}
 >
-  <div style={{
-    backgroundImage: `url(${heroImage})`
-  }}
-  class="relative flex-1 rounded-lg overflow-hidden bg-cover bg-center h-[500px]">
+  <div class="w-full bg-white dark:bg-gray-800 p-4 rounded-lg items-center flex flex-col md:flex-row gap-2 transition-colors duration-200">
+    <Image
+      src={heroImage}
+      class="rounded-lg object-cover w-fit h-64"
+      alt={title}
+      width={600}
+      height={338}
+      loading="lazy"
+    />
 
-  <div class="flex flex-col justify-between absolute bottom-0 bg-gray-50/50 text-black backdrop-blur-sm w-full p-4">
-    <div class="flex flex-col justify-end px-4">
-      <h2
-        class="md:text-xl text-base font-bold tracking-tight text-center sm:text-left mb-4"
-      >
-        {title}
-      </h2>
-      <div class="hidden sm:block">
-        <Content />
+    <div class="flex flex-col justify-between">
+      <div class="flex flex-col justify-end px-4">
+        <h2
+          class="md:text-xl text-base font-bold tracking-tight text-center sm:text-left text-gray-700 dark:text-white my-4"
+        >
+          {title}
+        </h2>
+        <div class="hidden sm:block">
+          <Content />
+        </div>
+
+        <div
+          class="relative h-14 w-full hidden xl:flex flex-row-reverse items-center mt-4"
+        >
+          {
+            iconStacks.map((stack, index) => (
+              <div class="absolute" style={{ right: `${index * 35}px` }}>
+                <RoundIcon icon={getIcon(stack)} />
+              </div>
+            ))
+          }
+        </div>
       </div>
     </div>
-
-    <!-- <div class="hidden xl:flex relative h-full">
-      {
-        iconStacks.map((stack, index) => (
-          <div class="absolute bottom-0" style={{ right: `${index * 45}px` }}>
-            <RoundIcon icon={getIcon(stack)} />
-          </div>
-        ))
-      }
-    </div> -->
-  </div>
-
   </div>
 </a>
 

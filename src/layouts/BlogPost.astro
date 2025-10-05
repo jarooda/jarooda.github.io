@@ -45,7 +45,7 @@ const isEnglish = tags.includes('english')
     <ClientRouter />
 	</head>
 
-	<body>
+	<body class="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 transition-colors duration-200">
 		<Header hasSeparator={ false } />
 		<main class=" pt-16">
 			<article>
@@ -85,7 +85,7 @@ const isEnglish = tags.includes('english')
                     <p>✨</p>
                     <a
                       href={ otherUrl }
-                      class=" text-sm md:text-base text-green-900 font-semibold underline underline-offset-2 hover:text-green-700"
+                      class=" text-sm md:text-base text-green-900 dark:text-green-700 font-semibold underline underline-offset-2 hover:text-green-700 dark:hover:text-green-500"
                     >🇬🇧 Read in English</a>
                     <p>✨</p>
                   </div>
@@ -97,7 +97,7 @@ const isEnglish = tags.includes('english')
                     <p>✨</p>
                     <a
                       href={ otherUrl }
-                      class=" text-sm md:text-base text-green-900 font-semibold underline underline-offset-2 hover:text-green-700"
+                      class=" text-sm md:text-base text-green-900 dark:text-green-700 font-semibold underline underline-offset-2 hover:text-green-700 dark:hover:text-green-500"
                     >🇮🇩 Read in Indonesian</a>
                     <p>✨</p>
                   </div>
@@ -123,12 +123,12 @@ const isEnglish = tags.includes('english')
 					</div>
           <div class=" blog">
             <aside>
-              <h1 class="font-semibold text-black">Contents</h1>
-              <ul>
+              <h1 class="font-semibold text-gray-900 dark:text-gray-100">Contents</h1>
+              <ul class="space-y-1 pl-5 lg:pl-0">
                 {
                   headings.map(({ depth, slug, text }) => (
-                    slug !== 'footnote-label' && <li style={{ marginLeft: calculateMarginLeft(depth) }} class=" list-inside">
-                      <a href={`#${slug}`}>{removeSRLabel(text)}</a>
+                    slug !== 'footnote-label' && <li style={{ marginLeft: calculateMarginLeft(depth) }} class="list-disc ml-5">
+                      <a href={`#${slug}`} class="font-semibold text-green-900 dark:text-green-700 underline underline-offset-2 hover:text-green-700 dark:hover:text-green-500">{removeSRLabel(text)}</a>
                     </li>
                   ))
                 }
@@ -148,17 +148,93 @@ const isEnglish = tags.includes('english')
               </p>
             )
           }
-          <script
-            src="https://utteranc.es/client.js"
-            {...{
-              repo: "jarooda/jarooda.github.io",
-              "issue-term": "pathname",
-              label: "blog-comment",
-              theme: "github-light",
-              crossorigin: "anonymous",
-              async: true,
-            } as any }
-          />
+          
+          <!-- Utterances Comments Container -->
+          <div id="utterances-container"></div>
+          
+          <script>
+            // Set Utterances theme dynamically and create the script element
+            function initializeUtterances() {
+              const container = document.getElementById('utterances-container');
+              if (!container) return;
+              
+              // Clear any existing utterances
+              container.innerHTML = '';
+              
+              const isDark = document.documentElement.classList.contains('dark');
+              const theme = isDark ? 'github-dark' : 'github-light';
+              
+              // Create script element with all required attributes
+              const script = document.createElement('script');
+              script.src = 'https://utteranc.es/client.js';
+              script.setAttribute('data-repo', 'jarooda/jarooda.github.io');
+              script.setAttribute('data-issue-term', 'pathname');
+              script.setAttribute('data-label', 'blog-comment');
+              script.setAttribute('data-theme', theme);
+              script.setAttribute('crossorigin', 'anonymous');
+              script.async = true;
+              
+              // Insert the script into the container
+              container.appendChild(script);
+            }
+            
+            // Reload Utterances with new theme
+            function reloadUtterances() {
+              const container = document.getElementById('utterances-container');
+              if (!container) return;
+              
+              // Clear the container completely
+              container.innerHTML = '';
+              
+              // Wait a bit for cleanup, then reinitialize
+              setTimeout(() => {
+                initializeUtterances();
+              }, 150);
+            }
+
+            // Override the theme toggle handler to also update Utterances
+            function enhanceThemeToggle() {
+              const themeToggle = document.getElementById("theme-toggle");
+              if (themeToggle && window.themeToggleHandler) {
+                const originalHandler = window.themeToggleHandler;
+                
+                window.themeToggleHandler = function(e) {
+                  originalHandler(e);
+                  // Always reload Utterances with new theme after a short delay
+                  setTimeout(() => {
+                    reloadUtterances();
+                  }, 200);
+                };
+                
+                // Remove old handler and add enhanced one
+                themeToggle.removeEventListener('click', originalHandler);
+                themeToggle.addEventListener('click', window.themeToggleHandler);
+              }
+            }
+
+            // Initialize everything
+            initializeUtterances();
+            
+            // Enhance theme toggle when it's available
+            function tryEnhanceThemeToggle() {
+              const themeToggle = document.getElementById("theme-toggle");
+              if (themeToggle) {
+                enhanceThemeToggle();
+              } else {
+                // Try again after a short delay
+                setTimeout(tryEnhanceThemeToggle, 500);
+              }
+            }
+            
+            // Start trying to enhance the theme toggle
+            tryEnhanceThemeToggle();
+            
+            // Also listen for Astro page loads
+            document.addEventListener("astro:page-load", () => {
+              initializeUtterances();
+              tryEnhanceThemeToggle();
+            });
+          </script>
 				</div>
 			</article>
 		</main>

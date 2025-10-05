@@ -1,0 +1,256 @@
+---
+import { getCollection } from "astro:content"
+
+import BaseHead from "../../components/shared/BaseHead.astro"
+import Header from "../../components/shared/Header.astro"
+import Footer from "../../components/shared/Footer.astro"
+import CollectionContent from "../../components/CollectionContent.md"
+import CollectionTable from "../../components/CollectionTable.astro"
+import Anchor from "../../components/shared/Anchor.astro"
+
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts"
+import "../../styles/base.css"
+import "../../styles/blogs.css"
+
+const title = "My Collections | " + SITE_TITLE + " - Frontend Developer"
+
+type ListConfig = {
+  key:
+    | "games"
+    | "figures"
+    | "books"
+    | "movies"
+    | "anime"
+    | "series"
+    | "musics"
+    | "gadgets"
+  title: string
+  description: string
+  link: string
+  buttonText: string
+  renderKeys: string[]
+}
+
+const lists: ListConfig[] = [
+  {
+    key: "games",
+    title: "Games",
+    description: "A collection of games that I've played",
+    link: "/about/collections?for=games",
+    buttonText: "Games",
+    renderKeys: ["title", "developer", "platform", "status"]
+  },
+  {
+    key: "figures",
+    title: "Figures",
+    description: "A collection of figures that I've collected.",
+    link: "/about/collections?for=figures",
+    buttonText: "Figures",
+    renderKeys: ["name", "series", "manufacturer"]
+  },
+  {
+    key: "books",
+    title: "Books",
+    description: "A collection of books that I've read.",
+    link: "/about/collections?for=books",
+    buttonText: "Books",
+    renderKeys: ["title", "author"]
+  },
+  {
+    key: "movies",
+    title: "Movies",
+    description: "A collection of movies that I've watched.",
+    link: "/about/collections?for=movies",
+    buttonText: "Movies",
+    renderKeys: ["title", "director"]
+  },
+  {
+    key: "anime",
+    title: "Anime",
+    description: "A collection of anime that I've watched.",
+    link: "/about/collections?for=anime",
+    buttonText: "Anime",
+    renderKeys: ["title", "studio"]
+  },
+  {
+    key: "series",
+    title: "Series",
+    description: "A collection of series that I've watched.",
+    link: "/about/collections?for=series",
+    buttonText: "Series",
+    renderKeys: ["title", "writer"]
+  },
+  {
+    key: "musics",
+    title: "Musics",
+    description: "A collection of musics that I've listened to.",
+    link: "/about/collections?for=musics",
+    buttonText: "Musics",
+    renderKeys: ["title", "artist"]
+  },
+  {
+    key: "gadgets",
+    title: "Gadgets",
+    description: "A collection of gadgets that I've owned.",
+    link: "/about/collections?for=gadgets",
+    buttonText: "Gadgets",
+    renderKeys: ["name", "brand"]
+  }
+]
+
+// Get query parameter
+const collectionType = Astro.url.searchParams.get("for") || "games"
+
+// Fetch all collections dynamically based on lists configuration
+const collectionsPromises = lists.map(async (list) => {
+  try {
+    const collection = await getCollection(list.key as any)
+    return {
+      key: list.key,
+      data: collection.map((item: any) => item.data),
+      config: list
+    }
+  } catch (error) {
+    // Handle case where collection doesn't exist
+    console.warn(`Collection "${list.key}" not found`)
+    return {
+      key: list.key,
+      data: [],
+      config: list
+    }
+  }
+})
+
+const collectionsArray = await Promise.all(collectionsPromises)
+
+// Convert array to object for easier access
+type CollectionData = {
+  data: any[]
+  config: ListConfig
+}
+
+const collectionsData = collectionsArray.reduce(
+  (acc, collection) => {
+    acc[collection.key] = {
+      data: collection.data,
+      config: collection.config
+    }
+    return acc
+  },
+  {} as Record<string, CollectionData>
+)
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="robots" content="noindex, nofollow" />
+    <link href="/themes/prism.css" rel="stylesheet" />
+    <BaseHead title={title} description={SITE_DESCRIPTION} />
+    <script src="../../utils/anchor-removal.ts"></script>
+  </head>
+  <body
+    class="bg-white dark:bg-gray-900 font-inter transition-colors duration-200"
+  >
+    <Header hasSeparator={false} />
+    <main
+      class="pt-20 mx-auto w-full lg:w-224 p-4 min-h-[calc(100vh-80px)] text-gray-700 dark:text-gray-300"
+    >
+      <astro-anchor-removal>
+        <div class="blog">
+          <CollectionContent />
+        </div>
+      </astro-anchor-removal>
+
+      <nav id="collection-nav">
+        <ul class="flex flex-wrap justify-center w-full gap-2 sm:gap-3 mb-8">
+          {
+            lists.map((list) => (
+              <li>
+                <Anchor
+                  href={list.link}
+                  dataCollection={list.title.toLowerCase()}
+                >
+                  {list.title}
+                </Anchor>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <!-- Collection Tables -->
+      {
+        lists.map((list) => (
+          <CollectionTable
+            id={`${list.key}-table`}
+            data={collectionsData[list.key]?.data || []}
+            renderKeys={collectionsData[list.key]?.config?.renderKeys || []}
+          />
+        ))
+      }
+
+      <!-- No data message -->
+      <div id="no-data" class="text-center py-8" style="display: none;">
+        <p class="text-gray-500 dark:text-gray-400">
+          No data available for this collection.
+        </p>
+      </div>
+
+      <script define:vars={{ initialCollection: collectionType }}>
+        // Get the actual collection type from the current URL
+        const urlParams = new URLSearchParams(window.location.search)
+        const actualCollectionType = urlParams.get("for") || "games"
+
+        function showCollection(collectionType, updateUrl = true) {
+          // Hide all tables
+          document.querySelectorAll(".collection-table").forEach((table) => {
+            table.style.display = "none"
+          })
+          document.getElementById("no-data").style.display = "none"
+
+          // Show the selected table
+          const tableId = collectionType + "-table"
+          const table = document.getElementById(tableId)
+
+          if (table) {
+            table.style.display = "block"
+          } else {
+            document.getElementById("no-data").style.display = "block"
+          }
+
+          // Update URL without page reload only if requested
+          if (updateUrl) {
+            const url = new URL(window.location)
+            url.searchParams.set("for", collectionType)
+            window.history.replaceState({}, "", url)
+          }
+
+          // Update active navigation - only target collection nav links
+          document.querySelectorAll("[data-collection]").forEach((link) => {
+            const linkCollection = link.getAttribute("data-collection")
+            if (linkCollection === collectionType) {
+              // Add active class or styling if needed
+              link.setAttribute("data-active", "true")
+            } else {
+              link.removeAttribute("data-active")
+            }
+          })
+        }
+
+        // Handle navigation clicks - only target collection nav links
+        document.querySelectorAll("[data-collection]").forEach((link) => {
+          link.addEventListener("click", (e) => {
+            e.preventDefault()
+            const collectionType = link.getAttribute("data-collection")
+            showCollection(collectionType, true)
+          })
+        })
+
+        // Use the actual URL parameter instead of server-side value
+        showCollection(actualCollectionType, false)
+      </script>
+    </main>
+    <Footer />
+  </body>
+</html>

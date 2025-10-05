@@ -1,7 +1,7 @@
 {
   "name": "jarooda.github.io",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.1.0",
   "packageManager": "pnpm@8.6.3",
   "scripts": {
     "dev": "astro dev",
@@ -20,6 +20,8 @@
     "@sentry/astro": "^9.27.0",
     "@tailwindcss/vite": "^4.1.8",
     "astro-icon": "^1.1.5",
+    "google-auth-library": "^10.4.0",
+    "googleapis": "^161.0.0",
     "gsap": "^3.13.0",
     "sass": "^1.89.1",
     "tailwindcss": "^4.1.8",
