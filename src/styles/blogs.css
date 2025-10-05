@@ -165,6 +165,15 @@
   color: var(--green-700); /* Lighten links on hover */
 }
 
+/* Dark mode link styles */
+.dark .blog a {
+  color: var(--green-700);
+}
+
+.dark .blog a:hover {
+  color: var(--green-500);
+}
+
 /* Code Block */
 
 .blog code {

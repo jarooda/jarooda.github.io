@@ -1,7 +1,7 @@
 import { defineCollection, z } from "astro:content"
 import { glob } from "astro/loaders"
 
-import { getGamesCollection, getFiguresCollection } from "./content/collections"
+import * as Collection from "./content/collections"
 
 const blog = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/blog" }),
@@ -52,7 +52,7 @@ const project = defineCollection({
 
 const games = defineCollection({
   loader: async () => {
-    const data = await getGamesCollection()
+    const data = await Collection.getGamesCollection()
     return data.map((item, index) => ({
       id: `game-${index + 1}`,
       ...item
@@ -70,7 +70,7 @@ const games = defineCollection({
 
 const figures = defineCollection({
   loader: async () => {
-    const data = await getFiguresCollection()
+    const data = await Collection.getFiguresCollection()
     return data.map((item, index) => ({
       id: `figure-${index + 1}`,
       ...item
@@ -87,4 +87,118 @@ const figures = defineCollection({
   })
 })
 
-export const collections = { blog, project, games, figures }
+const books = defineCollection({
+  loader: async () => {
+    const data = await Collection.getBooksCollection()
+    return data.map((item, index) => ({
+      id: `book-${index + 1}`,
+      ...item
+    }))
+  },
+  schema: z.object({
+    title: z.string(),
+    author: z.string(),
+    format: z.string(),
+    type: z.string(),
+    read_status: z.string(),
+    notes: z.string()
+  })
+})
+
+const movies = defineCollection({
+  loader: async () => {
+    const data = await Collection.getMoviesCollection()
+    return data.map((item, index) => ({
+      id: `movie-${index + 1}`,
+      ...item
+    }))
+  },
+  schema: z.object({
+    title: z.string(),
+    year: z.string(),
+    director: z.string(),
+    notes: z.string(),
+    web: z.string().optional()
+  })
+})
+
+const series = defineCollection({
+  loader: async () => {
+    const data = await Collection.getSeriesCollection()
+    return data.map((item, index) => ({
+      id: `series-${index + 1}`,
+      ...item
+    }))
+  },
+  schema: z.object({
+    title: z.string(),
+    year: z.string(),
+    writer: z.string(),
+    notes: z.string(),
+    web: z.string().optional()
+  })
+})
+
+const anime = defineCollection({
+  loader: async () => {
+    const data = await Collection.getAnimeCollection()
+    return data.map((item, index) => ({
+      id: `anime-${index + 1}`,
+      ...item
+    }))
+  },
+  schema: z.object({
+    title: z.string(),
+    year: z.string(),
+    studio: z.string(),
+    notes: z.string(),
+    web: z.string().optional()
+  })
+})
+
+const musics = defineCollection({
+  loader: async () => {
+    const data = await Collection.getMusicsCollection()
+    return data.map((item, index) => ({
+      id: `music-${index + 1}`,
+      ...item
+    }))
+  },
+  schema: z.object({
+    title: z.string(),
+    year: z.string(),
+    artist: z.string(),
+    album: z.string(),
+    notes: z.string()
+  })
+})
+
+const gadgets = defineCollection({
+  loader: async () => {
+    const data = await Collection.getGadgetsCollection()
+    return data.map((item, index) => ({
+      id: `gadget-${index + 1}`,
+      ...item
+    }))
+  },
+  schema: z.object({
+    name: z.string(),
+    type: z.string(),
+    brand: z.string(),
+    notes: z.string(),
+    web: z.string().optional()
+  })
+})
+
+export const collections = {
+  blog,
+  project,
+  games,
+  figures,
+  books,
+  movies,
+  series,
+  anime,
+  musics,
+  gadgets
+}

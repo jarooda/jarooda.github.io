@@ -9,6 +9,7 @@ const { id, data, renderKeys } = Astro.props;
 const tableHeaders = renderKeys.map(key => 
   key.charAt(0).toUpperCase() + key.slice(1)
 );
+const columnWidth = `${100 / renderKeys.length}%`;
 ---
 
 <div id={id} class="collection-table" style="display: none;">
@@ -18,7 +19,7 @@ const tableHeaders = renderKeys.map(key =>
         <thead>
           <tr class="bg-gray-100 dark:bg-gray-800">
             {tableHeaders.map((header) => (
-              <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left font-semibold">
+              <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left font-semibold" style={`width: ${columnWidth}`}>
                 {header}
               </th>
             ))}
@@ -28,7 +29,7 @@ const tableHeaders = renderKeys.map(key =>
           {data.map((item, index) => (
             <tr class={index % 2 === 0 ? "bg-gray-50 dark:bg-gray-900" : "bg-white dark:bg-gray-800"}>
               {renderKeys.map((key) => (
-                <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                <td class="border border-gray-300 dark:border-gray-600 px-4 py-2" style={`width: ${columnWidth}`}>
                   {item[key] || ""}
                 </td>
               ))}

@@ -12,6 +12,7 @@ interface Props {
   ariaLabel?: string
   as?: "button" | "a"
   block?: boolean
+  mobileBlock?: boolean
   dataCollection?: string
 }
 
@@ -28,14 +29,19 @@ const {
   ariaLabel,
   as = href ? "a" : "button",
   block = false,
+  mobileBlock = false,
   dataCollection
 } = Astro.props
 
 import { Icon } from "astro-icon/components"
 
-const baseClass = `cursor-pointer relative px-4 py-2 overflow-hidden font-semibold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-600 shadow-md rounded-sm group text-sm md:text-base ${
-  block ? 'w-full text-center' : 'w-full md:w-max'
-} transition-colors duration-200 ${className}`
+const getWidthClass = () => {
+  if (block) return 'w-full text-center'
+  if (mobileBlock) return 'w-full md:w-max text-center md:text-left'
+  return 'w-fit md:w-max'
+}
+
+const baseClass = `cursor-pointer relative px-4 py-2 overflow-hidden font-semibold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-600 shadow-md rounded-sm group text-sm md:text-base ${getWidthClass()} transition-colors duration-200 ${className}`
 ---
 
 {as === "a" ? (
