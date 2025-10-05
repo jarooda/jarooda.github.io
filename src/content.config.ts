@@ -32,6 +32,33 @@ const project = defineCollection({
   // Type-check frontmatter using a schema
   schema: z.object({
     title: z.string(),
+    heroImage: z.string().optional(),
+    status: z
+      .enum(["planning", "in-progress", "completed", "on-hold", "abandoned"])
+      .default("planning"),
+    category: z
+      .enum([
+        "web-app",
+        "mobile-app",
+        "library",
+        "tool",
+        "extension",
+        "game",
+        "other"
+      ])
+      .default("other"),
+    platform: z
+      .enum([
+        "web",
+        "mobile",
+        "desktop",
+        "cli",
+        "browser-extension",
+        "server",
+        "multi-platform",
+        "other"
+      ])
+      .default("other"),
     repo: z.string().optional(),
     demo: z.string().optional(),
     // Transform string to Date object
@@ -43,9 +70,6 @@ const project = defineCollection({
       .string()
       .optional()
       .transform((str) => (str ? new Date(str) : undefined)),
-    heroImage: z.string(),
-    isFeatured: z.boolean().optional(),
-    featuredOrder: z.number().optional(),
     stacks: z.array(z.string())
   })
 })

@@ -15,6 +15,7 @@ interface Props {
   mobileBlock?: boolean
   dataCollection?: string
   download?: boolean
+  [key: string]: any // Allow any additional attributes
 }
 
 const {
@@ -32,7 +33,8 @@ const {
   block = false,
   mobileBlock = false,
   dataCollection,
-  download
+  download,
+  ...rest
 } = Astro.props as Props
 
 import { Icon } from "astro-icon/components"
@@ -76,6 +78,7 @@ const baseClass = `cursor-pointer relative px-4 py-2 overflow-hidden font-semibo
       type={type}
       aria-label={ariaLabel}
       class={baseClass}
+      {...rest}
     >
       <span class="group-hover:w-full w-0 absolute h-0 transition-all duration-300 border-t-2 dark:border-gray-100 border-gray-700 ease top-0 left-0" />
       <span class="group-hover:w-full w-0 absolute h-0 transition-all duration-300 border-b-2 dark:border-gray-100 border-gray-700 ease bottom-0 right-0" />

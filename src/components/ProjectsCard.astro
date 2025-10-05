@@ -8,62 +8,67 @@ interface Props {
   title: string
   repo?: string
   demo?: string
-  heroImage?: string
   stacks: string[],
   post: any
+  status?: string
+  category?: string
+  platform?: string
 }
 
-const { title, heroImage, stacks = [], repo = '', demo = '', post } = Astro.props;
+const { title, stacks = [], repo = '', demo = '', post, status, category, platform } = Astro.props;
 const { Content } = await render(post);
+
+// Status badge colors
+const statusColors: Record<string, string> = {
+  'completed': 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
+  'in-progress': 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
+  'planning': 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200',
+  'on-hold': 'bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200',
+  'abandoned': 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+};
 
 ---
 
-<div class="flicking-panel relative flex w-full sm:w-128 mx-0 sm:mx-2 h-min flex-col rounded-xl bg-white dark:bg-gray-800 bg-clip-border text-gray-700 dark:text-gray-300 transition-colors duration-200">
-  <div class="relative overflow-hidden rounded-t-xl bg-blue-gray-500 bg-clip-border text-white group">
-    <div
-      style={{
-        backgroundImage: `url(${heroImage})`
-      }}
-      class=" w-full h-48 md:h-96 group-hover:scale-110 transition-all duration-500 ease-in-out transform object-cover object-center bg-no-repeat bg-center bg-cover"
-      />
-    </div>
-  <div class="p-6">
-    <div class=" flex flex-col md:flex-row mb-6 justify-between gap-4">
-      <h2 class=" block font-sans text-lg md:text-2xl font-bold leading-snug tracking-normal antialiased text-left">
-        { title }
-      </h2>
-      <div class=" flex gap-4">
-        {
-          demo && (
-          <aside class=" flex h-min">
-            <Anchor href={ demo } rel='noopener noreferrer' block target='_blank' icon="fluent:preview-link-16-regular">
-              Preview
-            </Anchor>
-          </aside>
-          )
-        }
-        {
-          repo && (
-          <aside class=" flex h-min">
-            <Anchor href={ repo } rel='noopener noreferrer' block target='_blank' icon="mdi:github">
-              Repo
-            </Anchor>
-          </aside>
-          )
-        }
-      </div>
-    </div>
-    <Content class="block font-sans text-sm md:text-base font-light leading-relaxed text-gray-700 antialiased" />
-    <div class="group mt-8 inline-flex flex-wrap items-center gap-3">
-      {
-        stacks.map((stack) => (
-          <Tag icon={ getIcon(stack) }>
-            <p class="text-xs md:text-sm">
-              { stack }
-            </p>
-          </Tag>
-        ))
-      }
-    </div>
+<div class="flex flex-col h-full rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6">
+  <div class="flex items-start justify-between gap-4 mb-4">
+    <h3 class="flex-1 text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100">
+      {title}
+    </h3>
+    {status && (
+      <span class={`px-3 py-1 text-xs font-semibold rounded-full ${statusColors[status] || statusColors['planning']}`}>
+        {status}
+      </span>
+    )}
   </div>
+  
+  {(demo || repo) && (
+    <div class="flex gap-3 mb-4">
+      {demo && (
+        <Anchor href={demo} rel='noopener noreferrer' block target='_blank' icon="fluent:preview-link-16-regular">
+          Preview
+        </Anchor>
+      )}
+      {repo && (
+        <Anchor href={repo} rel='noopener noreferrer' block target='_blank' icon="mdi:github">
+          Repo
+        </Anchor>
+      )}
+    </div>
+  )}
+  
+  <div class="flex-1 mb-4 text-sm md:text-base text-gray-700 dark:text-gray-300">
+    <Content />
+  </div>
+  
+  {stacks.length > 0 && (
+    <div class="flex flex-wrap gap-2">
+      {stacks.map((stack) => (
+        <Tag icon={getIcon(stack)}>
+          <p class="text-xs md:text-sm">
+            {stack}
+          </p>
+        </Tag>
+      ))}
+    </div>
+  )}
 </div>
