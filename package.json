@@ -33,7 +33,7 @@
     "@astrojs/sitemap": "^3.4.1",
     "@types/html-escaper": "^3.0.4",
     "@types/toastify-js": "^1.12.4",
-    "astro": "^5.9.1",
+    "astro": "^5.13.1",
     "cypress": "^14.4.1",
     "cypress-wait-until": "^3.0.2",
     "hast-util-to-string": "^3.0.1",
