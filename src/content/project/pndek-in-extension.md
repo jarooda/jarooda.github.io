@@ -3,7 +3,7 @@ title: 'pndek.in Chrome Extension'
 pubDate: 'Feb 23 2024'
 repo: 'https://pndek.in/gh'
 demo: 'https://pndek.in/extension'
-stacks: ['Javascript', 'Chrome API']
+stacks: ['Javascript', 'Chrome']
 status: 'completed'
 category: 'extension'
 platform: 'browser-extension'

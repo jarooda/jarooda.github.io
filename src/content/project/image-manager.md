@@ -1,7 +1,6 @@
 ---
 title: 'Image Manager'
 pubDate: 'May 14 2024'
-heroImage: 'https://cdn.jaluwibowo.id/assets/projects/image-manager.png'
 repo: 'https://pndek.in/img-manage-gh'
 demo: 'https://pndek.in/img-manage'
 stacks: ['Next', 'Supabase', 'AWS', 'AWS S3', 'React', 'Vercel']

@@ -3,7 +3,7 @@ title: 'pndek.in Telegram Bot'
 pubDate: 'Feb 23 2024'
 repo: 'https://pndek.in/gh'
 demo: 'https://pndek.in/bot'
-stacks: ['Telegram Bot', 'Express.js']
+stacks: ['Telegram Bot', 'Express']
 status: 'completed'
 category: 'tool'
 platform: 'server'

@@ -1,7 +1,6 @@
 ---
 title: 'JSON to Javascript Converter'
 pubDate: '21 Aug 2022'
-heroImage: 'https://cdn.jaluwibowo.id/assets/projects/json-to-js.png'
 repo: 'https://pndek.in/json-js-gh'
 demo: 'https://pndek.in/json-js'
 stacks: ['Vue.js']
