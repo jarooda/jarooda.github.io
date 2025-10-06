@@ -1,10 +1,10 @@
-# Hello! 👋
+# Hey there! 👋
 
-Hey there! I’m **Jalu Wibowo Aji**, but you can just call me **`Jalu`**.
+I’m **Jalu Wibowo Aji**, but you can just call me **`Jalu`**.
 
 I’m a software engineer with over **4** years of experience building web applications. Currently, I’m part of the team at [Sekolah.mu](https://sekolah.mu) where I focus on Vue.js. My journey in tech started at [Hacktiv8 Bootcamp](https://www.hacktiv8.com/), and I’m now continuing my studies for a Bachelor’s degree at [Universitas Terbuka](https://www.ut.ac.id/en/).
 
-I also keep a personal list of things I enjoy such as games, films, music, anime, and figures. It helps me track what I’ve played, watched, or listened to. If you’re interested, you are welcome to [take a look](/about/collections).
+I also keep a personal list of things I enjoy such as games, films, music, anime, and figures. It helps me track what I’ve played, watched, or listened to. If you’re interested, you are welcome to [take a look](/collections).
 
 Here’s the gear I currently use for work, studying, and unwinding:
 

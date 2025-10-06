@@ -33,4 +33,4 @@ const props = Astro.props;
 const { posts, tag } = props;
 ---
 
-<BlogList posts={ posts } header={ tag } />
+<BlogList posts={ posts } header={ `#${tag}` } />

@@ -33,15 +33,17 @@ const projectsByCategory = posts.reduce(
 )
 
 // Sort projects within each category by title
-Object.keys(projectsByCategory).forEach(category => {
-  projectsByCategory[category].sort((a, b) => 
+Object.keys(projectsByCategory).forEach((category) => {
+  projectsByCategory[category].sort((a, b) =>
     a.data.title.localeCompare(b.data.title)
   )
 })
 
 // Sort categories by project count (descending)
 const sortedProjectsByCategory = Object.fromEntries(
-  Object.entries(projectsByCategory).sort(([, a], [, b]) => (b as ProjectPost[]).length - (a as ProjectPost[]).length)
+  Object.entries(projectsByCategory).sort(
+    ([, a], [, b]) => (b as ProjectPost[]).length - (a as ProjectPost[]).length
+  )
 )
 
 // Category labels for display
@@ -100,7 +102,7 @@ const categoryIcons: Record<string, string> = {
 
       // Run on initial page load
       document.addEventListener("DOMContentLoaded", setupCategoryButtons)
-      
+
       // Run on Astro page transitions
       document.addEventListener("astro:page-load", setupCategoryButtons)
     </script>
@@ -110,15 +112,23 @@ const categoryIcons: Record<string, string> = {
   >
     <Header />
     <main class="bg-white dark:bg-gray-900 pt-20">
-      <section class="mx-auto w-full max-w-4xl p-4 md:p-8 min-h-screen">
-        <div class="mb-12">
-          <h1 class="text-2xl md:text-5xl font-semibold mb-8">#Projects</h1>
+      <section class="mx-auto w-full lg:w-256 px-6 min-h-screen">
+        <div class="mb-12 blog">
+          <h1 class="text-2xl md:text-5xl font-semibold mb-8">Projects</h1>
           <p class="blog mb-8">
-            A collection of my work across different categories. For more projects, please visit my <a
+            This section showcases some of my personal and experimental
+            projects.<br />
+            If you’re interested in seeing my professional work or client projects,
+            please visit my
+            <a
               href="https://www.upwork.com/freelancers/~010774d4112be0d77f?mp_source=share"
               target="_blank"
-              rel="noopener noreferrer">Upwork profile</a
-            >.
+              rel="noopener noreferrer">Upwork</a
+            > or <a
+              href="https://linkedin.com/in/jaluwibowoaji"
+              target="_blank"
+              rel="noopener noreferrer">LinkedIn</a
+            > profiles.
           </p>
 
           <!-- Table of Contents -->
