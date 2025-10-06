@@ -32,6 +32,18 @@ const projectsByCategory = posts.reduce(
   {} as Record<string, ProjectPost[]>
 )
 
+// Sort projects within each category by title
+Object.keys(projectsByCategory).forEach(category => {
+  projectsByCategory[category].sort((a, b) => 
+    a.data.title.localeCompare(b.data.title)
+  )
+})
+
+// Sort categories by project count (descending)
+const sortedProjectsByCategory = Object.fromEntries(
+  Object.entries(projectsByCategory).sort(([, a], [, b]) => (b as ProjectPost[]).length - (a as ProjectPost[]).length)
+)
+
 // Category labels for display
 const categoryLabels: Record<string, string> = {
   "web-app": "Web Applications",
@@ -41,18 +53,6 @@ const categoryLabels: Record<string, string> = {
   extension: "Extensions",
   game: "Games",
   other: "Other Projects"
-}
-
-const categoryColors: Record<string, string> = {
-  "web-app":
-    "bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200",
-  "mobile-app":
-    "bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200",
-  library: "bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200",
-  tool: "bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200",
-  extension: "bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200",
-  game: "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200",
-  other: "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
 }
 
 const categoryIcons: Record<string, string> = {
@@ -120,7 +120,7 @@ const categoryIcons: Record<string, string> = {
           <nav>
             <div class="flex flex-wrap gap-3">
               {
-                Object.entries(projectsByCategory).map(
+                Object.entries(sortedProjectsByCategory).map(
                   ([category, categoryPosts]) => {
                     const posts = categoryPosts as ProjectPost[]
                     return (
@@ -147,7 +147,7 @@ const categoryIcons: Record<string, string> = {
         <!-- Projects by Category -->
         <div class="space-y-16">
           {
-            Object.entries(projectsByCategory).map(
+            Object.entries(sortedProjectsByCategory).map(
               ([category, categoryPosts]) => {
                 const posts = categoryPosts as ProjectPost[]
                 return (

@@ -1,12 +1,12 @@
 ---
-title: 'pndek.in'
+title: 'pndek.in Chrome Extension'
 pubDate: 'Feb 23 2024'
 repo: 'https://pndek.in/gh'
-demo: 'https://pndek.in/aja'
-stacks: ['Remix', 'Telegram Bot', 'Parcel', 'React', 'Express.js', 'Postgresql', 'Safe Browsing API', 'IP Geolocation API']
+demo: 'https://pndek.in/extension'
+stacks: ['Javascript', 'Chrome API']
 status: 'completed'
 category: 'extension'
 platform: 'browser-extension'
 ---
 
-pndek.in is a web app that can shorten your links and manage URLs. You can create a shortened link either by logging in or without logging in to the web app, and you can even use the <mark>Telegram bot</mark> to shorten it. Using <mark>Safe Browsing API</mark> when creating a short link ensures that malicious links would not be created. Utilizing <mark>IP Geolocation API</mark> when redirecting short links makes the <mark>analytics</mark> more <mark>robust</mark> and <mark>comprehensive</mark>.
+pndek.in <mark>Chrome Extension</mark> to help user shorten an URL using chrome extension.
