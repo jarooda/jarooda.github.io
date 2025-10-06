@@ -1,45 +1,180 @@
 ---
 import { ClientRouter } from "astro:transitions"
-import BaseHead from '../components/shared/BaseHead.astro';
-import Header from '../components/shared/Header.astro';
-import Footer from '../components/shared/Footer.astro';
-import FlickingComponent from '../components/FlickingComponent.astro';
-import ProjectsCard from '../components/ProjectsCard.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
-import { getCollection } from 'astro:content';
-import { sortPosts } from '../utils/posts-helper';
-import '../styles/index.css';
-import '../styles/base.css';
+import { Icon } from "astro-icon/components"
+import BaseHead from "../components/shared/BaseHead.astro"
+import Header from "../components/shared/Header.astro"
+import Footer from "../components/shared/Footer.astro"
+import ProjectsCard from "../components/ProjectsCard.astro"
+import AnimatedButton from "../components/shared/AnimatedButton.astro"
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts"
+import { getCollection } from "astro:content"
+import { sortPosts } from "../utils/posts-helper"
+import "../styles/index.css"
+import "../styles/base.css"
+import "../styles/blogs.css"
 
-const posts = sortPosts(await getCollection('project'))
+const posts = sortPosts(await getCollection("project"))
 
-const title = `Projects - ${ SITE_TITLE }`
+const title = `Projects - ${SITE_TITLE}`
 
+type ProjectPost = (typeof posts)[number]
+
+// Group projects by category
+const projectsByCategory = posts.reduce(
+  (acc, post) => {
+    const category = post.data.category || "other"
+    if (!acc[category]) {
+      acc[category] = []
+    }
+    acc[category].push(post)
+    return acc
+  },
+  {} as Record<string, ProjectPost[]>
+)
+
+// Sort projects within each category by title
+Object.keys(projectsByCategory).forEach(category => {
+  projectsByCategory[category].sort((a, b) => 
+    a.data.title.localeCompare(b.data.title)
+  )
+})
+
+// Sort categories by project count (descending)
+const sortedProjectsByCategory = Object.fromEntries(
+  Object.entries(projectsByCategory).sort(([, a], [, b]) => (b as ProjectPost[]).length - (a as ProjectPost[]).length)
+)
+
+// Category labels for display
+const categoryLabels: Record<string, string> = {
+  "web-app": "Web Applications",
+  "mobile-app": "Mobile Applications",
+  library: "Libraries",
+  tool: "Tools",
+  extension: "Extensions",
+  game: "Games",
+  other: "Other Projects"
+}
+
+const categoryIcons: Record<string, string> = {
+  "web-app": "mdi:web",
+  "mobile-app": "mdi:cellphone",
+  library: "mdi:library",
+  tool: "mdi:tools",
+  extension: "mdi:puzzle",
+  game: "mdi:gamepad-variant",
+  other: "mdi:dots-horizontal"
+}
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={ title } description={ SITE_DESCRIPTION } />
-    <script is:inline async src="/scripts/flicking.min.js" />
+  <head>
+    <BaseHead title={title} description={SITE_DESCRIPTION} />
     <ClientRouter />
-    <link rel="stylesheet" href="/styles/flicking.css" />
-    <link rel="stylesheet" href="/styles/flicking-plugin.css" />
-	</head>
-	<body class="font-inter bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 transition-colors duration-200">
-		<Header />
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+    <script is:inline>
+      document.addEventListener("DOMContentLoaded", () => {
+        const categoryButtons = document.querySelectorAll(
+          "[data-category-target]"
+        )
+
+        categoryButtons.forEach((button) => {
+          button.addEventListener("click", (e) => {
+            e.preventDefault()
+            const targetId = button.getAttribute("data-category-target")
+            const targetElement = document.getElementById(targetId)
+
+            if (targetElement) {
+              targetElement.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+              })
+            }
+          })
+        })
+      })
+    </script>
+  </head>
+  <body
+    class="font-lato bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 transition-colors duration-200"
+  >
+    <Header />
     <main class="bg-white dark:bg-gray-900 pt-20">
-			<section class=" mx-auto w-full lg:w-256 p-4 min-h-screen">
-        <h1 class=" w-max text-2xl md:text-5xl font-semibold mb-8">#Projects</h1>
-        <FlickingComponent>
+      <section class="mx-auto w-full max-w-4xl p-4 md:p-8 min-h-screen">
+        <div class="mb-12">
+          <h1 class="text-2xl md:text-5xl font-semibold mb-8">#Projects</h1>
+          <p class="blog mb-8">
+            A collection of my work across different categories, for other
+            projects, please visit my <a
+              href="https://www.upwork.com/freelancers/~010774d4112be0d77f?mp_source=share"
+              target="_blank"
+              rel="noopener noreferrer">Upwork profile</a
+            >.
+          </p>
+
+          <!-- Table of Contents -->
+          <nav>
+            <div class="flex flex-wrap gap-3">
+              {
+                Object.entries(sortedProjectsByCategory).map(
+                  ([category, categoryPosts]) => {
+                    const posts = categoryPosts as ProjectPost[]
+                    return (
+                      <AnimatedButton
+                        as="button"
+                        class="!w-auto"
+                        data-category-target={category}
+                      >
+                        <span class="flex items-center gap-2">
+                          <span>{categoryLabels[category] || category}</span>
+                          <span class="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded-full">
+                            {posts.length}
+                          </span>
+                        </span>
+                      </AnimatedButton>
+                    )
+                  }
+                )
+              }
+            </div>
+          </nav>
+        </div>
+
+        <!-- Projects by Category -->
+        <div class="space-y-16">
           {
-            posts.map((post) => (
-              <ProjectsCard { ...post.data } post={post} />
-            ))
+            Object.entries(sortedProjectsByCategory).map(
+              ([category, categoryPosts]) => {
+                const posts = categoryPosts as ProjectPost[]
+                return (
+                  <div id={category} class="scroll-mt-24">
+                    <div class="mb-6 pb-2 border-b-2 border-gray-200 dark:border-gray-700 flex items-center gap-2">
+                      <Icon
+                        name={categoryIcons[category] || "mdi:dots-horizontal"}
+                        class="inline-block w-6 h-6"
+                      />
+                      <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-200">
+                        {categoryLabels[category] || category}{" "}
+                      </h2>
+                    </div>
+                    <div class="grid grid-cols-1 gap-6">
+                      {posts.map((post) => (
+                        <ProjectsCard {...post.data} post={post} />
+                      ))}
+                    </div>
+                  </div>
+                )
+              }
+            )
           }
-        </FlickingComponent>
-			</section>
-		</main>
-		<Footer />
-	</body>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </body>
 </html>

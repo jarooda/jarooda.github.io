@@ -3,67 +3,119 @@ import Tag from './Tag.astro';
 import Anchor from './shared/Anchor.astro';
 import { getIcon } from '../consts';
 import { render } from 'astro:content';
+import { Icon } from 'astro-icon/components';
 
 interface Props {
   title: string
   repo?: string
   demo?: string
-  heroImage?: string
   stacks: string[],
   post: any
+  status?: string
+  category?: string
+  platform?: string
 }
 
-const { title, heroImage, stacks = [], repo = '', demo = '', post } = Astro.props;
+const { title, stacks = [], repo = '', demo = '', post, status, category, platform } = Astro.props;
 const { Content } = await render(post);
 
+// Status badge colors
+const statusColors: Record<string, string> = {
+  'completed': 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
+  'in-progress': 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
+  'planning': 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200',
+  'on-hold': 'bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200',
+  'abandoned': 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+};
+
+// Platform badge colors
+const platformColors: Record<string, string> = {
+  'web': 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
+  'mobile': 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
+  'desktop': 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200',
+  'cli': 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200',
+  'browser-extension': 'bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200',
+  'server': 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200',
+  'multi-platform': 'bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200',
+  'other': 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+};
+
+// Format display names
+const formatLabel = (str: string) => {
+  return str.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+};
+
+// Platform icons
+const platformIcons: Record<string, string> = {
+  'web': 'mdi:web',
+  'mobile': 'mdi:cellphone',
+  'desktop': 'mdi:monitor',
+  'cli': 'mdi:console',
+  'browser-extension': 'mdi:puzzle',
+  'server': 'mdi:server',
+  'multi-platform': 'mdi:devices',
+  'other': 'mdi:help-circle'
+};
+
+// Status icons
+const statusIcons: Record<string, string> = {
+  'completed': 'mdi:check-circle',
+  'in-progress': 'mdi:progress-clock',
+  'planning': 'mdi:lightbulb-outline',
+  'on-hold': 'mdi:pause-circle',
+  'abandoned': 'mdi:close-circle'
+};
 ---
 
-<div class="flicking-panel relative flex w-full sm:w-128 mx-0 sm:mx-2 h-min flex-col rounded-xl bg-white dark:bg-gray-800 bg-clip-border text-gray-700 dark:text-gray-300 transition-colors duration-200">
-  <div class="relative overflow-hidden rounded-t-xl bg-blue-gray-500 bg-clip-border text-white group">
-    <div
-      style={{
-        backgroundImage: `url(${heroImage})`
-      }}
-      class=" w-full h-48 md:h-96 group-hover:scale-110 transition-all duration-500 ease-in-out transform object-cover object-center bg-no-repeat bg-center bg-cover"
-      />
-    </div>
-  <div class="p-6">
-    <div class=" flex flex-col md:flex-row mb-6 justify-between gap-4">
-      <h2 class=" block font-sans text-lg md:text-2xl font-bold leading-snug tracking-normal antialiased text-left">
-        { title }
-      </h2>
-      <div class=" flex gap-4">
-        {
-          demo && (
-          <aside class=" flex h-min">
-            <Anchor href={ demo } rel='noopener noreferrer' block target='_blank' icon="fluent:preview-link-16-regular">
-              Preview
-            </Anchor>
-          </aside>
-          )
-        }
-        {
-          repo && (
-          <aside class=" flex h-min">
-            <Anchor href={ repo } rel='noopener noreferrer' block target='_blank' icon="mdi:github">
-              Repo
-            </Anchor>
-          </aside>
-          )
-        }
-      </div>
-    </div>
-    <Content class="block font-sans text-sm md:text-base font-light leading-relaxed text-gray-700 antialiased" />
-    <div class="group mt-8 inline-flex flex-wrap items-center gap-3">
-      {
-        stacks.map((stack) => (
-          <Tag icon={ getIcon(stack) }>
-            <p class="text-xs md:text-sm">
-              { stack }
-            </p>
-          </Tag>
-        ))
-      }
-    </div>
+<div class="flex flex-col h-full rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6">
+  <h3 class="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+    {title}
+  </h3>
+  
+  <div class="flex-1 mb-4 text-sm md:text-base text-gray-700 dark:text-gray-300">
+    <Content />
   </div>
+  
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+    <div class="flex flex-wrap gap-2">
+      {status && (
+        <span class={`px-3 py-1 text-xs md:text-sm font-semibold rounded-full flex items-center gap-1 ${statusColors[status] || statusColors['planning']}`}>
+          <Icon name={statusIcons[status] || statusIcons['planning']} class="w-3 h-3" />
+          {formatLabel(status)}
+        </span>
+      )}
+
+      {platform && (
+        <span class={`px-3 py-1 text-xs md:text-sm font-semibold rounded-full flex items-center gap-1 ${platformColors[platform] || platformColors['other']}`}>
+          <Icon name={platformIcons[platform] || platformIcons['other']} class="w-3 h-3" />
+          {formatLabel(platform)}
+        </span>
+      )}
+    </div>
+    
+    {(demo || repo) && (
+      <div class="flex gap-2 shrink-0">
+        {demo && (
+          <Anchor href={demo} rel='noopener noreferrer' target='_blank' icon="fluent:preview-link-16-regular" block>
+            Preview
+          </Anchor>
+        )}
+        {repo && (
+          <Anchor href={repo} rel='noopener noreferrer' target='_blank' icon="mdi:github" block>
+            Repo
+          </Anchor>
+        )}
+      </div>
+    )}
+  </div>
+  
+  {stacks.length > 0 && (
+    <div class="flex flex-wrap gap-2">
+      {stacks.map((stack) => (
+        <Tag icon={getIcon(stack)}>
+          {stack}
+        </Tag>
+      ))}
+    </div>
+  )}
 </div>

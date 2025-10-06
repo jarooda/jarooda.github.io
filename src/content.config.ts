@@ -32,6 +32,33 @@ const project = defineCollection({
   // Type-check frontmatter using a schema
   schema: z.object({
     title: z.string(),
+    heroImage: z.string().optional(),
+    status: z
+      .enum(["planning", "in-progress", "completed", "on-hold", "abandoned"])
+      .default("planning"),
+    category: z
+      .enum([
+        "web-app",
+        "mobile-app",
+        "library",
+        "tool",
+        "extension",
+        "game",
+        "other"
+      ])
+      .default("other"),
+    platform: z
+      .enum([
+        "web",
+        "mobile",
+        "desktop",
+        "cli",
+        "browser-extension",
+        "server",
+        "multi-platform",
+        "other"
+      ])
+      .default("other"),
     repo: z.string().optional(),
     demo: z.string().optional(),
     // Transform string to Date object
@@ -43,9 +70,6 @@ const project = defineCollection({
       .string()
       .optional()
       .transform((str) => (str ? new Date(str) : undefined)),
-    heroImage: z.string(),
-    isFeatured: z.boolean().optional(),
-    featuredOrder: z.number().optional(),
     stacks: z.array(z.string())
   })
 })
@@ -61,8 +85,22 @@ const games = defineCollection({
   schema: z.object({
     title: z.string(),
     developer: z.string(),
-    platform: z.string(),
-    status: z.string(),
+    platform: z.enum([
+      "Nintendo Switch",
+      "Mobile",
+      "PC",
+      "Web",
+      "PlayStation",
+      "Xbox",
+      "Other"
+    ]),
+    status: z.enum([
+      'Backlog',
+      'Playing',
+      'Finished',
+      'Paused',
+      'Dropped',
+    ]),
     format: z.string(),
     web: z.string().optional()
   })
@@ -183,7 +221,22 @@ const gadgets = defineCollection({
   },
   schema: z.object({
     name: z.string(),
-    type: z.string(),
+    type: z.enum([
+      "Smartphone",
+      "Tablet",
+      "Laptop",
+      "Desktop",
+      "Monitor",
+      "Keyboard",
+      "Mouse",
+      "Headphone",
+      "Earphone",
+      "Smartwatch",
+      "Camera",
+      "Console",
+      "Accessory",
+      "Other"
+    ]),
     brand: z.string(),
     notes: z.string(),
     web: z.string().optional()

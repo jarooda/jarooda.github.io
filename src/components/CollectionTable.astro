@@ -1,38 +1,114 @@
 ---
+import { Icon } from 'astro-icon/components'
+
+type RenderKey = string | {
+  key: string
+  column?: (item: any) => string | any
+  header?: string
+  icon?: string | ((item: any) => string)
+  align?: 'left' | 'center' | 'right'
+}
+
 interface Props {
   id: string;
   data: any[];
-  renderKeys: string[];
+  renderKeys: RenderKey[];
 }
 
 const { id, data, renderKeys } = Astro.props;
-const tableHeaders = renderKeys.map(key => 
-  key.charAt(0).toUpperCase() + key.slice(1)
-);
+
+const tableHeaders = renderKeys.map(key => {
+  if (typeof key === 'string') {
+    return { text: key.charAt(0).toUpperCase() + key.slice(1), align: 'left' };
+  } else {
+    return { 
+      text: key.header || key.key.charAt(0).toUpperCase() + key.key.slice(1),
+      align: key.align || 'left'
+    };
+  }
+});
+
 const columnWidth = `${100 / renderKeys.length}%`;
 ---
 
 <div id={id} class="collection-table" style="display: none;">
   {data.length > 0 && (
     <div class="overflow-x-auto">
-      <table class="w-full border-collapse border border-gray-300 dark:border-gray-600">
+      <table class="w-full border-collapse">
         <thead>
-          <tr class="bg-gray-100 dark:bg-gray-800">
-            {tableHeaders.map((header) => (
-              <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left font-semibold" style={`width: ${columnWidth}`}>
-                {header}
-              </th>
-            ))}
+          <tr class="border-b-2 border-gray-200 dark:border-gray-700">
+            {tableHeaders.map((header) => {
+              const alignClass = header.align === 'center' ? 'text-center' : header.align === 'right' ? 'text-right' : 'text-left';
+              return (
+                <th class={`px-6 py-3 font-semibold text-gray-700 dark:text-gray-300 ${alignClass}`} style={`width: ${columnWidth}`}>
+                  {header.text}
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody>
           {data.map((item, index) => (
-            <tr class={index % 2 === 0 ? "bg-gray-50 dark:bg-gray-900" : "bg-white dark:bg-gray-800"}>
-              {renderKeys.map((key) => (
-                <td class="border border-gray-300 dark:border-gray-600 px-4 py-2" style={`width: ${columnWidth}`}>
-                  {item[key] || ""}
-                </td>
-              ))}
+            <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+              {renderKeys.map((renderKey, colIndex) => {
+                let cellValue: any = "";
+                let isHtml = false;
+                let iconName: string | undefined;
+                const align = typeof renderKey === 'string' ? 'left' : (renderKey.align || 'left');
+                
+                if (typeof renderKey === 'string') {
+                  cellValue = item[renderKey] || "";
+                } else {
+                  const value = item[renderKey.key];
+                  
+                  if (renderKey.icon) {
+                    iconName = typeof renderKey.icon === 'function' 
+                      ? renderKey.icon(item) 
+                      : renderKey.icon;
+                  }
+                  
+                  if (renderKey.column) {
+                    const result = renderKey.column(item);
+                    
+                    if (typeof result === 'object' && result !== null && '__html' in result) {
+                      cellValue = result.__html;
+                      isHtml = true;
+                    } else if (typeof result === 'string' && (result.includes('<') || result.includes('>'))) {
+                      cellValue = result;
+                      isHtml = true;
+                    } else {
+                      cellValue = result;
+                    }
+                  } else {
+                    cellValue = value || "";
+                  }
+                }
+                
+                const alignClass = align === 'center' ? 'text-center' : align === 'right' ? 'text-right' : 'text-left';
+                
+                return (
+                  <td class={`px-6 py-4 text-gray-600 dark:text-gray-400 ${alignClass}`} style={`width: ${columnWidth}`}>
+                    {iconName ? (
+                      <span class="inline-flex items-center gap-2">
+                        <Icon name={iconName} class="w-auto h-5 flex-shrink-0" />
+                        {isHtml ? (
+                          <span set:html={cellValue} />
+                        ) : (
+                          <span>{cellValue}</span>
+                        )}
+                      </span>
+                    ) : (
+                      <>
+                        {isHtml ? (
+                          <Fragment set:html={cellValue} />
+                        ) : (
+                          cellValue
+                        )}
+                      </>
+                    )}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>

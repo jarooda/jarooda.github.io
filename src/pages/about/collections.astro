@@ -8,11 +8,27 @@ import CollectionContent from "../../components/CollectionContent.md"
 import CollectionTable from "../../components/CollectionTable.astro"
 import Anchor from "../../components/shared/Anchor.astro"
 
+import {
+  getPlatformIcon,
+  getStatusIcon,
+  getGadgetTypeIcon
+} from "../../utils/icon-helpers"
+
 import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts"
 import "../../styles/base.css"
 import "../../styles/blogs.css"
 
 const title = "My Collections | " + SITE_TITLE + " - Frontend Developer"
+
+type RenderKey =
+  | string
+  | {
+      key: string
+      column?: (item: any) => string | any
+      header?: string
+      icon?: string | ((item: any) => string)
+      align?: 'left' | 'center' | 'right'
+    }
 
 type ListConfig = {
   key:
@@ -28,7 +44,7 @@ type ListConfig = {
   description: string
   link: string
   buttonText: string
-  renderKeys: string[]
+  renderKeys: RenderKey[]
 }
 
 const lists: ListConfig[] = [
@@ -38,15 +54,19 @@ const lists: ListConfig[] = [
     description: "A collection of games that I've played",
     link: "/about/collections?for=games",
     buttonText: "Games",
-    renderKeys: ["title", "developer", "platform", "status"]
-  },
-  {
-    key: "figures",
-    title: "Figures",
-    description: "A collection of figures that I've collected.",
-    link: "/about/collections?for=figures",
-    buttonText: "Figures",
-    renderKeys: ["name", "series", "manufacturer"]
+    renderKeys: [
+      {
+        key: "title",
+        icon: getPlatformIcon
+      },
+      "developer",
+      {
+        key: "status",
+        icon: getStatusIcon,
+        header: "Playing Status",
+        align: 'center'
+      }
+    ]
   },
   {
     key: "books",
@@ -55,6 +75,14 @@ const lists: ListConfig[] = [
     link: "/about/collections?for=books",
     buttonText: "Books",
     renderKeys: ["title", "author"]
+  },
+  {
+    key: "figures",
+    title: "Figures",
+    description: "A collection of figures that I've collected.",
+    link: "/about/collections?for=figures",
+    buttonText: "Figures",
+    renderKeys: ["name", "manufacturer"]
   },
   {
     key: "movies",
@@ -94,14 +122,19 @@ const lists: ListConfig[] = [
     description: "A collection of gadgets that I've owned.",
     link: "/about/collections?for=gadgets",
     buttonText: "Gadgets",
-    renderKeys: ["name", "brand"]
-  }
+    renderKeys: [
+      {
+        key: "name",
+        icon: getGadgetTypeIcon
+      },
+      "brand"
+    ]
+  },
 ]
 
 // Get query parameter
 const collectionType = Astro.url.searchParams.get("for") || "games"
 
-// Fetch all collections dynamically based on lists configuration
 const collectionsPromises = lists.map(async (list) => {
   try {
     const collection = await getCollection(list.key as any)
@@ -111,7 +144,6 @@ const collectionsPromises = lists.map(async (list) => {
       config: list
     }
   } catch (error) {
-    // Handle case where collection doesn't exist
     console.warn(`Collection "${list.key}" not found`)
     return {
       key: list.key,
@@ -123,7 +155,6 @@ const collectionsPromises = lists.map(async (list) => {
 
 const collectionsArray = await Promise.all(collectionsPromises)
 
-// Convert array to object for easier access
 type CollectionData = {
   data: any[]
   config: ListConfig
@@ -150,7 +181,7 @@ const collectionsData = collectionsArray.reduce(
     <script src="../../utils/anchor-removal.ts"></script>
   </head>
   <body
-    class="bg-white dark:bg-gray-900 font-inter transition-colors duration-200"
+    class="bg-white dark:bg-gray-900 font-lato transition-colors duration-200"
   >
     <Header hasSeparator={false} />
     <main
@@ -179,7 +210,6 @@ const collectionsData = collectionsArray.reduce(
         </ul>
       </nav>
 
-      <!-- Collection Tables -->
       {
         lists.map((list) => (
           <CollectionTable
@@ -190,7 +220,6 @@ const collectionsData = collectionsArray.reduce(
         ))
       }
 
-      <!-- No data message -->
       <div id="no-data" class="text-center py-8" style="display: none;">
         <p class="text-gray-500 dark:text-gray-400">
           No data available for this collection.
@@ -198,18 +227,15 @@ const collectionsData = collectionsArray.reduce(
       </div>
 
       <script define:vars={{ initialCollection: collectionType }}>
-        // Get the actual collection type from the current URL
         const urlParams = new URLSearchParams(window.location.search)
         const actualCollectionType = urlParams.get("for") || "games"
 
         function showCollection(collectionType, updateUrl = true) {
-          // Hide all tables
           document.querySelectorAll(".collection-table").forEach((table) => {
             table.style.display = "none"
           })
           document.getElementById("no-data").style.display = "none"
 
-          // Show the selected table
           const tableId = collectionType + "-table"
           const table = document.getElementById(tableId)
 
@@ -219,18 +245,15 @@ const collectionsData = collectionsArray.reduce(
             document.getElementById("no-data").style.display = "block"
           }
 
-          // Update URL without page reload only if requested
           if (updateUrl) {
             const url = new URL(window.location)
             url.searchParams.set("for", collectionType)
             window.history.replaceState({}, "", url)
           }
 
-          // Update active navigation - only target collection nav links
           document.querySelectorAll("[data-collection]").forEach((link) => {
             const linkCollection = link.getAttribute("data-collection")
             if (linkCollection === collectionType) {
-              // Add active class or styling if needed
               link.setAttribute("data-active", "true")
             } else {
               link.removeAttribute("data-active")
@@ -238,7 +261,6 @@ const collectionsData = collectionsArray.reduce(
           })
         }
 
-        // Handle navigation clicks - only target collection nav links
         document.querySelectorAll("[data-collection]").forEach((link) => {
           link.addEventListener("click", (e) => {
             e.preventDefault()
@@ -247,7 +269,6 @@ const collectionsData = collectionsArray.reduce(
           })
         })
 
-        // Use the actual URL parameter instead of server-side value
         showCollection(actualCollectionType, false)
       </script>
     </main>
