@@ -1,7 +1,7 @@
 {
   "name": "jarooda.github.io",
   "type": "module",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "packageManager": "pnpm@8.6.3",
   "scripts": {
     "dev": "astro dev",
