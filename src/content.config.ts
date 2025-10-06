@@ -85,8 +85,22 @@ const games = defineCollection({
   schema: z.object({
     title: z.string(),
     developer: z.string(),
-    platform: z.string(),
-    status: z.string(),
+    platform: z.enum([
+      "Nintendo Switch",
+      "Mobile",
+      "PC",
+      "Web",
+      "PlayStation",
+      "Xbox",
+      "Other"
+    ]),
+    status: z.enum([
+      'Backlog',
+      'Playing',
+      'Finished',
+      'Paused',
+      'Dropped',
+    ]),
     format: z.string(),
     web: z.string().optional()
   })
@@ -207,7 +221,22 @@ const gadgets = defineCollection({
   },
   schema: z.object({
     name: z.string(),
-    type: z.string(),
+    type: z.enum([
+      "Smartphone",
+      "Tablet",
+      "Laptop",
+      "Desktop",
+      "Monitor",
+      "Keyboard",
+      "Mouse",
+      "Headphone",
+      "Earphone",
+      "Smartwatch",
+      "Camera",
+      "Console",
+      "Accessory",
+      "Other"
+    ]),
     brand: z.string(),
     notes: z.string(),
     web: z.string().optional()
