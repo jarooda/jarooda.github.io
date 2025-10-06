@@ -2,7 +2,6 @@
 title: "Slidev Repo Template"
 pubDate: "10 Jun 2024"
 repo: "https://github.com/jarooda/slidev-repo-template"
-demo: "https://www.npmjs.com/package/string-randomify"
 stacks: ["pnpm", "hygen"]
 status: "completed"
 category: "library"
