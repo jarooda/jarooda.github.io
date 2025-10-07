@@ -214,7 +214,7 @@ const musics = defineCollection({
 const gadgets = defineCollection({
   loader: async () => {
     const data = await Collection.getGadgetsCollection()
-    return data.map((item, index) => ({
+    return data.filter(item => item.in_use.toLowerCase() === "true").map((item, index) => ({
       id: `gadget-${index + 1}`,
       ...item
     }))
@@ -239,6 +239,7 @@ const gadgets = defineCollection({
     ]),
     brand: z.string(),
     notes: z.string(),
+    in_use: z.string(),
     web: z.string().optional()
   })
 })

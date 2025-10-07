@@ -52,9 +52,9 @@ export function getGadgetTypeIcon(item: any): string {
     "Earphone": "mdi:earbuds",
     "Smartwatch": "mdi:watch",
     "Camera": "mdi:camera",
-    "Console": "mdi:gamepad",
-    "Accessory": "mdi:usb",
-    "Other": "mdi:devices"
+    "Console": "mdi:google-gamepad",
+    "Accessory": "mdi:cable-data",
+    "Other": "mdi:power-standby"
   }
   
   return iconMap[type] || "mdi:chip"
