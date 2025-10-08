@@ -27,7 +27,7 @@ type RenderKey =
       column?: (item: any) => string | any
       header?: string
       icon?: string | ((item: any) => string)
-      align?: 'left' | 'center' | 'right'
+      align?: "left" | "center" | "right"
     }
 
 type ListConfig = {
@@ -64,8 +64,22 @@ const lists: ListConfig[] = [
         key: "status",
         icon: getStatusIcon,
         header: "Playing Status",
-        align: 'center'
+        align: "center"
       }
+    ]
+  },
+  {
+    key: "figures",
+    title: "Figures",
+    description: "A collection of figures that I've collected.",
+    link: "/about/collections?for=figures",
+    buttonText: "Figures",
+    renderKeys: [
+      {
+        key: "name",
+        column: (item) => `${item.type} ${item.name}`,
+      },
+      "manufacturer"
     ]
   },
   {
@@ -75,14 +89,6 @@ const lists: ListConfig[] = [
     link: "/about/collections?for=books",
     buttonText: "Books",
     renderKeys: ["title", "author"]
-  },
-  {
-    key: "figures",
-    title: "Figures",
-    description: "A collection of figures that I've collected.",
-    link: "/about/collections?for=figures",
-    buttonText: "Figures",
-    renderKeys: ["name", "manufacturer"]
   },
   {
     key: "movies",
@@ -129,7 +135,7 @@ const lists: ListConfig[] = [
       },
       "brand"
     ]
-  },
+  }
 ]
 
 // Get query parameter
