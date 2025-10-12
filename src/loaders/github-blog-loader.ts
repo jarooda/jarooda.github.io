@@ -69,7 +69,7 @@ export function githubLoader(options: GitHubLoaderOptions): Loader {
         const response = await fetch(apiUrl, {
           headers: {
             'Accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'Astro-Blog-Loader',
+            'User-Agent': 'Astro-Loader',
           },
         });
 
@@ -84,7 +84,7 @@ export function githubLoader(options: GitHubLoaderOptions): Loader {
           await processGitHubItem(item, context, owner, repo, path, branch, markdownProcessor);
         }
 
-        context.logger.info(`Loaded blog content from GitHub: ${owner}/${repo}/${path}`);
+        context.logger.info(`Loaded content from GitHub: ${owner}/${repo}/${path}`);
       } catch (error) {
         context.logger.error(`Failed to load content from GitHub: ${error}`);
         throw error;

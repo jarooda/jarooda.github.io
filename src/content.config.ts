@@ -38,7 +38,12 @@ const blog = defineCollection({
 })
 
 const project = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/project" }),
+  loader: githubLoader({ 
+    owner: "jarooda", 
+    repo: "projects", 
+    path: "project",
+    branch: "main"
+  }),
   // Type-check frontmatter using a schema
   schema: z.object({
     title: z.string(),
