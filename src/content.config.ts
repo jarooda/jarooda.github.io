@@ -2,9 +2,15 @@ import { defineCollection, z } from "astro:content"
 import { glob } from "astro/loaders"
 
 import * as Collection from "./content/collections"
+import { githubLoader } from "./loaders/github-blog-loader"
 
 const blog = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/blog" }),
+  loader: githubLoader({ 
+    owner: "jarooda", 
+    repo: "blogs", 
+    path: "blog",
+    branch: "main"
+  }),
   // Type-check frontmatter using a schema
   schema: z.object({
     title: z.string(),
@@ -13,11 +19,15 @@ const blog = defineCollection({
     pubDate: z
       .string()
       .or(z.date())
-      .transform((val) => new Date(val)),
+      .transform((val) => val instanceof Date ? val : new Date(val)),
     updatedDate: z
       .string()
+      .or(z.date())
       .optional()
-      .transform((str) => (str ? new Date(str) : undefined)),
+      .transform((str) => {
+        if (!str) return undefined;
+        return str instanceof Date ? str : new Date(str);
+      }),
     heroImage: z.string().optional(),
     metaImage: z.string().optional(),
     tags: z.array(z.string()),
