@@ -2,22 +2,37 @@ import { defineCollection, z } from "astro:content"
 import { glob } from "astro/loaders"
 
 import * as Collection from "./content/collections"
+import { githubLoader } from "./loaders/github-blog-loader"
+
+// Reusable date transformation for Zod schemas
+const dateTransform = z
+  .string()
+  .or(z.date())
+  .transform((val) => val instanceof Date ? val : new Date(val));
+
+const optionalDateTransform = z
+  .string()
+  .or(z.date())
+  .optional()
+  .transform((val) => {
+    if (!val) return undefined;
+    return val instanceof Date ? val : new Date(val);
+  });
 
 const blog = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/blog" }),
+  loader: githubLoader({ 
+    owner: "jarooda", 
+    repo: "blogs", 
+    path: "blog",
+    branch: "main"
+  }),
   // Type-check frontmatter using a schema
   schema: z.object({
     title: z.string(),
     description: z.string(),
     // Transform string to Date object
-    pubDate: z
-      .string()
-      .or(z.date())
-      .transform((val) => new Date(val)),
-    updatedDate: z
-      .string()
-      .optional()
-      .transform((str) => (str ? new Date(str) : undefined)),
+    pubDate: dateTransform,
+    updatedDate: optionalDateTransform,
     heroImage: z.string().optional(),
     metaImage: z.string().optional(),
     tags: z.array(z.string()),
@@ -28,7 +43,12 @@ const blog = defineCollection({
 })
 
 const project = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/project" }),
+  loader: githubLoader({ 
+    owner: "jarooda", 
+    repo: "projects", 
+    path: "project",
+    branch: "main"
+  }),
   // Type-check frontmatter using a schema
   schema: z.object({
     title: z.string(),
@@ -62,14 +82,8 @@ const project = defineCollection({
     repo: z.string().optional(),
     demo: z.string().optional(),
     // Transform string to Date object
-    pubDate: z
-      .string()
-      .or(z.date())
-      .transform((val) => new Date(val)),
-    updatedDate: z
-      .string()
-      .optional()
-      .transform((str) => (str ? new Date(str) : undefined)),
+    pubDate: dateTransform,
+    updatedDate: optionalDateTransform,
     stacks: z.array(z.string())
   })
 })
