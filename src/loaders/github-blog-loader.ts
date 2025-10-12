@@ -18,8 +18,8 @@ interface GitHubContent {
 }
 
 // Parse frontmatter from markdown content
-function parseFrontmatter(content: string): { data: Record<string, any>; body: string } {
-  const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+function parseFrontmatter(content: string, filename?: string): { data: Record<string, any>; body: string } {
+  const frontmatterRegex = /^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n([\s\S]*)$/;
   const match = content.match(frontmatterRegex);
   
   if (!match) {
@@ -45,7 +45,8 @@ function parseFrontmatter(content: string): { data: Record<string, any>; body: s
     
     return { data: data || {}, body };
   } catch (error) {
-    console.error('Failed to parse frontmatter:', error);
+    const fileContext = filename ? ` in file: ${filename}` : '';
+    console.error(`Failed to parse frontmatter${fileContext}:`, error);
     return { data: {}, body: content };
   }
 }
@@ -74,7 +75,7 @@ export function githubLoader(options: GitHubLoaderOptions): Loader {
         });
 
         if (!response.ok) {
-          throw new Error(`GitHub API returned ${response.status}: ${response.statusText}`);
+          throw new Error(`GitHub API returned ${response.status}: ${response.statusText} for ${owner}/${repo}/${path}`);
         }
 
         const data: GitHubContent[] = await response.json();
@@ -86,7 +87,7 @@ export function githubLoader(options: GitHubLoaderOptions): Loader {
 
         context.logger.info(`Loaded content from GitHub: ${owner}/${repo}/${path}`);
       } catch (error) {
-        context.logger.error(`Failed to load content from GitHub: ${error}`);
+        context.logger.error(`Failed to load content from GitHub ${owner}/${repo}/${path}: ${error}`);
         throw error;
       }
     },
@@ -116,7 +117,7 @@ async function processGitHubItem(
     const rawContent = await contentResponse.text();
     
     // Parse frontmatter and body
-    const { data: frontmatter, body } = parseFrontmatter(rawContent);
+    const { data: frontmatter, body } = parseFrontmatter(rawContent, item.path);
     
     // Create an ID from the file path
     const id = item.path.replace(`${basePath}/`, '').replace(/\.(md|mdx)$/, '');
