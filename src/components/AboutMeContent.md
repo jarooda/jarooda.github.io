@@ -2,10 +2,11 @@
 
 I’m **Jalu Wibowo Aji**, but you can just call me **`Jalu`**.
 
-I’m a software engineer with over **4** years of experience building web applications. Currently, I’m part of the team at [Sekolah.mu](https://sekolah.mu) where I focus on Vue.js. My journey in tech started at [Hacktiv8 Bootcamp](https://www.hacktiv8.com/), and I’m now continuing my studies for a Bachelor’s degree at [Universitas Terbuka](https://www.ut.ac.id/en/).
+I’m a Software Engineer with over **4** years of experience building web applications. Right now, I’m part of the awesome team at [Sekolah.mu](https://sekolah.mu), where I mainly work with Vue.js to craft smooth and scalable front-end experiences.
 
-I keep a personal list of things I enjoy such as [games](/collections?for=games), [movies](/collections?for=movies), [musics](/collections?for=musics), [anime](/collections?for=anime), or even [figures](/collections?for=figures) etc.
+My journey into tech kicked off at [Hacktiv8 Bootcamp](https://www.hacktiv8.com/), and I’m currently pursuing my Bachelor’s degree at [Universitas Terbuka](https://www.ut.ac.id/en/) to keep sharpening my skills and expanding my horizons. I like to keep learning, experimenting, and finding new ways to make stuff look and work better on the web.
 
+When I’m not coding, you’ll probably find me diving into [games](/collections?for=games), [movies](/collections?for=movies), [musics](/collections?for=musics), [anime](/collections?for=anime), or browsing for new [figures](/collections?for=figures) to add to my collection. Basically, anything that sparks a bit of creativity or fun.
 
 Here’s the [gear](/collections?for=gadgets) I currently use for work, studying, and unwinding:
 
@@ -35,4 +36,4 @@ Here’s the [gear](/collections?for=gadgets) I currently use for work, studying
 - Amazon Kindle Paperwhite (10th gen)
 </details>
 
-When I’m not coding, I like to join tech meetups in `Semarang` and connect with other developers. If you’d like to chat or collaborate, feel free to [reach me out](/#contactme).
+You’ll probably have a chance to meet me at tech meetups around [Semarang](https://maps.app.goo.gl/D7UBcVQWcuhYKisJA). If you’d like to chat or collaborate, feel free to [reach me out](/#contactme).
