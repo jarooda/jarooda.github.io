@@ -31,3 +31,7 @@ export async function getMusicsCollection() {
 export async function getGadgetsCollection() {
   return await getGsheetCollection("gadgets")
 }
+
+export async function getAccountsCollection() {
+  return await getGsheetCollection("accounts")
+}

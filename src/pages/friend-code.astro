@@ -1,0 +1,64 @@
+---
+import { getCollection } from "astro:content"
+
+import BaseHead from "../components/shared/BaseHead.astro"
+import Header from "../components/shared/Header.astro"
+import Footer from "../components/shared/Footer.astro"
+import CollectionTable from "../components/CollectionTable.astro"
+
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts"
+import "../styles/base.css"
+import "../styles/blogs.css"
+
+const title = "Friend Codes | " + SITE_TITLE + " - Frontend Developer"
+
+const friendCodesCollection = await getCollection("friendCodes")
+const friendCodes = friendCodesCollection.map((item) => ({
+  id: item.id,
+  ...item.data
+}))
+
+const renderKeys = [
+  {
+    key: "platform",
+    link: (item: any) => item.web
+  },
+  {
+    key: "friend_code",
+    header: "Friend Code",
+    copyButton: true,
+    copyValue: (item: any) => item.friend_code || ""
+  }
+]
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="robots" content="noindex, nofollow" />
+    <link href="/themes/prism.css" rel="stylesheet" />
+    <BaseHead title={title} description={SITE_DESCRIPTION} />
+  </head>
+  <body
+    class="bg-white dark:bg-gray-900 font-lato transition-colors duration-200"
+  >
+    <Header hasSeparator={false} />
+    <main
+      class="pt-20 mx-auto w-full lg:w-256 px-6 min-h-[calc(100vh-80px)] text-gray-700 dark:text-gray-300"
+    >
+      <CollectionTable
+        id="friend-codes-table"
+        data={friendCodes}
+        renderKeys={renderKeys}
+        hidden={false}
+      />
+
+      <div id="no-data" class="text-center py-8" style="display: none;">
+        <p class="text-gray-500 dark:text-gray-400">
+          No data available for this collection.
+        </p>
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>
