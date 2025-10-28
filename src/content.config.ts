@@ -8,21 +8,21 @@ import { githubLoader } from "./loaders/github-blog-loader"
 const dateTransform = z
   .string()
   .or(z.date())
-  .transform((val) => val instanceof Date ? val : new Date(val));
+  .transform((val) => (val instanceof Date ? val : new Date(val)))
 
 const optionalDateTransform = z
   .string()
   .or(z.date())
   .optional()
   .transform((val) => {
-    if (!val) return undefined;
-    return val instanceof Date ? val : new Date(val);
-  });
+    if (!val) return undefined
+    return val instanceof Date ? val : new Date(val)
+  })
 
 const blog = defineCollection({
-  loader: githubLoader({ 
-    owner: "jarooda", 
-    repo: "blogs", 
+  loader: githubLoader({
+    owner: "jarooda",
+    repo: "blogs",
     path: "blog",
     branch: "main"
   }),
@@ -43,9 +43,9 @@ const blog = defineCollection({
 })
 
 const project = defineCollection({
-  loader: githubLoader({ 
-    owner: "jarooda", 
-    repo: "projects", 
+  loader: githubLoader({
+    owner: "jarooda",
+    repo: "projects",
     path: "project",
     branch: "main"
   }),
@@ -108,13 +108,7 @@ const games = defineCollection({
       "Xbox",
       "Other"
     ]),
-    status: z.enum([
-      'Backlog',
-      'Playing',
-      'Finished',
-      'Paused',
-      'Dropped',
-    ]),
+    status: z.enum(["Backlog", "Playing", "Finished", "Paused", "Dropped"]),
     format: z.string(),
     web: z.string().optional()
   })
@@ -228,10 +222,12 @@ const musics = defineCollection({
 const gadgets = defineCollection({
   loader: async () => {
     const data = await Collection.getGadgetsCollection()
-    return data.filter(item => item.in_use.toLowerCase() === "true").map((item, index) => ({
-      id: `gadget-${index + 1}`,
-      ...item
-    }))
+    return data
+      .filter((item) => item.in_use.toLowerCase() === "true")
+      .map((item, index) => ({
+        id: `gadget-${index + 1}`,
+        ...item
+      }))
   },
   schema: z.object({
     name: z.string(),
@@ -258,6 +254,33 @@ const gadgets = defineCollection({
   })
 })
 
+const friendCodes = defineCollection({
+  loader: async () => {
+    const data = await Collection.getAccountsCollection()
+
+    return data
+      .filter(
+        (item) =>
+          item.in_use.toLowerCase() === "true" &&
+          item.visibility === "public" &&
+          item.type === "gaming"
+      )
+      .map((item, index) => ({
+        id: `friend-code-${index + 1}`,
+        ...item
+      }))
+  },
+  schema: z.object({
+    platform: z.string(),
+    username: z.string(),
+    friend_code: z.string().optional(),
+    type: z.enum(["dev", "gaming", "social", "work"]),
+    visibility: z.enum(["public", "private"]),
+    in_use: z.string(),
+    web: z.string().optional()
+  })
+})
+
 export const collections = {
   blog,
   project,
@@ -268,5 +291,6 @@ export const collections = {
   series,
   anime,
   musics,
-  gadgets
+  gadgets,
+  friendCodes
 }

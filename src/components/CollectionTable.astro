@@ -1,118 +1,313 @@
 ---
-import { Icon } from 'astro-icon/components'
+import { Icon } from "astro-icon/components"
 
-type RenderKey = string | {
-  key: string
-  column?: (item: any) => string | any
-  header?: string
-  icon?: string | ((item: any) => string)
-  align?: 'left' | 'center' | 'right'
-}
+type RenderKey =
+  | string
+  | {
+      key: string
+      column?: (item: any) => string | any
+      header?: string
+      icon?: string | ((item: any) => string)
+      align?: "left" | "center" | "right"
+      copyButton?: boolean
+      copyValue?: (item: any) => string
+      link?: (item: any) => string | undefined
+    }
 
 interface Props {
-  id: string;
-  data: any[];
-  renderKeys: RenderKey[];
+  id: string
+  data: any[]
+  renderKeys: RenderKey[]
+  hidden?: boolean
 }
 
-const { id, data, renderKeys } = Astro.props;
+const { id, data, renderKeys, hidden = true } = Astro.props
 
-const tableHeaders = renderKeys.map(key => {
-  if (typeof key === 'string') {
-    return { text: key.charAt(0).toUpperCase() + key.slice(1), align: 'left' };
+const tableHeaders = renderKeys.map((key) => {
+  if (typeof key === "string") {
+    return { text: key.charAt(0).toUpperCase() + key.slice(1), align: "left" }
   } else {
-    return { 
+    return {
       text: key.header || key.key.charAt(0).toUpperCase() + key.key.slice(1),
-      align: key.align || 'left'
-    };
+      align: key.align || "left"
+    }
   }
-});
+})
 
-const columnWidth = `${100 / renderKeys.length}%`;
+const columnWidth = `${100 / renderKeys.length}%`
 ---
 
-<div id={id} class="collection-table" style="display: none;">
-  {data.length > 0 && (
-    <div class="overflow-x-auto">
-      <table class="w-full border-collapse">
-        <thead>
-          <tr class="border-b-2 border-gray-200 dark:border-gray-700">
-            {tableHeaders.map((header) => {
-              const alignClass = header.align === 'center' ? 'text-center' : header.align === 'right' ? 'text-right' : 'text-left';
-              return (
-                <th class={`px-6 py-3 font-semibold text-gray-700 dark:text-gray-300 ${alignClass}`} style={`width: ${columnWidth}`}>
-                  {header.text}
-                </th>
-              );
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, index) => (
-            <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
-              {renderKeys.map((renderKey, colIndex) => {
-                let cellValue: any = "";
-                let isHtml = false;
-                let iconName: string | undefined;
-                const align = typeof renderKey === 'string' ? 'left' : (renderKey.align || 'left');
-                
-                if (typeof renderKey === 'string') {
-                  cellValue = item[renderKey] || "";
-                } else {
-                  const value = item[renderKey.key];
-                  
-                  if (renderKey.icon) {
-                    iconName = typeof renderKey.icon === 'function' 
-                      ? renderKey.icon(item) 
-                      : renderKey.icon;
-                  }
-                  
-                  if (renderKey.column) {
-                    const result = renderKey.column(item);
-                    
-                    if (typeof result === 'object' && result !== null && '__html' in result) {
-                      cellValue = result.__html;
-                      isHtml = true;
-                    } else if (typeof result === 'string' && (result.includes('<') || result.includes('>'))) {
-                      cellValue = result;
-                      isHtml = true;
-                    } else {
-                      cellValue = result;
-                    }
-                  } else {
-                    cellValue = value || "";
-                  }
-                }
-                
-                const alignClass = align === 'center' ? 'text-center' : align === 'right' ? 'text-right' : 'text-left';
-                
+<div
+  id={id}
+  class="collection-table"
+  style={hidden && data.length === 0 ? "display: none;" : ""}
+>
+  {
+    data.length > 0 && (
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="border-b-2 border-gray-200 dark:border-gray-700">
+              {tableHeaders.map((header) => {
+                const alignClass =
+                  header.align === "center"
+                    ? "text-center"
+                    : header.align === "right"
+                      ? "text-right"
+                      : "text-left"
                 return (
-                  <td class={`px-6 py-4 text-gray-600 dark:text-gray-400 ${alignClass}`} style={`width: ${columnWidth}`}>
-                    {iconName ? (
-                      <span class="inline-flex items-center gap-2">
-                        <Icon name={iconName} class="w-auto h-5 flex-shrink-0" />
-                        {isHtml ? (
-                          <span set:html={cellValue} />
-                        ) : (
-                          <span>{cellValue}</span>
-                        )}
-                      </span>
-                    ) : (
-                      <>
-                        {isHtml ? (
-                          <Fragment set:html={cellValue} />
-                        ) : (
-                          cellValue
-                        )}
-                      </>
-                    )}
-                  </td>
-                );
+                  <th
+                    class={`px-6 py-3 font-semibold text-gray-700 dark:text-gray-300 ${alignClass}`}
+                    style={`width: ${columnWidth}`}
+                  >
+                    {header.text}
+                  </th>
+                )
               })}
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )}
+          </thead>
+          <tbody>
+            {data.map((item, index) => (
+              <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+                {renderKeys.map((renderKey, colIndex) => {
+                  let cellValue: any = ""
+                  let isHtml = false
+                  let iconName: string | undefined
+                  let hasCopyButton = false
+                  let copyValue = ""
+                  let linkUrl: string | undefined
+                  const align =
+                    typeof renderKey === "string"
+                      ? "left"
+                      : renderKey.align || "left"
+
+                  if (typeof renderKey === "string") {
+                    cellValue = item[renderKey] || ""
+                  } else {
+                    const value = item[renderKey.key]
+
+                    if (renderKey.icon) {
+                      iconName =
+                        typeof renderKey.icon === "function"
+                          ? renderKey.icon(item)
+                          : renderKey.icon
+                    }
+
+                    if (renderKey.link) {
+                      linkUrl = renderKey.link(item)
+                    }
+
+                    if (renderKey.copyButton && renderKey.copyValue) {
+                      const tempCopyValue = renderKey.copyValue(item)
+                      
+                      // Only show button if the copy value is not empty
+                      if (tempCopyValue && tempCopyValue.trim() !== '') {
+                        hasCopyButton = true
+                        copyValue = tempCopyValue
+                      }
+                    }
+
+                    if (renderKey.column) {
+                      const result = renderKey.column(item)
+
+                      if (
+                        typeof result === "object" &&
+                        result !== null &&
+                        "__html" in result
+                      ) {
+                        cellValue = result.__html
+                        isHtml = true
+                      } else if (
+                        typeof result === "string" &&
+                        (result.includes("<") || result.includes(">"))
+                      ) {
+                        cellValue = result
+                        isHtml = true
+                      } else {
+                        cellValue = result
+                      }
+                    } else {
+                      cellValue = value || ""
+                    }
+                  }
+
+                  const alignClass =
+                    align === "center"
+                      ? "text-center"
+                      : align === "right"
+                        ? "text-right"
+                        : "text-left"
+
+                  return (
+                    <td
+                      class={`px-6 py-4 text-gray-600 dark:text-gray-400 ${alignClass}`}
+                      style={`width: ${columnWidth}`}
+                    >
+                      {linkUrl ? (
+                        <a
+                          href={linkUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="text-green-900 dark:text-green-700 underline underline-offset-2 hover:text-green-700 dark:hover:text-green-500 font-bold"
+                        >
+                          {hasCopyButton ? (
+                            <span class="inline-flex items-center gap-2">
+                              {iconName ? (
+                                <span class="inline-flex items-center gap-2">
+                                  <Icon
+                                    name={iconName}
+                                    class="w-auto h-5 flex-shrink-0"
+                                  />
+                                  {isHtml ? (
+                                    <span set:html={cellValue} />
+                                  ) : (
+                                    <span>{cellValue}</span>
+                                  )}
+                                </span>
+                              ) : (
+                                <>
+                                  {isHtml ? (
+                                    <span set:html={cellValue} />
+                                  ) : (
+                                    <span>{cellValue}</span>
+                                  )}
+                                </>
+                              )}
+                              <button
+                                class="copy-btn ml-2 p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors cursor-pointer"
+                                data-copy-value={copyValue}
+                                aria-label="Copy to clipboard"
+                                title="Copy to clipboard"
+                                onclick="event.preventDefault(); event.stopPropagation();"
+                              >
+                                <Icon
+                                  name="mdi:content-copy"
+                                  class="w-4 h-4"
+                                />
+                              </button>
+                            </span>
+                          ) : iconName ? (
+                            <span class="inline-flex items-center gap-2">
+                              <Icon
+                                name={iconName}
+                                class="w-auto h-5 flex-shrink-0"
+                              />
+                              {isHtml ? (
+                                <span set:html={cellValue} />
+                              ) : (
+                                <span>{cellValue}</span>
+                              )}
+                            </span>
+                          ) : (
+                            <>
+                              {isHtml ? (
+                                <Fragment set:html={cellValue} />
+                              ) : (
+                                cellValue
+                              )}
+                            </>
+                          )}
+                        </a>
+                      ) : hasCopyButton ? (
+                        <span class="inline-flex items-center gap-2">
+                          {iconName ? (
+                            <span class="inline-flex items-center gap-2">
+                              <Icon
+                                name={iconName}
+                                class="w-auto h-5 flex-shrink-0"
+                              />
+                              {isHtml ? (
+                                <span set:html={cellValue} />
+                              ) : (
+                                <span>{cellValue}</span>
+                              )}
+                            </span>
+                          ) : (
+                            <>
+                              {isHtml ? (
+                                <span set:html={cellValue} />
+                              ) : (
+                                <span>{cellValue}</span>
+                              )}
+                            </>
+                          )}
+                          <button
+                            class="copy-btn ml-2 p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors cursor-pointer"
+                            data-copy-value={copyValue}
+                            aria-label="Copy to clipboard"
+                            title="Copy to clipboard"
+                          >
+                            <Icon
+                              name="mdi:content-copy"
+                              class="w-4 h-4"
+                            />
+                          </button>
+                        </span>
+                      ) : iconName ? (
+                        <span class="inline-flex items-center gap-2">
+                          <Icon
+                            name={iconName}
+                            class="w-auto h-5 flex-shrink-0"
+                          />
+                          {isHtml ? (
+                            <span set:html={cellValue} />
+                          ) : (
+                            <span>{cellValue}</span>
+                          )}
+                        </span>
+                      ) : (
+                        <>
+                          {isHtml ? (
+                            <Fragment set:html={cellValue} />
+                          ) : (
+                            cellValue
+                          )}
+                        </>
+                      )}
+                    </td>
+                  )
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const copyButtons = document.querySelectorAll('.copy-btn')
+    
+    copyButtons.forEach((button) => {
+      button.addEventListener('click', async (e) => {
+        const btn = e.currentTarget as HTMLButtonElement
+        const copyValue = btn.getAttribute('data-copy-value') || ''
+        
+        try {
+          await navigator.clipboard.writeText(copyValue)
+          
+          // Visual feedback
+          const icon = btn.querySelector('[data-icon]')
+          const originalIcon = icon?.getAttribute('data-icon')
+          
+          if (icon) {
+            icon.setAttribute('data-icon', 'mdi:check')
+          }
+          
+          btn.classList.add('text-green-600', 'dark:text-green-400')
+          
+          setTimeout(() => {
+            if (icon && originalIcon) {
+              icon.setAttribute('data-icon', originalIcon)
+            }
+            btn.classList.remove('text-green-600', 'dark:text-green-400')
+          }, 2000)
+        } catch (err) {
+          console.error('Failed to copy:', err)
+        }
+      })
+    })
+  })
+</script>

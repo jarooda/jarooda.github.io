@@ -29,7 +29,7 @@ import Anchor from "./shared/Anchor.astro"
       const containerWidth = container.offsetWidth
       const containerHeight = container.offsetHeight
 
-      let wireframes = false
+      let isDebugging = false
       // create renderer
       const render = Render.create({
         element: container,
@@ -37,7 +37,9 @@ import Anchor from "./shared/Anchor.astro"
         options: {
           width: containerWidth,
           height: containerHeight,
-          wireframes,
+          wireframes: isDebugging,
+          showIds: isDebugging,
+          showAngleIndicator: isDebugging,
           background: "transparent"
         }
       })
@@ -211,6 +213,16 @@ import Anchor from "./shared/Anchor.astro"
         //   shape: "circle",
         //   options: { radius: 25 }
         // },
+        {
+          url: "logos--php_m0tm9q",
+          shape: "rectangle",
+          options: { width: 68, height: 40 }
+        },
+        {
+          url: "logos--wordpress_bml2jm",
+          shape: "circle",
+          options: { radius: 20 }
+        },
         {
           url: "logos--express_agc18f",
           shape: "rectangle",
@@ -475,6 +487,18 @@ import Anchor from "./shared/Anchor.astro"
         })
       }
 
+      const toggleWireframeButton = document.getElementById(
+        "toggle-wireframe"
+      )
+      if (toggleWireframeButton) {
+        toggleWireframeButton.addEventListener("click", () => {
+          isDebugging = !isDebugging
+          render.options.wireframes = isDebugging
+          render.options.showIds = isDebugging
+          render.options.showAngleIndicator = isDebugging
+        })
+      }
+
       window.addEventListener("resize", () => {
         render.options.width = container.offsetWidth
         render.options.height = container.offsetHeight
@@ -519,6 +543,15 @@ import Anchor from "./shared/Anchor.astro"
             Add Stack
           </Anchor>
         </button>
+        <!-- <button
+          id="toggle-wireframe"
+          data-test="toggle-wireframe-button"
+          class="ml-3 p-0 m-0 flex h-min w-fit items-center mt-3 md:mt-0"
+        >
+          <Anchor href="javascript:void(0)" icon="mdi:bug-play-outline">
+            Toggle Wireframe
+          </Anchor>
+        </button> -->
       </div>
     </div>
   </div>
