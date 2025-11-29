@@ -59,6 +59,7 @@ const icons: Dictionary = {
   supabase: 'logos:supabase-icon',
   tailwind: 'logos:tailwindcss-icon',
   telegrambot: 'logos:telegram',
+  threejs: 'logos:threejs',
   typescript: 'logos:typescript-icon',
   vercel: 'logos:vercel-icon',
   vitest: 'logos:vitest',
