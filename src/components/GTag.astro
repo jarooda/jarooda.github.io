@@ -1,9 +1,41 @@
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4EQX1MPBVK"></script>
-<script>
+<!-- Google tag (gtag.js) - Lazy loaded for performance -->
+<script is:inline>
+  // Initialize dataLayer
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-4EQX1MPBVK');
+  
+  // Flag to ensure script loads only once
+  let gtagLoaded = false;
+  
+  function loadGtag() {
+    if (gtagLoaded) return;
+    gtagLoaded = true;
+    
+    // Load the gtag script
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=G-4EQX1MPBVK';
+    document.head.appendChild(script);
+    
+    // Configure gtag
+    gtag('js', new Date());
+    gtag('config', 'G-4EQX1MPBVK');
+  }
+  
+  // Load on user interaction or after page load
+  const events = ['mousedown', 'touchstart', 'keydown', 'scroll'];
+  const loadOnInteraction = () => {
+    loadGtag();
+    events.forEach(event => window.removeEventListener(event, loadOnInteraction));
+  };
+  
+  // Add event listeners for user interaction
+  events.forEach(event => window.addEventListener(event, loadOnInteraction, { passive: true, once: true }));
+  
+  // Fallback: load after page is fully loaded
+  if (document.readyState === 'complete') {
+    setTimeout(loadGtag, 3000);
+  } else {
+    window.addEventListener('load', () => setTimeout(loadGtag, 3000));
+  }
 </script>
