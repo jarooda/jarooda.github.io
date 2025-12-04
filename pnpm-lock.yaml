@@ -45,6 +45,9 @@ dependencies:
   gsap:
     specifier: ^3.13.0
     version: 3.13.0
+  jalutils:
+    specifier: ^0.1.2
+    version: 0.1.2
   js-yaml:
     specifier: ^4.1.0
     version: 4.1.0
@@ -4155,6 +4158,10 @@ packages:
   /isstream@0.1.2:
     resolution: {integrity: sha512-Yljz7ffyPbrLpLngrMtZ7NduUgVvi6wG9RJ9IUcyCd59YQ911PBJphODUcbOVbqYfxe1wuYf/LJ8PauMRwsM/g==}
     dev: true
+
+  /jalutils@0.1.2:
+    resolution: {integrity: sha512-UNphL0TEyAS9/pFR1YSu2r3t3dafcNT4zODSA/SOCLXbx0dtVU0NdncPqd+UnL3qjyepPUjEqZTJS7WGyjZZsQ==}
+    dev: false
 
   /jiti@2.6.1:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}

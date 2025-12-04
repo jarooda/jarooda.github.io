@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components"
+import { capitalize } from "jalutils"
 
 type RenderKey =
   | string
@@ -25,10 +26,10 @@ const { id, data, renderKeys, hidden = true } = Astro.props
 
 const tableHeaders = renderKeys.map((key) => {
   if (typeof key === "string") {
-    return { text: key.charAt(0).toUpperCase() + key.slice(1), align: "left" }
+    return { text: capitalize(key), align: "left" }
   } else {
     return {
-      text: key.header || key.key.charAt(0).toUpperCase() + key.key.slice(1),
+      text: key.header || capitalize(key.key),
       align: key.align || "left"
     }
   }
