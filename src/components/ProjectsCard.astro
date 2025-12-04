@@ -21,9 +21,10 @@ const { Content } = await render(post);
 
 // Status badge colors
 const statusColors: Record<string, string> = {
-  'completed': 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
-  'in-progress': 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
   'planning': 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200',
+  'in-progress': 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
+  'active': 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
+  'completed': 'bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200',
   'on-hold': 'bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200',
   'abandoned': 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
 };
@@ -59,11 +60,12 @@ const platformIcons: Record<string, string> = {
 
 // Status icons
 const statusIcons: Record<string, string> = {
-  'completed': 'mdi:check-circle',
-  'in-progress': 'mdi:progress-clock',
   'planning': 'mdi:lightbulb-outline',
-  'on-hold': 'mdi:pause-circle',
-  'abandoned': 'mdi:close-circle'
+  'in-progress': 'mdi:progress-clock',
+  'active': 'mdi:play-circle-outline',
+  'completed': 'mdi:check-circle-outline',
+  'on-hold': 'mdi:pause-circle-outline',
+  'abandoned': 'mdi:close-circle-outline'
 };
 ---
 

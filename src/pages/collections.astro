@@ -14,7 +14,7 @@ import {
   getGadgetTypeIcon
 } from "../utils/icon-helpers"
 
-import { SITE_TITLE, SITE_DESCRIPTION } from "../consts"
+import { SITE_TITLE } from "../consts"
 import "../styles/base.css"
 import "../styles/blogs.css"
 
@@ -182,7 +182,7 @@ const collectionsData = collectionsArray.reduce(
   <head>
     <meta name="robots" content="noindex, nofollow" />
     <link href="/themes/prism.css" rel="stylesheet" />
-    <BaseHead title={title} description={SITE_DESCRIPTION} />
+    <BaseHead title={title} description={"I keep a list of my personal collections here. It’s mainly for tracking the things I own and enjoy, such as games, films, music, anime, and figures. If you share similar interests, feel free to reach out. We can exchange recommendations or play together sometime."} />
     <script src="../utils/anchor-removal.ts"></script>
   </head>
   <body
