@@ -29,14 +29,12 @@ export default defineConfig({
     mdx(),
     sitemap(),
     sentry({
-      dsn: SENTRY_DSN,
       sourceMapsUploadOptions: {
         org: SENTRY_ORG,
         project: SENTRY_PROJECT,
         authToken: SENTRY_AUTH_TOKEN,
         telemetry: false
-      },
-      enabled: process.env.NODE_ENV === "production"
+      }
     })
   ],
 
