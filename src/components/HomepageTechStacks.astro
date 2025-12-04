@@ -1,5 +1,6 @@
 ---
 import Anchor from "./shared/Anchor.astro"
+import AnimatedButton from "./shared/AnimatedButton.astro"
 ---
 
 <script is:inline>
@@ -487,9 +488,7 @@ import Anchor from "./shared/Anchor.astro"
         })
       }
 
-      const toggleWireframeButton = document.getElementById(
-        "toggle-wireframe"
-      )
+      const toggleWireframeButton = document.getElementById("toggle-wireframe")
       if (toggleWireframeButton) {
         toggleWireframeButton.addEventListener("click", () => {
           isDebugging = !isDebugging
@@ -534,28 +533,36 @@ import Anchor from "./shared/Anchor.astro"
     >
       <h1 class="shrink-0">Tech Stacks</h1>
       <div class="flex w-full md:justify-end justify-center">
-        <button
+        <AnimatedButton
           id="add"
-          data-test="add-stack-button"
-          class="p-0 m-0 flex h-min w-fit items-center mt-3 md:mt-0"
+          dataTest="add-stack-button"
+          iconName="mdi:shape-add"
+          as="button"
+          type="button"
+          ariaLabel="Add random tech stack"
         >
-          <Anchor href="javascript:void(0)" icon="mdi:shape-add">
-            Click Me!
-          </Anchor>
-        </button>
-        <!-- <button
+          Click Me!
+        </AnimatedButton>
+        <!-- <AnimatedButton
           id="toggle-wireframe"
           data-test="toggle-wireframe-button"
           class="ml-3 p-0 m-0 flex h-min w-fit items-center mt-3 md:mt-0"
+          iconName="mdi:bug-play-outline"
+          as="button"
+          type="button"
+          ariaLabel="Toggle wireframe view"
         >
-          <Anchor href="javascript:void(0)" icon="mdi:bug-play-outline">
-            Toggle Wireframe
-          </Anchor>
-        </button> -->
+          Toggle Wireframe
+        </AnimatedButton> -->
       </div>
     </div>
   </div>
   <div class="w-full h-128">
-    <div id="matter-js" data-test="techstack-canvas" class="w-full h-full cursor-grab"></div>
+    <div
+      id="matter-js"
+      data-test="techstack-canvas"
+      class="w-full h-full cursor-grab"
+    >
+    </div>
   </div>
 </section>
