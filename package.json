@@ -7,7 +7,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "SENTRY_LOG_LEVEL=error astro build",
-    "preview": "astro preview",
+    "preview": "astro build && astro preview",
     "astro": "astro",
     "cypress:run": "cypress run",
     "cypress:open": "cypress open"
