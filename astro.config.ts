@@ -60,6 +60,18 @@ export default defineConfig({
       tailwindcss({
         applyBaseStyles: false
       })
-    ]
+    ],
+    build: {
+      sourcemap: true,
+      rollupOptions: {
+        onwarn(warning, warn) {
+          // Suppress sourcemap warnings for astro:transitions plugin
+          if (warning.code === 'SOURCEMAP_ERROR' && warning.message.includes('astro:transitions')) {
+            return;
+          }
+          warn(warning);
+        }
+      }
+    }
   }
 })
