@@ -29,14 +29,12 @@ export default defineConfig({
     mdx(),
     sitemap(),
     sentry({
-      dsn: SENTRY_DSN,
       sourceMapsUploadOptions: {
         org: SENTRY_ORG,
         project: SENTRY_PROJECT,
         authToken: SENTRY_AUTH_TOKEN,
         telemetry: false
-      },
-      enabled: process.env.NODE_ENV === "production"
+      }
     })
   ],
 
@@ -62,6 +60,18 @@ export default defineConfig({
       tailwindcss({
         applyBaseStyles: false
       })
-    ]
+    ],
+    build: {
+      sourcemap: true,
+      rollupOptions: {
+        onwarn(warning, warn) {
+          // Suppress sourcemap warnings for astro:transitions plugin
+          if (warning.code === 'SOURCEMAP_ERROR' && warning.message.includes('astro:transitions')) {
+            return;
+          }
+          warn(warning);
+        }
+      }
+    }
   }
 })
