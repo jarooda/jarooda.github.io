@@ -1,0 +1,280 @@
+---
+interface Props {
+  posts: { data: { title: string; links?: string[] } }[]
+}
+
+const props = Astro.props
+
+const nodes = props.posts.map((post) => {
+  return {
+    id: post.data.title
+  }
+})
+
+const links: { source: string; target: string }[] = []
+props.posts.forEach((post) => {
+  if (post.data.links) {
+    post.data.links.forEach((link) => {
+      links.push({
+        source: post.data.title,
+        target: link
+      })
+    })
+  }
+})
+---
+<style>
+  .svg-container {
+        width: 100%;
+        height: 800px;
+        /* border: 1px solid #ddd; */
+        margin-top: 20px;
+      }
+  @media (max-width: 768px) {
+    .svg-container {
+      height: 1000px;
+    }
+  }
+</style>
+<svg class="svg-container" width="100%" height="800"></svg>
+<script is:inline define:vars={{ nodes, links }}>
+  // Function to initialize the graph when d3 is ready
+  function initGraph() {
+    if (typeof d3 === "undefined") {
+      console.error("d3 is not loaded yet, retrying...")
+      setTimeout(initGraph, 100)
+      return
+    }
+
+    // ----- BOUNDING BOX -----
+    const svg = d3.select(".svg-container")
+    const svgNode = svg.node()
+    const svgWidth = svgNode.clientWidth || 800
+    const svgHeight = svgNode.clientHeight || 800
+    
+    // Responsive padding based on screen size
+    const isMobile = svgWidth < 768
+    const padding = isMobile ? 30 : 50
+    const boxX = padding
+    const boxY = padding
+    const boxWidth = svgWidth - (padding * 2)
+    const boxHeight = svgHeight - (padding * 2)
+
+    if (svg.empty()) {
+      console.error("SVG element not found!")
+      return
+    }
+
+    // Draw bounding box
+    svg
+      .append("rect")
+      .attr("x", boxX)
+      .attr("y", boxY)
+      .attr("width", boxWidth)
+      .attr("height", boxHeight)
+      .attr("fill", "none")
+      // .attr("stroke", "#444")
+      .attr("stroke-width", 2)
+
+    // Responsive force parameters
+    const linkDistance = isMobile ? 80 : 150
+    const chargeStrength = isMobile ? -300 : -500
+    const collisionRadius = isMobile ? 50 : 70
+    const collisionStrength = isMobile ? 1 : 0.8
+
+    // ----- FORCE SETUP -----
+    const simulation = d3
+      .forceSimulation(nodes)
+      .force(
+        "link",
+        d3
+          .forceLink(links)
+          .id((d) => d.id)
+          .distance(linkDistance)
+      )
+      .force("charge", d3.forceManyBody().strength(chargeStrength))
+      .force("collision", d3.forceCollide().radius(collisionRadius).strength(collisionStrength))
+      .force(
+        "center",
+        d3.forceCenter(boxX + boxWidth / 2, boxY + boxHeight / 2)
+      )
+
+    // ----- LINKS -----
+    const link = svg
+      .append("g")
+      .attr("stroke", "#aaa")
+      .attr("stroke-width", 2)
+      .selectAll("line")
+      .data(links)
+      .enter()
+      .append("line")
+
+    // Track currently selected node
+    let selectedNode = null
+
+    // ----- NODE GROUP -----
+    const nodeGroup = svg
+      .append("g")
+      .selectAll("g")
+      .data(nodes)
+      .enter()
+      .append("g")
+      .style("cursor", "pointer")
+      .call(drag(simulation))
+      .on("click", (_, d) => toggleHighlight(d))
+
+    // Add pill rect first (behind text)
+    nodeGroup.append("rect")
+      .attr("rx", 18)
+      .attr("ry", 18)
+      .attr("fill", "#4a86e8")
+
+    // Add text on top (full text, no truncation)
+    nodeGroup
+      .append("text")
+      .attr("font-size", "11px")
+      .attr("font-weight", "500")
+      .attr("fill", "white")
+      .attr("text-anchor", "middle")
+      .attr("dominant-baseline", "middle")
+      .attr("x", 0)
+      .attr("y", 0)
+      .text((d) => d.id)
+
+    // Calculate and set rect dimensions based on text
+    nodeGroup.each(function (d) {
+      const g = d3.select(this)
+      const text = g.select("text")
+      const rect = g.select("rect")
+      
+      try {
+        const bbox = text.node().getBBox()
+        
+        const padX = 20
+        const padY = 10
+        
+        const rectWidth = bbox.width + padX * 2
+        const rectHeight = bbox.height + padY * 2
+
+        rect
+          .attr("x", -rectWidth / 2)
+          .attr("y", -rectHeight / 2)
+          .attr("width", rectWidth)
+          .attr("height", rectHeight)
+      } catch (e) {
+        console.error("Error calculating bbox for", d.id, e)
+        // Fallback dimensions
+        rect
+          .attr("x", -80)
+          .attr("y", -15)
+          .attr("width", 160)
+          .attr("height", 30)
+      }
+    })
+
+    // ----- DRAG HANDLER -----
+    function drag(sim) {
+      return d3
+        .drag()
+        .on("start", (event, d) => {
+          if (!event.active) sim.alphaTarget(0.3).restart()
+          d.fx = d.x
+          d.fy = d.y
+        })
+        .on("drag", (event, d) => {
+          d.fx = event.x
+          d.fy = event.y
+        })
+        .on("end", (event, d) => {
+          if (!event.active) sim.alphaTarget(0)
+          d.fx = null
+          d.fy = null
+        })
+    }
+
+    // ----- HIGHLIGHT LOGIC -----
+    function toggleHighlight(clicked) {
+      // If clicking the same node, deselect it
+      if (selectedNode && selectedNode.id === clicked.id) {
+        selectedNode = null
+        resetHighlight()
+        return
+      }
+
+      // Otherwise, select the new node
+      selectedNode = clicked
+      highlight(clicked)
+    }
+
+    function highlight(clicked) {
+      const connected = new Set([clicked.id])
+
+      links.forEach((l) => {
+        if (l.source.id === clicked.id) connected.add(l.target.id)
+        if (l.target.id === clicked.id) connected.add(l.source.id)
+      })
+
+      nodeGroup.select("rect").attr("fill", (d) => {
+        if (d.id === clicked.id) return "#ff4d4d"
+        return connected.has(d.id) ? "#ffc107" : "#cccccc"
+      })
+
+      link.attr("stroke", (l) =>
+        l.source.id === clicked.id || l.target.id === clicked.id
+          ? "#ff4d4d"
+          : "#ccc"
+      )
+    }
+
+    function resetHighlight() {
+      nodeGroup.select("rect").attr("fill", "#4a86e8")
+      link.attr("stroke", "#aaa")
+    }
+
+    // ----- SIM TICK -----
+    simulation.on("tick", () => {
+      // Keep inside bounding box with padding for node sizes (responsive)
+      const nodePadding = isMobile ? 60 : 100
+      nodes.forEach((d) => {
+        d.x = Math.max(boxX + nodePadding, Math.min(boxX + boxWidth - nodePadding, d.x))
+        d.y = Math.max(boxY + nodePadding, Math.min(boxY + boxHeight - nodePadding, d.y))
+      })
+
+      link
+        .attr("x1", (d) => d.source.x)
+        .attr("y1", (d) => d.source.y)
+        .attr("x2", (d) => d.target.x)
+        .attr("y2", (d) => d.target.y)
+
+      nodeGroup.attr("transform", (d) => `translate(${d.x}, ${d.y})`)
+    })
+  }
+
+  // Initialize when DOM is ready AND when parent becomes visible
+  let initialized = false
+  
+  function tryInitGraph() {
+    if (initialized) return
+    
+    const svg = d3.select(".svg-container")
+    const svgNode = svg.node()
+    
+    // Check if SVG is visible
+    if (!svgNode || svgNode.offsetParent === null) {
+      return
+    }
+    
+    initialized = true
+    initGraph()
+  }
+  
+  // Try on load
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", tryInitGraph)
+  } else {
+    tryInitGraph()
+  }
+  
+  // Also listen for when accordion opens
+  window.addEventListener("project-c-opened", tryInitGraph)
+</script>

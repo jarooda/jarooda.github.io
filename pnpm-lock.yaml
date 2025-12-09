@@ -42,8 +42,8 @@ dependencies:
     specifier: ^3.13.0
     version: 3.13.0
   jalutils:
-    specifier: ^0.2.0
-    version: 0.2.0
+    specifier: ^1.0.0
+    version: 1.0.0
   js-yaml:
     specifier: ^4.1.1
     version: 4.1.1
@@ -4112,8 +4112,8 @@ packages:
       '@pkgjs/parseargs': 0.11.0
     dev: false
 
-  /jalutils@0.2.0:
-    resolution: {integrity: sha512-Qb/mo+A80+wQ6u4A9EnARc+NBWpkrS8Oxa7JzfYYIrR39yvf0gWe1H/ZZ8v1EH5BRx0b0Fc8SrZHOxfs5gpimw==}
+  /jalutils@1.0.0:
+    resolution: {integrity: sha512-6whBQMMw0m0OLtUJUXFFoedhGBj1uhVpOuJS2XlFGX0YQvJfZ51z0xZu52f4KQPOtDsXYJ18hHTN3u62k0NpOw==}
     dev: false
 
   /jiti@2.6.1:
