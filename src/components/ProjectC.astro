@@ -38,16 +38,52 @@ props.posts.forEach((post) => {
 </style>
 <svg class="svg-container" width="100%" height="800"></svg>
 <script is:inline define:vars={{ nodes, links }}>
+  // Global flag to track initialization across page navigations
+  window.__projectCInitialized = window.__projectCInitialized || false
+  
+  // Ensure d3 is loaded before initializing
+  function loadD3AndInit() {
+    if (typeof d3 !== "undefined") {
+      initGraph()
+      return
+    }
+    
+    // Check if d3 script already exists
+    const existingScript = document.querySelector('script[src*="d3.v7.min.js"]')
+    if (existingScript) {
+      // If script exists but d3 not loaded, wait for it
+      if (existingScript.complete || existingScript.readyState === 'complete') {
+        setTimeout(loadD3AndInit, 50)
+      } else {
+        existingScript.addEventListener('load', initGraph)
+      }
+      return
+    }
+    
+    // Load d3 dynamically if not present
+    const script = document.createElement('script')
+    script.src = 'https://d3js.org/d3.v7.min.js'
+    script.onload = initGraph
+    script.onerror = () => {
+      console.error('Failed to load d3.js')
+    }
+    document.head.appendChild(script)
+  }
+
   // Function to initialize the graph when d3 is ready
   function initGraph() {
     if (typeof d3 === "undefined") {
       console.error("d3 is not loaded yet, retrying...")
-      setTimeout(initGraph, 100)
+      setTimeout(loadD3AndInit, 100)
       return
     }
 
     // ----- BOUNDING BOX -----
     const svg = d3.select(".svg-container")
+    
+    // Clear any existing content first
+    svg.selectAll("*").remove()
+    
     const svgNode = svg.node()
     const svgWidth = svgNode.clientWidth || 800
     const svgHeight = svgNode.clientHeight || 800
@@ -215,13 +251,13 @@ props.posts.forEach((post) => {
       })
 
       nodeGroup.select("rect").attr("fill", (d) => {
-        if (d.id === clicked.id) return "#ff4d4d"
-        return connected.has(d.id) ? "#ffc107" : "#cccccc"
+        if (d.id === clicked.id) return "#4a86e8"
+        return connected.has(d.id) ? "#4ade80" : "#cccccc"
       })
 
       link.attr("stroke", (l) =>
         l.source.id === clicked.id || l.target.id === clicked.id
-          ? "#ff4d4d"
+          ? "#4a86e8"
           : "#ccc"
       )
     }
@@ -251,22 +287,25 @@ props.posts.forEach((post) => {
   }
 
   // Initialize when DOM is ready AND when parent becomes visible
-  let initialized = false
   
   function tryInitGraph() {
-    if (initialized) return
+    if (window.__projectCInitialized) return
     
-    const svg = d3.select(".svg-container")
-    const svgNode = svg.node()
+    const svg = document.querySelector(".svg-container")
     
-    // Check if SVG is visible
-    if (!svgNode || svgNode.offsetParent === null) {
+    // Check if SVG exists and is visible
+    if (!svg || svg.offsetParent === null) {
       return
     }
     
-    initialized = true
-    initGraph()
+    window.__projectCInitialized = true
+    loadD3AndInit()
   }
+  
+  // Reset on Astro page navigation
+  document.addEventListener("astro:before-preparation", () => {
+    window.__projectCInitialized = false
+  })
   
   // Try on load
   if (document.readyState === "loading") {
@@ -277,4 +316,10 @@ props.posts.forEach((post) => {
   
   // Also listen for when accordion opens
   window.addEventListener("project-c-opened", tryInitGraph)
+  
+  // Listen for Astro page transitions
+  document.addEventListener("astro:page-load", () => {
+    window.__projectCInitialized = false
+    tryInitGraph()
+  })
 </script>
