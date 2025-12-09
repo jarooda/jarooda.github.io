@@ -12,6 +12,7 @@ import { sortPosts } from "../utils/posts-helper"
 import "../styles/index.css"
 import "../styles/base.css"
 import "../styles/blogs.css"
+import ProjectC from "../components/ProjectC.astro"
 
 const posts = sortPosts(await getCollection("project"))
 
@@ -71,7 +72,10 @@ const categoryIcons: Record<string, string> = {
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={title} description={"Showcases some of my personal and experimental projects. If you’re interested in seeing my professional work or client projects, please visit my Upwork or LinkedIn profiles."} />
+    <BaseHead
+      title={title}
+      description={"Showcases some of my personal and experimental projects. If you’re interested in seeing my professional work or client projects, please visit my Upwork or LinkedIn profiles."}
+    />
     <ClientRouter />
     <style>
       html {
@@ -106,6 +110,7 @@ const categoryIcons: Record<string, string> = {
       // Run on Astro page transitions
       document.addEventListener("astro:page-load", setupCategoryButtons)
     </script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
   </head>
   <body
     class="font-lato bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 transition-colors duration-200"
@@ -131,65 +136,181 @@ const categoryIcons: Record<string, string> = {
             > profiles.
           </p>
 
-          <!-- Table of Contents -->
-          <nav>
-            <div class="flex flex-wrap gap-3">
-              {
-                Object.entries(sortedProjectsByCategory).map(
-                  ([category, categoryPosts]) => {
-                    const posts = categoryPosts as ProjectPost[]
-                    return (
-                      <AnimatedButton
-                        as="button"
-                        class="!w-auto"
-                        data-category-target={category}
-                      >
-                        <span class="flex items-center gap-2">
-                          <span>{categoryLabels[category] || category}</span>
-                          <span class="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded-full">
-                            {posts.length}
-                          </span>
-                        </span>
-                      </AnimatedButton>
-                    )
-                  }
-                )
-              }
+          <!-- Project C Section -->
+          <div
+            class="my-12 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+          >
+            <button
+              id="project-c-toggle"
+              class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors rounded-lg cursor-pointer"
+              aria-expanded="true"
+              aria-controls="project-c-content"
+              type="button"
+            >
+              <h2
+                class="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-200 mb-0!"
+              >
+                Project C: Connect, Concept, Cycle
+              </h2>
+              <span
+                id="project-c-icon"
+                class="transition-transform duration-300 inline-block"
+                style="pointer-events: none; transform: rotate(180deg);"
+              >
+                <Icon name="mdi:chevron-down" class="w-6 h-6" />
+              </span>
+            </button>
+            <div
+              id="project-c-content"
+              class="px-6 pb-6"
+              style="display: block;"
+            >
+              <p class="blog mb-4">
+                This interactive graph shows how my personal projects relate to
+                each other over time. Some share the same tech stack, others
+                borrow ideas, and a few evolve into something new.
+                <strong>Tap a node</strong> to highlight its links and discover how
+                each project fits into the bigger picture.
+              </p>
+              <ul class="blog list-disc list-inside space-y-1 text-sm mb-4">
+                <li>
+                  <strong>Connect:</strong> Sharing tools, libraries, or integrations
+                  across stacks
+                </li>
+                <li>
+                  <strong>Concept:</strong> Exploring similar themes, problems, and
+                  design ideas
+                </li>
+                <li>
+                  <strong>Cycle:</strong> Iterating on previous work to build the
+                  next version of something bigger
+                </li>
+              </ul>
+
+              <ProjectC posts={posts} />
             </div>
-          </nav>
+          </div>
         </div>
 
-        <!-- Projects by Category -->
-        <div class="space-y-16">
-          {
-            Object.entries(sortedProjectsByCategory).map(
-              ([category, categoryPosts]) => {
-                const posts = categoryPosts as ProjectPost[]
-                return (
-                  <div id={category} class="scroll-mt-24">
-                    <div class="mb-6 pb-2 border-b-2 border-gray-200 dark:border-gray-700 flex items-center gap-2">
-                      <Icon
-                        name={categoryIcons[category] || "mdi:dots-horizontal"}
-                        class="inline-block w-6 h-6"
-                      />
-                      <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-200">
-                        {categoryLabels[category] || category}{" "}
-                      </h2>
+        <!-- Two Column Layout: Projects (left) and TOC (right) -->
+        <div class="flex flex-col lg:flex-row gap-8">
+          <!-- Projects by Category (Left Column) -->
+          <div class="flex-1 space-y-16">
+            {
+              Object.entries(sortedProjectsByCategory).map(
+                ([category, categoryPosts]) => {
+                  const posts = categoryPosts as ProjectPost[]
+                  return (
+                    <div id={category} class="scroll-mt-24">
+                      <div class="mb-6 pb-2 border-b-2 border-gray-200 dark:border-gray-700 flex items-center gap-2">
+                        <Icon
+                          name={
+                            categoryIcons[category] || "mdi:dots-horizontal"
+                          }
+                          class="inline-block w-6 h-6"
+                        />
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-200">
+                          {categoryLabels[category] || category}{" "}
+                        </h2>
+                      </div>
+                      <div class="grid grid-cols-1 gap-6">
+                        {posts.map((post) => (
+                          <ProjectsCard {...post.data} post={post} />
+                        ))}
+                      </div>
                     </div>
-                    <div class="grid grid-cols-1 gap-6">
-                      {posts.map((post) => (
-                        <ProjectsCard {...post.data} post={post} />
-                      ))}
-                    </div>
-                  </div>
-                )
-              }
-            )
-          }
+                  )
+                }
+              )
+            }
+          </div>
+
+          <!-- Table of Contents (Right Column - Sticky) -->
+          <aside class="lg:w-64 shrink-0">
+            <nav class="lg:sticky lg:top-24">
+              <h3
+                class="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200"
+              >
+                Categories
+              </h3>
+              <div class="flex flex-col gap-4">
+                {
+                  Object.entries(sortedProjectsByCategory).map(
+                    ([category, categoryPosts]) => {
+                      const posts = categoryPosts as ProjectPost[]
+                      return (
+                        <AnimatedButton
+                          as="button"
+                          class="w-full! text-left"
+                          data-category-target={category}
+                        >
+                          <span class="flex items-center justify-between gap-2">
+                            <span class="flex items-center gap-2">
+                              <Icon
+                                name={
+                                  categoryIcons[category] ||
+                                  "mdi:dots-horizontal"
+                                }
+                                class="inline-block w-4 h-4 shrink-0"
+                              />
+                              <span class="truncate">
+                                {categoryLabels[category] || category}
+                              </span>
+                            </span>
+                            <span class="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded-full shrink-0">
+                              {posts.length}
+                            </span>
+                          </span>
+                        </AnimatedButton>
+                      )
+                    }
+                  )
+                }
+              </div>
+            </nav>
+          </aside>
         </div>
       </section>
     </main>
 
     <Footer />
+
+    <script>
+      // Client-side script for accordion
+      function initAccordion() {
+        const toggle = document.getElementById("project-c-toggle")
+        const content = document.getElementById("project-c-content")
+        const icon = document.getElementById("project-c-icon")
+
+        if (!toggle || !content || !icon) {
+          console.error("Accordion elements not found")
+          return
+        }
+
+        toggle.onclick = function (e) {
+          e.preventDefault()
+
+          const isExpanded = toggle.getAttribute("aria-expanded") === "true"
+          const willExpand = !isExpanded
+
+          toggle.setAttribute("aria-expanded", String(willExpand))
+          content.style.display = willExpand ? "block" : "none"
+          icon.style.transform = willExpand ? "rotate(180deg)" : "rotate(0deg)"
+
+          // Dispatch event when opening so graph can initialize
+          if (willExpand) {
+            setTimeout(() => {
+              window.dispatchEvent(new CustomEvent("project-c-opened"))
+            }, 50) // Small delay to ensure content is rendered
+          }
+        }
+      }
+
+      // Initialize immediately
+      initAccordion()
+
+      // Also initialize on page load
+      document.addEventListener("astro:page-load", initAccordion)
+    </script>
   </body>
 </html>

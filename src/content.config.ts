@@ -84,7 +84,8 @@ const project = defineCollection({
     // Transform string to Date object
     pubDate: dateTransform,
     updatedDate: optionalDateTransform,
-    stacks: z.array(z.string())
+    stacks: z.array(z.string()),
+    links:z.array(z.string()).optional(),
   })
 })
 
