@@ -24,7 +24,7 @@
     "google-auth-library": "^10.5.0",
     "googleapis": "^167.0.0",
     "gsap": "^3.13.0",
-    "jalutils": "^0.2.0",
+    "jalutils": "^1.0.0",
     "js-yaml": "^4.1.1",
     "sass": "^1.94.2",
     "tailwindcss": "^4.1.17",
