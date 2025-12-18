@@ -21,7 +21,7 @@ const restPosts = newestPosts.slice(1)
     <main class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div
         class="post bg-no-repeat bg-cover rounded-lg group first-post opacity-0"
-        style={`background-image: url("${firstPost.data.heroImage}")`}
+        style={`--bg-image: url("${firstPost.data.heroImage}")`}
       >
         <div
           class="flex flex-col justify-end md:text-gray-200 dark:md:text-gray-300 p-0 md:p-4 pb-4 h-full md:rounded-lg md:backdrop-brightness-50 dark:md:backdrop-brightness-[0.3] md:group-hover:backdrop-blur-sm border-b border-white dark:border-gray-600 md:border-b-0 transition-colors duration-200"
@@ -91,8 +91,8 @@ const restPosts = newestPosts.slice(1)
 
 <style>
   .first-post {
-    @media screen and (max-width: 767px) {
-      background-image: none;
+    @media screen and (min-width: 768px) {
+      background-image: var(--bg-image);
     }
   }
 </style>
