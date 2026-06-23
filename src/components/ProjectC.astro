@@ -1,13 +1,33 @@
 ---
 interface Props {
-  posts: { data: { title: string; links?: string[] } }[]
+  posts: { data: { title: string; category?: string; links?: string[] } }[]
 }
 
 const props = Astro.props
 
+// MDI icon path bodies (24x24 viewBox) keyed by project category.
+// `currentColor` is used so the icon color follows the group's CSS color.
+const categoryIcons: Record<string, string> = {
+  "web-app":
+    '<path fill="currentColor" d="M16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2m-5.15 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56M14.34 14H9.66c-.1-.66-.16-1.32-.16-2s.06-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2M12 19.96c-.83-1.2-1.5-2.53-1.91-3.96h3.82c-.41 1.43-1.08 2.76-1.91 3.96M8 8H5.08A7.92 7.92 0 0 1 9.4 4.44C8.8 5.55 8.35 6.75 8 8m-2.92 8H8c.35 1.25.8 2.45 1.4 3.56A8 8 0 0 1 5.08 16m-.82-2C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2M12 4.03c.83 1.2 1.5 2.54 1.91 3.97h-3.82c.41-1.43 1.08-2.77 1.91-3.97M18.92 8h-2.95a15.7 15.7 0 0 0-1.38-3.56c1.84.63 3.37 1.9 4.33 3.56M12 2C6.47 2 2 6.5 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2"/>',
+  "mobile-app":
+    '<path fill="currentColor" d="M17 19H7V5h10m0-4H7c-1.11 0-2 .89-2 2v18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2"/>',
+  library:
+    '<path fill="currentColor" d="M12 8a3 3 0 0 0 3-3a3 3 0 0 0-3-3a3 3 0 0 0-3 3a3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54c2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/>',
+  tool:
+    '<path fill="currentColor" d="m21.71 20.29l-1.42 1.42a1 1 0 0 1-1.41 0L7 9.85A3.8 3.8 0 0 1 6 10a4 4 0 0 1-3.78-5.3l2.54 2.54l.53-.53l1.42-1.42l.53-.53L4.7 2.22A4 4 0 0 1 10 6a3.8 3.8 0 0 1-.15 1l11.86 11.88a1 1 0 0 1 0 1.41M2.29 18.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0l5.47-5.46l-2.83-2.83M20 2l-4 2v2l-2.17 2.17l2 2L18 8h2l2-4Z"/>',
+  extension:
+    '<path fill="currentColor" d="M20.5 11H19V7a2 2 0 0 0-2-2h-4V3.5A2.5 2.5 0 0 0 10.5 1A2.5 2.5 0 0 0 8 3.5V5H4a2 2 0 0 0-2 2v3.8h1.5c1.5 0 2.7 1.2 2.7 2.7S5 16.2 3.5 16.2H2V20a2 2 0 0 0 2 2h3.8v-1.5c0-1.5 1.2-2.7 2.7-2.7s2.7 1.2 2.7 2.7V22H17a2 2 0 0 0 2-2v-4h1.5a2.5 2.5 0 0 0 2.5-2.5a2.5 2.5 0 0 0-2.5-2.5"/>',
+  game:
+    '<path fill="currentColor" d="M7 6h10a6 6 0 0 1 6 6a6 6 0 0 1-6 6c-1.78 0-3.37-.77-4.47-2h-1.06c-1.1 1.23-2.69 2-4.47 2a6 6 0 0 1-6-6a6 6 0 0 1 6-6M6 9v2H4v2h2v2h2v-2h2v-2H8V9zm9.5 3a1.5 1.5 0 0 0-1.5 1.5a1.5 1.5 0 0 0 1.5 1.5a1.5 1.5 0 0 0 1.5-1.5a1.5 1.5 0 0 0-1.5-1.5m3-3a1.5 1.5 0 0 0-1.5 1.5a1.5 1.5 0 0 0 1.5 1.5a1.5 1.5 0 0 0 1.5-1.5A1.5 1.5 0 0 0 18.5 9"/>',
+  other:
+    '<path fill="currentColor" d="M16 12a2 2 0 0 1 2-2a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2m-6 0a2 2 0 0 1 2-2a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2m-6 0a2 2 0 0 1 2-2a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2"/>'
+}
+
 const nodes = props.posts.map((post) => {
   return {
-    id: post.data.title
+    id: post.data.title,
+    icon: categoryIcons[post.data.category || "other"] || categoryIcons.other
   }
 })
 
@@ -163,7 +183,16 @@ props.posts.forEach((post) => {
     nodeGroup.append("rect")
       .attr("rx", 18)
       .attr("ry", 18)
-      .attr("fill", "#4a86e8")
+      .attr("fill", "#1c398e")
+
+    // Category icon (sized via a scaled 24x24 viewBox, color follows currentColor)
+    const iconSize = 16
+    const iconGap = 6
+    nodeGroup
+      .append("g")
+      .attr("class", "node-icon")
+      .style("color", "white")
+      .html((d) => d.icon)
 
     // Add text on top (full text, no truncation)
     nodeGroup
@@ -171,32 +200,43 @@ props.posts.forEach((post) => {
       .attr("font-size", "11px")
       .attr("font-weight", "500")
       .attr("fill", "white")
-      .attr("text-anchor", "middle")
+      .attr("text-anchor", "start")
       .attr("dominant-baseline", "middle")
-      .attr("x", 0)
       .attr("y", 0)
       .text((d) => d.id)
 
-    // Calculate and set rect dimensions based on text
+    // Calculate and set rect + content positions based on text + icon
     nodeGroup.each(function (d) {
       const g = d3.select(this)
       const text = g.select("text")
       const rect = g.select("rect")
-      
+      const icon = g.select(".node-icon")
+
+      const padX = 20
+      const padY = 10
+
       try {
         const bbox = text.node().getBBox()
-        
-        const padX = 20
-        const padY = 10
-        
-        const rectWidth = bbox.width + padX * 2
-        const rectHeight = bbox.height + padY * 2
+
+        const contentWidth = iconSize + iconGap + bbox.width
+        const rectWidth = contentWidth + padX * 2
+        const rectHeight = Math.max(bbox.height, iconSize) + padY * 2
+        const left = -contentWidth / 2
 
         rect
           .attr("x", -rectWidth / 2)
           .attr("y", -rectHeight / 2)
           .attr("width", rectWidth)
           .attr("height", rectHeight)
+
+        // Scale the 24x24 icon to iconSize and center it vertically
+        const scale = iconSize / 24
+        icon.attr(
+          "transform",
+          `translate(${left}, ${-iconSize / 2}) scale(${scale})`
+        )
+
+        text.attr("x", left + iconSize + iconGap)
       } catch (e) {
         console.error("Error calculating bbox for", d.id, e)
         // Fallback dimensions
@@ -205,6 +245,9 @@ props.posts.forEach((post) => {
           .attr("y", -15)
           .attr("width", 160)
           .attr("height", 30)
+        const scale = iconSize / 24
+        icon.attr("transform", `translate(${-70}, ${-iconSize / 2}) scale(${scale})`)
+        text.attr("x", -70 + iconSize + iconGap)
       }
     })
 
@@ -251,19 +294,19 @@ props.posts.forEach((post) => {
       })
 
       nodeGroup.select("rect").attr("fill", (d) => {
-        if (d.id === clicked.id) return "#4a86e8"
-        return connected.has(d.id) ? "#4ade80" : "#cccccc"
+        if (d.id === clicked.id) return "#1c398e"
+        return connected.has(d.id) ? "#14532d" : "#cccccc"
       })
 
       link.attr("stroke", (l) =>
         l.source.id === clicked.id || l.target.id === clicked.id
-          ? "#4a86e8"
+          ? "#1c398e"
           : "#ccc"
       )
     }
 
     function resetHighlight() {
-      nodeGroup.select("rect").attr("fill", "#4a86e8")
+      nodeGroup.select("rect").attr("fill", "#1c398e")
       link.attr("stroke", "#aaa")
     }
 
