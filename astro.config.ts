@@ -6,6 +6,7 @@ import sitemap from "@astrojs/sitemap"
 import autolinkHeadings from "rehype-autolink-headings"
 import rehypeExternalLinks from "rehype-external-links"
 import rehypeSlug from "rehype-slug"
+import { unified } from "@astrojs/markdown-remark"
 import sentry from "@sentry/astro"
 
 import { remarkReadingTime } from "./src/utils/remark-reading-time"
@@ -39,20 +40,22 @@ export default defineConfig({
   ],
 
   markdown: {
-    gfm: true,
     syntaxHighlight: "prism",
-    remarkPlugins: [remarkReadingTime],
-    rehypePlugins: [
-      rehypeSlug,
-      [autolinkHeadings, autolinkConfig],
-      [
-        rehypeExternalLinks,
-        {
-          target: "_blank",
-          rel: "noreferrer"
-        }
+    processor: unified({
+      gfm: true,
+      remarkPlugins: [remarkReadingTime],
+      rehypePlugins: [
+        rehypeSlug,
+        [autolinkHeadings, autolinkConfig],
+        [
+          rehypeExternalLinks,
+          {
+            target: "_blank",
+            rel: "noreferrer"
+          }
+        ]
       ]
-    ]
+    })
   },
 
   vite: {

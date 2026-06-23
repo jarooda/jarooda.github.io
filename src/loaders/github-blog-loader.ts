@@ -1,7 +1,6 @@
 import type { Loader, LoaderContext } from 'astro/loaders';
-import yaml from 'js-yaml';
-import { createMarkdownProcessor } from '@astrojs/markdown-remark';
-import type { MarkdownProcessor } from '@astrojs/markdown-remark';
+import { load as yamlLoad } from 'js-yaml';
+import type { MarkdownRenderer } from '@astrojs/markdown-remark';
 
 interface GitHubLoaderOptions {
   owner: string;
@@ -31,7 +30,7 @@ function parseFrontmatter(content: string, filename?: string): { data: Record<st
   
   try {
     // Parse YAML frontmatter
-    const data = yaml.load(frontmatterText) as Record<string, any>;
+    const data = yamlLoad(frontmatterText) as Record<string, any>;
     
     // Transform date strings to Date objects
     if (data && typeof data === 'object') {
@@ -52,7 +51,7 @@ function parseFrontmatter(content: string, filename?: string): { data: Record<st
 }
 
 export function githubLoader(options: GitHubLoaderOptions): Loader {
-  let markdownProcessor: MarkdownProcessor | null = null;
+  let markdownProcessor: MarkdownRenderer | null = null;
 
   return {
     name: 'github-loader',
@@ -60,9 +59,17 @@ export function githubLoader(options: GitHubLoaderOptions): Loader {
       const { owner, repo, path, branch = 'main' } = options;
       const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
 
-      // Initialize markdown processor
+      // Initialize markdown processor from the configured `markdown.processor`
+      // so the remark/rehype plugins in astro.config.ts are applied.
       if (!markdownProcessor) {
-        markdownProcessor = await createMarkdownProcessor(context.config.markdown);
+        const { markdown } = context.config;
+        markdownProcessor = await markdown.processor.createRenderer({
+          image: markdown.image,
+          syntaxHighlight: markdown.syntaxHighlight,
+          shikiConfig: markdown.shikiConfig,
+          gfm: markdown.gfm,
+          smartypants: markdown.smartypants
+        });
       }
 
       try {
@@ -101,7 +108,7 @@ async function processGitHubItem(
   repo: string,
   basePath: string,
   branch: string,
-  markdownProcessor: MarkdownProcessor
+  markdownProcessor: MarkdownRenderer
 ): Promise<void> {
   // Process .md and .mdx files
   if (item.type === 'file' && /\.(md|mdx)$/.test(item.name)) {
