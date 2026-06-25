@@ -14,7 +14,9 @@ import "../styles/base.css"
 import "../styles/blogs.css"
 import ProjectC from "../components/ProjectC.astro"
 
-const posts = sortPosts(await getCollection("project"))
+const posts = sortPosts(
+  await getCollection("project", ({ data }) => data.status !== "abandoned")
+)
 
 const title = `Projects - ${SITE_TITLE}`
 
