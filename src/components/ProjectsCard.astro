@@ -2,6 +2,7 @@
 import { capitalize } from "jalutils"
 import Tag from "./Tag.astro"
 import Anchor from "./shared/Anchor.astro"
+import AnimatedButton from "./shared/AnimatedButton.astro"
 import { getIcon } from "../consts"
 import { render } from "astro:content"
 import { Icon } from "astro-icon/components"
@@ -87,24 +88,23 @@ const statusIcons: Record<string, string> = {
 ---
 
 <div
-  class="flex flex-col h-full rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6"
+  class="flex flex-col md:flex-row gap-4 md:gap-6 h-full rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6"
 >
-  <h3
-    class="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-4"
-  >
-    {title}
-  </h3>
+  {/* Left: title, description, badges and stacks */}
+  <div class="flex flex-col flex-1 min-w-0">
+    <h3
+      class="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-4"
+    >
+      {title}
+    </h3>
 
-  <div
-    class="flex-1 mb-4 text-sm md:text-base text-gray-700 dark:text-gray-300"
-  >
-    <Content />
-  </div>
+    <div
+      class="flex-1 mb-4 text-sm md:text-base text-gray-700 dark:text-gray-300"
+    >
+      <Content />
+    </div>
 
-  <div
-    class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4"
-  >
-    <div class="flex flex-wrap gap-2">
+    <div class="flex flex-wrap gap-2 mb-4">
       {
         status && (
           <span
@@ -135,42 +135,55 @@ const statusIcons: Record<string, string> = {
     </div>
 
     {
-      (demo || repo) && (
-        <div class="flex gap-2 shrink-0">
-          {demo && (
-            <Anchor
-              href={demo}
-              rel="noopener noreferrer"
-              target="_blank"
-              icon="fluent:preview-link-16-regular"
-              block
-            >
-              Preview
-            </Anchor>
-          )}
-          {repo && (
-            <Anchor
-              href={repo}
-              rel="noopener noreferrer"
-              target="_blank"
-              icon="mdi:github"
-              block
-            >
-              Repo
-            </Anchor>
-          )}
+      stacks.length > 0 && (
+        <div class="flex flex-wrap gap-2">
+          {stacks.map((stack) => (
+            <Tag icon={getIcon(stack)}>{stack}</Tag>
+          ))}
         </div>
       )
     }
   </div>
 
-  {
-    stacks.length > 0 && (
-      <div class="flex flex-wrap gap-2">
-        {stacks.map((stack) => (
-          <Tag icon={getIcon(stack)}>{stack}</Tag>
-        ))}
-      </div>
-    )
-  }
+  {/* Right: actions stacked vertically */}
+  <div class="flex flex-col gap-2 shrink-0 md:w-44">
+    <AnimatedButton
+      as="button"
+      block
+      iconName="mdi:graph-outline"
+      ariaLabel={`Show ${title} in Project C graph`}
+      data-project-c-open
+      data-project-title={title}
+    >
+      Project C
+    </AnimatedButton>
+
+    {
+      demo && (
+        <Anchor
+          href={demo}
+          rel="noopener noreferrer"
+          target="_blank"
+          icon="fluent:preview-link-16-regular"
+          block
+        >
+          Preview
+        </Anchor>
+      )
+    }
+
+    {
+      repo && (
+        <Anchor
+          href={repo}
+          rel="noopener noreferrer"
+          target="_blank"
+          icon="mdi:github"
+          block
+        >
+          Repo
+        </Anchor>
+      )
+    }
+  </div>
 </div>

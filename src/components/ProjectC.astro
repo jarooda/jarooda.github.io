@@ -45,9 +45,10 @@ props.posts.forEach((post) => {
 ---
 <style>
   .svg-container {
+        display: block;
         width: 100%;
         height: 800px;
-        /* border: 1px solid #ddd; */
+        border: 1px solid #ddd;
         margin-top: 20px;
       }
   @media (max-width: 768px) {
@@ -105,8 +106,11 @@ props.posts.forEach((post) => {
     svg.selectAll("*").remove()
     
     const svgNode = svg.node()
-    const svgWidth = svgNode.clientWidth || 800
-    const svgHeight = svgNode.clientHeight || 800
+    // Measure the rendered box directly; getBoundingClientRect reflects the
+    // actual laid-out width (clientWidth can be unreliable for inline SVG).
+    const measured = svgNode.getBoundingClientRect()
+    const svgWidth = Math.round(measured.width) || svgNode.clientWidth || 800
+    const svgHeight = Math.round(measured.height) || svgNode.clientHeight || 800
     
     // Responsive padding based on screen size
     const isMobile = svgWidth < 768
@@ -132,11 +136,15 @@ props.posts.forEach((post) => {
       // .attr("stroke", "#444")
       .attr("stroke-width", 2)
 
-    // Responsive force parameters
-    const linkDistance = isMobile ? 80 : 150
-    const chargeStrength = isMobile ? -300 : -500
-    const collisionRadius = isMobile ? 50 : 70
-    const collisionStrength = isMobile ? 1 : 0.8
+    // Responsive force parameters.
+    // On desktop, scale the repulsion/link distance with the available width so
+    // the graph actually spreads out to fill a wide modal instead of clustering
+    // in the middle and leaving big empty side margins.
+    const widthFactor = isMobile ? 1 : Math.max(1, boxWidth / 900)
+    const linkDistance = isMobile ? 80 : 180 * widthFactor
+    const chargeStrength = isMobile ? -300 : -900 * widthFactor
+    const collisionRadius = isMobile ? 50 : 80
+    const collisionStrength = isMobile ? 1 : 0.9
 
     // ----- FORCE SETUP -----
     const simulation = d3
@@ -310,6 +318,24 @@ props.posts.forEach((post) => {
       link.attr("stroke", "#aaa")
     }
 
+    // Expose focus-by-title so external triggers (e.g. the card buttons)
+    // can highlight a project the same way clicking its node would.
+    window.__projectCFocus = function (title) {
+      const node = nodes.find((n) => n.id === title)
+      if (node) {
+        selectedNode = node
+        highlight(node)
+      } else {
+        selectedNode = null
+        resetHighlight()
+      }
+    }
+
+    // Apply any focus requested before the graph finished initializing.
+    if (window.__projectCPendingFocus) {
+      window.__projectCFocus(window.__projectCPendingFocus)
+    }
+
     // ----- SIM TICK -----
     simulation.on("tick", () => {
       // Keep inside bounding box with padding for node sizes (responsive)
@@ -357,8 +383,40 @@ props.posts.forEach((post) => {
     tryInitGraph()
   }
   
-  // Also listen for when accordion opens
-  window.addEventListener("project-c-opened", tryInitGraph)
+  // Re-layout the graph to the container's current width whenever the modal
+  // opens. We re-measure (rather than cache the first init) so the graph always
+  // fills the full modal width, even if it was first measured while hidden.
+  function relayoutGraph() {
+    const svg = document.querySelector(".svg-container")
+    if (!svg || svg.offsetParent === null) return
+    window.__projectCInitialized = true
+    // Wait a frame so the modal has finished laying out at full width.
+    requestAnimationFrame(() => loadD3AndInit())
+  }
+  window.addEventListener("project-c-opened", relayoutGraph)
+
+  // Re-fit on window resize while the graph is visible.
+  if (!window.__projectCResizeBound) {
+    window.__projectCResizeBound = true
+    let resizeTimer
+    window.addEventListener("resize", () => {
+      const svg = document.querySelector(".svg-container")
+      if (!svg || svg.offsetParent === null) return
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => loadD3AndInit(), 200)
+    })
+  }
+
+  // Focus a node by project title when requested from outside the graph.
+  // Stash the title so it can be applied once the graph finishes init.
+  if (!window.__projectCFocusBound) {
+    window.__projectCFocusBound = true
+    window.addEventListener("project-c-focus", (e) => {
+      const title = e && e.detail ? e.detail.title : null
+      window.__projectCPendingFocus = title
+      if (window.__projectCFocus) window.__projectCFocus(title)
+    })
+  }
   
   // Listen for Astro page transitions
   document.addEventListener("astro:page-load", () => {

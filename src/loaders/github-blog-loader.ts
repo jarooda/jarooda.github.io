@@ -87,6 +87,13 @@ export function githubLoader(options: GitHubLoaderOptions): Loader {
 
         const data: GitHubContent[] = await response.json();
 
+        // Rebuild from scratch each load so entries deleted from the repo are
+        // removed. The store is persisted across builds, so without clearing it
+        // `store.set` would only ever add/update — stale (deleted) files would
+        // keep rendering. We clear only after the listing fetch succeeds so a
+        // failed request doesn't wipe previously loaded content.
+        context.store.clear();
+
         // Process each file and directory
         for (const item of data) {
           await processGitHubItem(item, context, owner, repo, path, branch, markdownProcessor);

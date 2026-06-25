@@ -137,61 +137,12 @@ const categoryIcons: Record<string, string> = {
             > profiles.
           </p>
 
-          <!-- Project C Section -->
-          <div
-            class="my-12 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
-          >
-            <button
-              id="project-c-toggle"
-              class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors rounded-lg cursor-pointer"
-              aria-expanded="true"
-              aria-controls="project-c-content"
-              type="button"
-            >
-              <h2
-                class="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-200 mb-0! flex items-center gap-2"
-              >
-                <Icon name="mdi:graph-outline" class="w-6 h-6 shrink-0" />
-                Project C: Connect, Concept, Cycle
-              </h2>
-              <span
-                id="project-c-icon"
-                class="transition-transform duration-300 inline-block"
-                style="pointer-events: none; transform: rotate(180deg);"
-              >
-                <Icon name="mdi:chevron-down" class="w-6 h-6" />
-              </span>
-            </button>
-            <div
-              id="project-c-content"
-              class="px-6 pb-6"
-              style="display: block;"
-            >
-              <p class="blog mb-4">
-                This interactive graph shows how my personal projects relate to
-                each other over time. Some share the same tech stack, others
-                borrow ideas, and a few evolve into something new.
-                <strong>Tap a node</strong> to highlight its links and discover how
-                each project fits into the bigger picture.
-              </p>
-              <ul class="blog list-disc list-inside space-y-1 text-sm mb-4">
-                <li>
-                  <strong>Connect:</strong> Sharing tools, libraries, or integrations
-                  across stacks
-                </li>
-                <li>
-                  <strong>Concept:</strong> Exploring similar themes, problems, and
-                  design ideas
-                </li>
-                <li>
-                  <strong>Cycle:</strong> Iterating on previous work to build the
-                  next version of something bigger
-                </li>
-              </ul>
-
-              <ProjectC posts={posts} />
-            </div>
-          </div>
+          <p class="blog">
+            Each project links to <strong>Project C</strong>, an interactive
+            graph that shows how my personal projects relate to each other over
+            time.<br>Click the <strong>Project C</strong> button on any card to open
+            the graph which the project linked to.
+          </p>
         </div>
 
         <!-- Two Column Layout: Projects (left) and TOC (right) -->
@@ -275,44 +226,129 @@ const categoryIcons: Record<string, string> = {
       </section>
     </main>
 
+    <!-- Project C Modal -->
+    <div
+      id="project-c-modal"
+      class="fixed inset-0 z-50 hidden items-center justify-center p-4"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="project-c-modal-title"
+    >
+      <div
+        class="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        data-project-c-close
+      >
+      </div>
+      <div
+        class="relative z-10 w-[95vw] max-w-[1600px] max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700"
+      >
+        <div
+          class="sticky top-0 z-10 flex items-center justify-between gap-4 p-6 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700"
+        >
+          <h2
+            id="project-c-modal-title"
+            class="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-200 mb-0! flex items-center gap-2"
+          >
+            <Icon name="mdi:graph-outline" class="w-6 h-6 shrink-0" />
+            Project C: Connect, Concept, Cycle
+          </h2>
+          <button
+            type="button"
+            data-project-c-close
+            aria-label="Close Project C graph"
+            class="shrink-0 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+          >
+            <Icon name="mdi:close" class="w-6 h-6" />
+          </button>
+        </div>
+        <div class="blog p-6">
+          <p class="mb-4">
+            This interactive graph shows how my personal projects relate to each
+            other over time. Some share the same tech stack, others borrow
+            ideas, and a few evolve into something new.
+            <strong>Tap a node</strong> to highlight its links and discover how each
+            project fits into the bigger picture.
+          </p>
+          <ul class="blog list-disc list-inside space-y-1 text-sm mb-4">
+            <li>
+              <strong>Connect:</strong> Sharing tools, libraries, or integrations
+              across stacks
+            </li>
+            <li>
+              <strong>Concept:</strong> Exploring similar themes, problems, and design
+              ideas
+            </li>
+            <li>
+              <strong>Cycle:</strong> Iterating on previous work to build the next
+              version of something bigger
+            </li>
+          </ul>
+
+          <ProjectC posts={posts} />
+        </div>
+      </div>
+    </div>
+
     <Footer />
 
     <script>
-      // Client-side script for accordion
-      function initAccordion() {
-        const toggle = document.getElementById("project-c-toggle")
-        const content = document.getElementById("project-c-content")
-        const icon = document.getElementById("project-c-icon")
+      // Client-side script for the Project C modal
+      function initProjectCModal() {
+        const modal = document.getElementById("project-c-modal")
+        if (!modal) return
 
-        if (!toggle || !content || !icon) {
-          console.error("Accordion elements not found")
-          return
+        const openModal = (title: string | null) => {
+          modal.classList.remove("hidden")
+          modal.classList.add("flex")
+          modal.setAttribute("aria-hidden", "false")
+          document.body.style.overflow = "hidden"
+
+          // Ensure the graph initializes now that it's visible
+          window.dispatchEvent(new CustomEvent("project-c-opened"))
+
+          // Focus the requested node once the graph is ready
+          window.dispatchEvent(
+            new CustomEvent("project-c-focus", { detail: { title } })
+          )
         }
 
-        toggle.onclick = function (e) {
-          e.preventDefault()
+        const closeModal = () => {
+          modal.classList.add("hidden")
+          modal.classList.remove("flex")
+          modal.setAttribute("aria-hidden", "true")
+          document.body.style.overflow = ""
+        }
 
-          const isExpanded = toggle.getAttribute("aria-expanded") === "true"
-          const willExpand = !isExpanded
+        document.querySelectorAll("[data-project-c-open]").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault()
+            openModal(btn.getAttribute("data-project-title"))
+          })
+        })
 
-          toggle.setAttribute("aria-expanded", String(willExpand))
-          content.style.display = willExpand ? "block" : "none"
-          icon.style.transform = willExpand ? "rotate(180deg)" : "rotate(0deg)"
+        modal.querySelectorAll("[data-project-c-close]").forEach((el) => {
+          el.addEventListener("click", closeModal)
+        })
 
-          // Dispatch event when opening so graph can initialize
-          if (willExpand) {
-            setTimeout(() => {
-              window.dispatchEvent(new CustomEvent("project-c-opened"))
-            }, 50) // Small delay to ensure content is rendered
-          }
+        // Escape to close (registered once on the document)
+        if (!(window as any).__projectCEscBound) {
+          ;(window as any).__projectCEscBound = true
+          document.addEventListener("keydown", (e) => {
+            const m = document.getElementById("project-c-modal")
+            if (e.key === "Escape" && m && !m.classList.contains("hidden")) {
+              m.classList.add("hidden")
+              m.classList.remove("flex")
+              m.setAttribute("aria-hidden", "true")
+              document.body.style.overflow = ""
+            }
+          })
         }
       }
 
-      // Initialize immediately
-      initAccordion()
-
-      // Also initialize on page load
-      document.addEventListener("astro:page-load", initAccordion)
+      // Initialize immediately and on Astro page transitions
+      initProjectCModal()
+      document.addEventListener("astro:page-load", initProjectCModal)
     </script>
   </body>
 </html>
