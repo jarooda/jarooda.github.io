@@ -26,6 +26,8 @@ interface MarkerSpec {
   name: string
   position: Vec3
   userData: Record<string, unknown>
+  // Blender Z rotation in degrees; equals the Three.js Y rotation.
+  rotZ?: number
 }
 
 interface CameraSpec {
@@ -274,7 +276,13 @@ const MARKERS: MarkerSpec[] = [
   { name: "trigger_tv", position: [-1.1, -0.55, 0], userData: { type: "trigger", target: "tv", radius: 0.6 } },
   { name: "trigger_switch", position: [-1.5, -1.75, 0], userData: { type: "trigger", target: "switch", radius: 0.45 } },
   { name: "trigger_window", position: [0.2, 1.8, 0], userData: { type: "trigger", target: "window", radius: 0.45 } },
-  { name: "focus_rubik", position: [1.35, 1.95, 1.05], userData: { type: "focus" } }
+  { name: "focus_rubik", position: [1.35, 1.95, 1.05], userData: { type: "focus" } },
+  { name: "trigger_bed", position: [0.9, -1.1, 0], userData: { type: "trigger", target: "bed", radius: 0.6 } },
+  { name: "pose_window", position: [0.2, 2.05, 0], rotZ: 180, userData: { type: "pose", target: "window" } },
+  { name: "pose_whiteboard", position: [-1.3, 1.0, 0], rotZ: -90, userData: { type: "pose", target: "whiteboard" } },
+  { name: "pose_tv", position: [-0.6, -0.7, 0], rotZ: -90, userData: { type: "pose", target: "tv" } },
+  { name: "pose_desk", position: [1.3, 1.9, 0], rotZ: 180, userData: { type: "pose", target: "desk" } },
+  { name: "pose_bed", position: [0.9, -1.3, 0], rotZ: 180, userData: { type: "pose", target: "bed" } }
 ]
 
 // Contract §6 targets/directions; ortho scale and near plane match room.glb.
@@ -324,11 +332,12 @@ function buildCollision([name, [x, y], [sx, sy]]: (typeof COLLISIONS)[number]): 
   return mesh
 }
 
-function buildMarker({ name, position, userData }: MarkerSpec): THREE.Object3D {
+function buildMarker({ name, position, userData, rotZ = 0 }: MarkerSpec): THREE.Object3D {
   const marker = new THREE.Object3D()
   marker.name = name
   marker.userData = { name, ...userData }
   marker.position.copy(vecFromBlender(position))
+  marker.rotation.y = THREE.MathUtils.degToRad(rotZ)
   return marker
 }
 

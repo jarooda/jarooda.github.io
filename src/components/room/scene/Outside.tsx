@@ -73,6 +73,14 @@ export default function Outside({ room }: { room: THREE.Object3D }) {
       const material = byName.get(name)
       if (material) unlit(material)
     })
+    // City lights are glow only: a lit base color would show as grey/orange squares in daylight.
+    // They fade in and out by opacity with the phase instead of dimming into visible patches.
+    const city = byName.get("emit_city_lights")
+    if (city) {
+      unlit(city)
+      city.transparent = true
+      city.depthWrite = false
+    }
     return byName
   }, [scene])
 
@@ -86,7 +94,11 @@ export default function Outside({ room }: { room: THREE.Object3D }) {
     materials.get("mat_skyline_mid")?.emissive.copy(live.skyline[1])
     materials.get("mat_skyline_near")?.emissive.copy(live.skyline[2])
     const city = materials.get("emit_city_lights")
-    if (city) city.emissiveIntensity = live.cityLights * CITY_LIGHT_GLOW
+    if (city) {
+      city.emissiveIntensity = CITY_LIGHT_GLOW
+      city.opacity = Math.min(1, live.cityLights)
+      city.visible = live.cityLights > 0.01
+    }
   })
 
   return (

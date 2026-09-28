@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "stop": "astro dev stop",
     "build": "SENTRY_LOG_LEVEL=error astro build",
     "preview": "astro build && astro preview",
     "astro": "astro",

@@ -88,8 +88,6 @@ const toDay = (date?: Date) =>
 // Invalid or missing dates sort as oldest instead of breaking the build.
 const time = (date?: Date) => (isValid(date) ? date.valueOf() : 0)
 
-const compact = (values: (string | undefined)[]) => values.filter((v): v is string => !!v)
-
 // Sheet-backed collections are empty (or missing) without Google credentials; the room must still build.
 async function safeCollection<C extends keyof DataEntryMap>(name: C): Promise<CollectionEntry<C>[]> {
   try {
@@ -187,114 +185,33 @@ async function getCollections(): Promise<RoomData["collections"]> {
       safeCollection("gadgets")
     ])
 
+  // Same columns as the 2D /collections (and /friend-code) tables: a title plus one column (user feedback).
+  const pairs = <T,>(entries: { data: T }[], title: (data: T) => string, subtitle: (data: T) => string | undefined) =>
+    entries.map(({ data }) => ({ title: title(data), subtitle: subtitle(data) || undefined, meta: [] }))
+
   return {
     films: [
-      {
-        id: "movies",
-        label: "Movies",
-        items: movies.map(({ data }) => ({
-          title: data.title,
-          subtitle: data.director,
-          meta: compact([data.year]),
-          notes: data.notes || undefined,
-          url: data.web || undefined
-        }))
-      },
-      {
-        id: "series",
-        label: "Series",
-        items: series.map(({ data }) => ({
-          title: data.title,
-          subtitle: data.writer,
-          meta: compact([data.year]),
-          notes: data.notes || undefined,
-          url: data.web || undefined
-        }))
-      },
-      {
-        id: "anime",
-        label: "Anime",
-        items: anime.map(({ data }) => ({
-          title: data.title,
-          subtitle: data.studio,
-          meta: compact([data.year]),
-          notes: data.notes || undefined,
-          url: data.web || undefined
-        }))
-      }
+      { id: "movies", label: "Movies", items: pairs(movies, (d) => d.title, (d) => d.director) },
+      { id: "series", label: "Series", items: pairs(series, (d) => d.title, (d) => d.writer) },
+      { id: "anime", label: "Anime", items: pairs(anime, (d) => d.title, (d) => d.studio) }
     ],
     games: [
-      {
-        id: "games",
-        label: "Games",
-        items: games.map(({ data }) => ({
-          title: data.title,
-          subtitle: data.developer,
-          meta: compact([data.platform, data.status, data.format]),
-          url: data.web || undefined
-        }))
-      },
+      { id: "games", label: "Games", items: pairs(games, (d) => d.title, (d) => d.status) },
       {
         id: "friend-codes",
         label: "Friend codes",
         items: friendCodes.map(({ data }) => ({
           title: data.platform,
-          subtitle: data.username,
-          meta: compact([data.friend_code]),
+          subtitle: data.friend_code || undefined,
+          meta: [],
           url: data.web || undefined
         }))
       }
     ],
-    figures: [
-      {
-        id: "figures",
-        label: "Figures",
-        items: figures.map(({ data }) => ({
-          title: data.name,
-          subtitle: data.series,
-          meta: compact([data.type, data.manufacturer, data.condition]),
-          notes: data.notes || undefined,
-          url: data.web || undefined
-        }))
-      }
-    ],
-    books: [
-      {
-        id: "books",
-        label: "Books",
-        items: books.map(({ data }) => ({
-          title: data.title,
-          subtitle: data.author,
-          meta: compact([data.format, data.type, data.read_status]),
-          notes: data.notes || undefined
-        }))
-      }
-    ],
-    music: [
-      {
-        id: "musics",
-        label: "Music",
-        items: musics.map(({ data }) => ({
-          title: data.title,
-          subtitle: data.artist,
-          meta: compact([data.album, data.year]),
-          notes: data.notes || undefined
-        }))
-      }
-    ],
-    gadgets: [
-      {
-        id: "gadgets",
-        label: "Gadgets",
-        items: gadgets.map(({ data }) => ({
-          title: data.name,
-          subtitle: data.brand,
-          meta: compact([data.type]),
-          notes: data.notes || undefined,
-          url: data.web || undefined
-        }))
-      }
-    ]
+    figures: [{ id: "figures", label: "Figures", items: pairs(figures, (d) => [d.type, d.name].filter(Boolean).join(" "), (d) => d.manufacturer) }],
+    books: [{ id: "books", label: "Books", items: pairs(books, (d) => d.title, (d) => d.author) }],
+    music: [{ id: "musics", label: "Music", items: pairs(musics, (d) => d.title, (d) => d.artist) }],
+    gadgets: [{ id: "gadgets", label: "Gadgets", items: pairs(gadgets, (d) => d.name, (d) => d.brand) }]
   }
 }
 

@@ -37,9 +37,6 @@ export default function RubikHud() {
               {face.category}
             </span>
           </p>
-          <button type="button" onClick={closePopup} className={buttonClass} aria-label="Close tech stack">
-            Close ✕
-          </button>
         </div>
         <ul className="flex flex-wrap gap-2" aria-label={`${face.category} technologies`}>
           {face.items.map((item) => (
@@ -50,11 +47,11 @@ export default function RubikHud() {
         </ul>
         <div className="flex items-center justify-between gap-2">
           <button type="button" onClick={() => step(-1)} className={buttonClass}>
-            ← Previous face
+            Previous face
           </button>
           <span className="hidden text-xs text-gray-500 sm:inline dark:text-gray-400">Drag the cube to turn it</span>
           <button type="button" onClick={() => step(1)} className={buttonClass}>
-            Next face →
+            Next face
           </button>
         </div>
       </div>

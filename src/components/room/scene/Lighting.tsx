@@ -20,6 +20,8 @@ const BULB_ON = 3
 const BULB_OFF = 0.08
 const DESK_BULB = 1.2
 const GLASS_GLOW = 1.1
+// The pane is lit by the bright day light; at the asset's opacity it hides the view (user feedback).
+const GLASS_OPACITY = 0.08
 
 const NIGHT = toAtmosphere(presetById("night"))
 
@@ -68,6 +70,10 @@ export default function Lighting({ scene }: { scene: THREE.Object3D }) {
   )
 
   useEffect(() => {
+    if (materials.glass) materials.glass.opacity = GLASS_OPACITY
+  }, [materials])
+
+  useEffect(() => {
     scene.traverse((object) => {
       if (!(object instanceof THREE.Mesh) || !object.visible) return
       const solid = ![object.material].flat().some((m) => NO_SHADOW.test(m.name))
@@ -111,7 +117,7 @@ export default function Lighting({ scene }: { scene: THREE.Object3D }) {
 
     if (materials.glass instanceof THREE.MeshStandardMaterial) {
       materials.glass.emissive.copy(live.windowColor)
-      materials.glass.emissiveIntensity = live.window * c * GLASS_GLOW
+      materials.glass.emissiveIntensity = live.glass * c * GLASS_GLOW
     }
     if (materials.bulb instanceof THREE.MeshStandardMaterial) {
       materials.bulb.emissiveIntensity = THREE.MathUtils.lerp(BULB_OFF, BULB_ON, lampLevel.current)

@@ -44,11 +44,11 @@ export default function Atmosphere() {
     return () => window.clearInterval(timer)
   }, [phaseOverride])
 
-  // Lamp default per phase (00 §6): on load, and when a phase is picked manually.
+  // Lamp default per phase (00 §6), on load only: picking a phase changes the outside, never
+  // the switch (user feedback).
   useEffect(() => {
-    const phase = phaseOverride ?? useRoomStore.getState().phase
-    useRoomStore.setState({ lightOn: presetById(phase).lampDefaultOn })
-  }, [phaseOverride])
+    useRoomStore.setState({ lightOn: presetById(useRoomStore.getState().phase).lampDefaultOn })
+  }, [])
 
   useFrame((_, delta) => {
     lerpAtmosphere(live, target.current, reducedMotion ? 1 : Math.min(1, delta * EASE_PER_SECOND))

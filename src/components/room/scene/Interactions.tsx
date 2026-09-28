@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import * as THREE from "three"
 import { labels } from "../labels"
 import { SECTION_ZONE, isSection, zoneTarget, type SectionId, type ZoneId } from "../sections"
-import { useRoomStore } from "../store"
+import { useRoomStore, type FixtureTarget } from "../store"
 import { setHighlight } from "../systems/highlight"
 import { buildZoneGroups, type ZoneGroups } from "../systems/zoneGroups"
 
@@ -12,7 +12,10 @@ import { buildZoneGroups, type ZoneGroups } from "../systems/zoneGroups"
 type Target =
   | { kind: "zone"; zone: ZoneId; key: ZoneId; nodes: THREE.Object3D[] }
   | { kind: "section"; section: SectionId; key: THREE.Object3D; nodes: THREE.Object3D[] }
-  | { kind: "fixture"; fixture: "switch" | "window"; key: THREE.Object3D; nodes: THREE.Object3D[] }
+  | { kind: "fixture"; fixture: FixtureTarget; key: THREE.Object3D; nodes: THREE.Object3D[] }
+
+// Room objects outside the zones that the avatar uses (the bed has no section, V2).
+const FIXTURE_NODE: Record<FixtureTarget, string> = { switch: "int_switch", window: "int_window", bed: "deco_bed" }
 
 // Walks up from the hit mesh: in Roam any part of a zone targets the whole zone,
 // in Zoom only interactive objects of the framed zone are targets. Zone roots are never
@@ -24,6 +27,7 @@ function resolveTarget(hit: THREE.Object3D, mode: string, view: string, groups: 
     // The light switch and the window (with its curtains) can be tapped in the room too.
     const section = node.userData.section
     if (mode === "roam" && (section === "switch" || section === "window")) return { kind: "fixture", fixture: section, key: node, nodes: [node] }
+    if (mode === "roam" && node.name === FIXTURE_NODE.bed) return { kind: "fixture", fixture: "bed", key: node, nodes: [node] }
     if (mode === "zoom" && node.userData.zone_root) return null
     if (mode === "zoom" && isSection(node.userData.section) && SECTION_ZONE[node.userData.section] === view) {
       return { kind: "section", section: node.userData.section, key: node, nodes: [node] }
@@ -51,13 +55,15 @@ export default function Interactions({ scene }: { scene: THREE.Object3D }) {
   const [hovered, setHovered] = useState<Target | null>(null)
 
   // While an action is available (prompt shown), its object is highlighted: the whole zone,
-  // or the light switch / the window with its curtains (user feedback).
-  const nearbyTarget = useRoomStore((state) => (state.mode === "roam" && !state.sequence ? state.nearbyTarget : null))
+  // or the light switch / the window with its curtains / the bed (user feedback). Not while asleep.
+  const nearbyTarget = useRoomStore((state) =>
+    state.mode === "roam" && !state.sequence && state.avatarPose !== "bed" ? state.nearbyTarget : null
+  )
   useEffect(() => {
     if (!nearbyTarget) return
     const nodes =
-      nearbyTarget === "switch" || nearbyTarget === "window"
-        ? [scene.getObjectByName(nearbyTarget === "switch" ? "int_switch" : "int_window")].filter((n): n is THREE.Object3D => !!n)
+      nearbyTarget === "switch" || nearbyTarget === "window" || nearbyTarget === "bed"
+        ? [scene.getObjectByName(FIXTURE_NODE[nearbyTarget])].filter((n): n is THREE.Object3D => !!n)
         : groups.members.get(nearbyTarget) ?? []
     nodes.forEach((node) => setHighlight(node, true))
     return () => nodes.forEach((node) => setHighlight(node, false))
@@ -124,7 +130,7 @@ export default function Interactions({ scene }: { scene: THREE.Object3D }) {
     const target = resolveTarget(event.object, mode, view, groups)
     if (!target) {
       setHovered(null)
-      // Anything else in the room (floor, rug, bed…): walk to that spot.
+      // Anything else in the room (floor, rug…): walk to that spot.
       if (mode === "roam") walkTo(event.point.x, event.point.z)
       return
     }

@@ -118,8 +118,10 @@ export default function Overlay() {
           </div>
         ) : (
           <>
-            <div className="order-1">
+            {/* Simple view sits beside the clock, away from the popup panel on the right (user feedback). */}
+            <div className="order-1 flex items-start gap-2">
               <TimeControl />
+              <SimpleViewLink />
             </div>
             <div className="order-3">
               <QuickNav />
@@ -143,7 +145,6 @@ export default function Overlay() {
             <MovePad />
             <StatusBar />
           </div>
-          <SimpleViewLink />
         </div>
       )}
 

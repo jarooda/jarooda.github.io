@@ -12,11 +12,15 @@ export interface PhasePreset {
   ground: string
   sun: { color: string; intensity: number; direction: [number, number, number] }
   sky: string
+  // Far, mid, near. Each layer is darker than the one behind it and than the sky, so buildings
+  // read clearly and lit windows sit on them (user feedback).
   skyline: [string, string, string]
   cityLights: number
   background: { top: string; bottom: string }
   lampDefaultOn: boolean
-  windowGlow: { color: string; intensity: number }
+  // `intensity` drives the light through the window; `glass` the glow of the pane itself, kept low
+  // in dark phases so the skyline and city lights behind it are not washed out (user feedback).
+  windowGlow: { color: string; intensity: number; glass: number }
   exposure: number
 }
 
@@ -29,11 +33,11 @@ export const PHASES: PhasePreset[] = [
     ground: "#4a3f55",
     sun: { color: "#b7c0ff", intensity: 0.5, direction: [-3, 3, -6] },
     sky: "#7a6bb5",
-    skyline: ["#5a5185", "#453f6e", "#302b4f"],
+    skyline: ["#4d4578", "#3a345f", "#282443"],
     cityLights: 0.5,
     background: { top: "#3e3d68", bottom: "#d8a9a6" },
     lampDefaultOn: true,
-    windowGlow: { color: "#a8b6ff", intensity: 0.7 },
+    windowGlow: { color: "#a8b6ff", intensity: 0.7, glass: 0.2 },
     exposure: 0.95
   },
   {
@@ -44,11 +48,11 @@ export const PHASES: PhasePreset[] = [
     ground: "#8a6a4f",
     sun: { color: "#ffd9a0", intensity: 3, direction: [-2.5, 4, -6] },
     sky: "#8fc5f2",
-    skyline: ["#b9c8d8", "#9fb0c2", "#7f8ea0"],
+    skyline: ["#7f98b3", "#647c96", "#4b5f76"],
     cityLights: 0,
     background: { top: "#fbe9cf", bottom: "#f1c68e" },
     lampDefaultOn: false,
-    windowGlow: { color: "#ffe2ad", intensity: 1.4 },
+    windowGlow: { color: "#ffe2ad", intensity: 1.4, glass: 0.35 },
     exposure: 1
   },
   {
@@ -59,11 +63,11 @@ export const PHASES: PhasePreset[] = [
     ground: "#8f7a66",
     sun: { color: "#fff6e8", intensity: 2.8, direction: [0.6, 8, -3] },
     sky: "#6fb5f0",
-    skyline: ["#c9d4df", "#adbccb", "#8e9eb0"],
+    skyline: ["#88a0b8", "#6b829b", "#51667e"],
     cityLights: 0,
     background: { top: "#f7efe2", bottom: "#e6d3b3" },
     lampDefaultOn: false,
-    windowGlow: { color: "#ffffff", intensity: 1.5 },
+    windowGlow: { color: "#ffffff", intensity: 1.5, glass: 0.35 },
     exposure: 1.02
   },
   {
@@ -74,11 +78,11 @@ export const PHASES: PhasePreset[] = [
     ground: "#7a5238",
     sun: { color: "#ffb56b", intensity: 2.6, direction: [3.5, 2.6, -6] },
     sky: "#f2a65a",
-    skyline: ["#c98f6b", "#a8735a", "#7d5646"],
+    skyline: ["#b8764f", "#94593f", "#6b3f2f"],
     cityLights: 0,
     background: { top: "#fcd9a8", bottom: "#e4935e" },
     lampDefaultOn: false,
-    windowGlow: { color: "#ffc07a", intensity: 1.6 },
+    windowGlow: { color: "#ffc07a", intensity: 1.6, glass: 0.4 },
     exposure: 1
   },
   {
@@ -89,11 +93,11 @@ export const PHASES: PhasePreset[] = [
     ground: "#4d3848",
     sun: { color: "#ff8d5e", intensity: 1.1, direction: [4.5, 1.4, -6] },
     sky: "#8e5cab",
-    skyline: ["#5e426f", "#4a345d", "#352641"],
+    skyline: ["#4f3862", "#3d2b4f", "#2b1f38"],
     cityLights: 0.6,
     background: { top: "#6c4c8b", bottom: "#e58f6a" },
     lampDefaultOn: false,
-    windowGlow: { color: "#ff9f7a", intensity: 1 },
+    windowGlow: { color: "#ff9f7a", intensity: 1, glass: 0.3 },
     exposure: 0.97
   },
   {
@@ -104,11 +108,11 @@ export const PHASES: PhasePreset[] = [
     ground: "#1f2238",
     sun: { color: "#a4b6ff", intensity: 0.4, direction: [-2, 6, -5] },
     sky: "#1d2a52",
-    skyline: ["#27345f", "#1d2849", "#141b33"],
+    skyline: ["#111a36", "#0c1328", "#080d1c"],
     cityLights: 1,
     background: { top: "#1b2340", bottom: "#3b3662" },
     lampDefaultOn: true,
-    windowGlow: { color: "#6f86d6", intensity: 0.55 },
+    windowGlow: { color: "#6f86d6", intensity: 0.55, glass: 0.08 },
     exposure: 0.95
   },
   {
@@ -119,11 +123,11 @@ export const PHASES: PhasePreset[] = [
     ground: "#15172a",
     sun: { color: "#8292d4", intensity: 0.22, direction: [-1.5, 6, -5] },
     sky: "#0c1123",
-    skyline: ["#131b34", "#0f1529", "#0a0f1e"],
+    skyline: ["#070b18", "#050812", "#03050c"],
     cityLights: 0.7,
     background: { top: "#0e1224", bottom: "#24213b" },
     lampDefaultOn: true,
-    windowGlow: { color: "#3f519c", intensity: 0.35 },
+    windowGlow: { color: "#3f519c", intensity: 0.35, glass: 0.05 },
     exposure: 0.9
   }
 ]
@@ -177,6 +181,7 @@ export interface Atmosphere {
   cityLights: number
   windowColor: THREE.Color
   window: number
+  glass: number
   exposure: number
   backgroundTop: THREE.Color
   backgroundBottom: THREE.Color
@@ -195,6 +200,7 @@ export function toAtmosphere(p: PhasePreset): Atmosphere {
     cityLights: p.cityLights,
     windowColor: new THREE.Color(p.windowGlow.color),
     window: p.windowGlow.intensity,
+    glass: p.windowGlow.glass,
     exposure: p.exposure,
     backgroundTop: new THREE.Color(p.background.top),
     backgroundBottom: new THREE.Color(p.background.bottom)
@@ -215,6 +221,7 @@ export function lerpAtmosphere(out: Atmosphere, target: Atmosphere, t: number) {
   out.cityLights = n(out.cityLights, target.cityLights)
   out.windowColor.lerp(target.windowColor, t)
   out.window = n(out.window, target.window)
+  out.glass = n(out.glass, target.glass)
   out.exposure = n(out.exposure, target.exposure)
   out.backgroundTop.lerp(target.backgroundTop, t)
   out.backgroundBottom.lerp(target.backgroundBottom, t)

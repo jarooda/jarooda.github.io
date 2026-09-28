@@ -55,7 +55,7 @@ export default function Popup({ title, onClose, tabs, activeTab, onTab, headerAc
           className="cursor-pointer rounded-sm px-2 py-1 text-sm font-semibold hover:bg-gray-100 dark:hover:bg-gray-700"
           aria-label="Close"
         >
-          Close <span aria-hidden="true">✕</span>
+          <span aria-hidden="true">✕</span>
         </button>
       </header>
 

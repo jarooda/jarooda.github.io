@@ -1,11 +1,13 @@
 import { create } from "zustand"
 import type { ViewId } from "./scene/viewPresets"
 import { SECTION_ZONE, isSection, viewForSection, type NavTarget, type SectionId, type ZoneId } from "./sections"
+import type { PoseTarget } from "./systems/poses"
 import { readJSON, writeJSON } from "./systems/storage"
 
 export type Mode = "loading" | "intro" | "roam" | "zoom" | "popup"
 export type PhaseId = "dawn" | "morning" | "noon" | "afternoon" | "dusk" | "night" | "latenight"
-export type TriggerTarget = ZoneId | "switch" | "window"
+export type FixtureTarget = "switch" | "window" | "bed"
+export type TriggerTarget = ZoneId | FixtureTarget
 export type Tier = "high" | "medium" | "low"
 // Runtime reasons to offer the classic site (K32).
 export type RuntimeIssue = "context-lost" | "load-failed" | "slow"
@@ -17,8 +19,8 @@ export interface PopupState {
 }
 
 // Animated navigation (decision 7, 03 §5.3):
-// toMain (camera back to the room view) → walk (avatar walks, faces the object, plays interact)
-// → zoomIn (camera to the zone, target highlighted) → popup.
+// toMain (camera back to the room view) → walk (avatar walks to the zone's pose marker and takes
+// the pose, V2) → zoomIn (camera to the zone, target highlighted) → popup.
 export type SequenceStage = "toMain" | "walk" | "zoomIn"
 
 export interface Sequence {
@@ -41,8 +43,10 @@ interface RoomState {
   // Requests for the avatar; tokens make repeated requests distinct.
   walkRequest: { x: number; z: number; token: number } | null
   interactRequest: number
-  // Tap/click on the light switch or window: walk there, then use it.
-  fixtureRequest: { target: "switch" | "window"; token: number } | null
+  // Tap/click on the light switch, window or bed: walk there, then use it.
+  fixtureRequest: { target: FixtureTarget; token: number } | null
+  // Pose the avatar holds or is entering (V2); null when standing.
+  avatarPose: PoseTarget | null
   avatarSnap: { zone: ZoneId; token: number } | null
   lightOn: boolean
   phaseOverride: PhaseId | null
@@ -74,7 +78,8 @@ interface RoomState {
   cameraSettled(view: ViewId): void
   walkTo(x: number, z: number): void
   requestInteract(): void
-  useFixture(target: "switch" | "window"): void
+  useFixture(target: FixtureTarget): void
+  setAvatarPose(pose: PoseTarget | null): void
   setNearbyTarget(target: TriggerTarget | null): void
   toggleLight(): void
   toggleCurtains(): void
@@ -127,6 +132,7 @@ export const useRoomStore = create<RoomState>((set, get) => {
     walkRequest: null,
     interactRequest: 0,
     fixtureRequest: null,
+    avatarPose: null,
     avatarSnap: null,
     lightOn: false,
     phaseOverride: null,
@@ -211,6 +217,7 @@ export const useRoomStore = create<RoomState>((set, get) => {
     walkTo: (x, z) => set((state) => ({ walkRequest: { x, z, token: (state.walkRequest?.token ?? 0) + 1 } })),
     requestInteract: () => set((state) => ({ interactRequest: state.interactRequest + 1 })),
     useFixture: (target) => set((state) => ({ fixtureRequest: { target, token: (state.fixtureRequest?.token ?? 0) + 1 } })),
+    setAvatarPose: (avatarPose) => set({ avatarPose }),
     setNearbyTarget: (nearbyTarget) => {
       if (get().nearbyTarget !== nearbyTarget) set({ nearbyTarget })
     },

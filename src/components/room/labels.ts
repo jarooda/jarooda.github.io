@@ -13,5 +13,6 @@ export const labels = {
   tv: "TV Corner",
   whiteboard: "Whiteboard",
   switch: "Light switch",
-  window: "Window"
+  window: "Window",
+  bed: "Bed"
 } as const
