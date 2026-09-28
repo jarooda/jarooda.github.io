@@ -1,0 +1,38 @@
+---
+// "Enter the room" in the 2D header (K33): a manual choice, remembered across visits.
+// data-astro-reload: the room page has no ClientRouter and needs a full page load.
+import { Icon } from "astro-icon/components"
+import { EXPERIENCE_KEY, FALLBACK_KEY, ROOM_URL } from "../utils/experience"
+
+interface Props {
+  compact?: boolean
+}
+
+const { compact = false } = Astro.props
+---
+
+<a
+  href={ROOM_URL}
+  data-astro-reload
+  data-room-toggle
+  data-test="enter-room"
+  aria-label={compact ? "Enter the room" : undefined}
+  class="rounded-lg px-3 py-2 text-sm font-semibold text-gray-700 transition-colors duration-200 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-gray-700"
+>
+  {/* Layout lives on the span: the site-wide `a { display: inline-block }` outranks utilities. */}
+  <span class="flex items-center gap-2">
+    <Icon name="mdi:cube-outline" class="h-5 w-5" aria-hidden="true" />
+    {!compact && <span>Enter the room</span>}
+  </span>
+</a>
+
+<script is:inline define:vars={{ experienceKey: EXPERIENCE_KEY, fallbackKey: FALLBACK_KEY }}>
+  document.addEventListener("click", function (event) {
+    var link = event.target instanceof Element ? event.target.closest("[data-room-toggle]") : null
+    if (!link) return
+    try {
+      localStorage.setItem(experienceKey, "room")
+      sessionStorage.removeItem(fallbackKey)
+    } catch (e) {}
+  })
+</script>

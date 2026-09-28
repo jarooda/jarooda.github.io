@@ -1,6 +1,7 @@
 import { defineConfig } from "astro/config"
 import { loadEnv } from "vite"
 import mdx from "@astrojs/mdx"
+import react from "@astrojs/react"
 import icon from "astro-icon"
 import sitemap from "@astrojs/sitemap"
 import autolinkHeadings from "rehype-autolink-headings"
@@ -25,9 +26,15 @@ const { SENTRY_DSN, SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT } = loadEnv(
 export default defineConfig({
   site: "https://jaluwibowo.id",
 
+  // The 3D room was developed under /room before it became the homepage.
+  redirects: {
+    "/room": "/"
+  },
+
   integrations: [
     icon(),
     mdx(),
+    react(),
     sitemap(),
     sentry({
       sourceMapsUploadOptions: {

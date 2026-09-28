@@ -1,5 +1,7 @@
 ---
 import Anchor from "./shared/Anchor.astro"
+import AnimatedButton from "./shared/AnimatedButton.astro"
+import { ROOM_URL } from "../utils/experience"
 import JaluLogoIcon from "./JaluLogoIcon.astro"
 
 const firstWords = ["Halo,", "I", "am"]
@@ -47,6 +49,20 @@ const secondWords = ["Jalu", "Wibowo", "Aji"]
         <h2 class="opacity-0 word" data-test="changing-text">
           I <mark id="changing-text">do Frontend Magic.</mark>
         </h2>
+      </div>
+
+      <!-- data-room-toggle: remembers the choice (see RoomToggle.astro); data-astro-reload: full load, the room has no ClientRouter. -->
+      <div class="flex md:hidden mt-8 justify-center">
+        <AnimatedButton
+          href={ROOM_URL}
+          as="a"
+          iconName="mdi:cube-outline"
+          dataTest="hero-link-room"
+          data-room-toggle
+          data-astro-reload
+        >
+          Enter the Room
+        </AnimatedButton>
       </div>
 
       <aside
