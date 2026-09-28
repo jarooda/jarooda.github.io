@@ -17,7 +17,7 @@ function Blog() {
         ))}
       </ul>
       <a href="/blog" className="self-end text-sm font-semibold hover:underline">
-        All posts →
+        All posts
       </a>
     </div>
   )
@@ -67,7 +67,7 @@ function Talks() {
         </article>
       ))}
       <a href="/talks" className="self-end text-sm font-semibold hover:underline">
-        Talks page →
+        All talks
       </a>
     </div>
   )

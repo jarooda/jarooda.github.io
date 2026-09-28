@@ -1,6 +1,6 @@
 import { create } from "zustand"
 import type { ViewId } from "./scene/viewPresets"
-import { SECTION_ZONE, isSection, type NavTarget, type SectionId, type ZoneId } from "./sections"
+import { SECTION_ZONE, isSection, viewForSection, type NavTarget, type SectionId, type ZoneId } from "./sections"
 import { readJSON, writeJSON } from "./systems/storage"
 
 export type Mode = "loading" | "intro" | "roam" | "zoom" | "popup"
@@ -36,9 +36,11 @@ interface RoomState {
   visited: SectionId[]
   // True once the camera has framed the first view; deep links wait for it so they animate.
   ready: boolean
+  // View the camera has finished moving to; null while a transition runs.
+  settledView: ViewId | null
 
   enterZoom(zone: ZoneId): void
-  openPopup(section: SectionId, tab?: string): void
+  openPopup(section: SectionId, tab?: string, projectId?: string): void
   closePopup(): void
   setPopupTab(tab: string): void
   openProject(projectId: string | undefined): void
@@ -79,15 +81,19 @@ export const useRoomStore = create<RoomState>((set, get) => {
     curtainsOpen: true,
     visited: loadVisited(),
     ready: false,
+    settledView: null,
 
     enterZoom: (zone) => set({ mode: "zoom", view: zone, popup: null }),
 
-    openPopup: (section, tab) => {
-      set({ mode: "popup", view: SECTION_ZONE[section], popup: { section, tab } })
+    openPopup: (section, tab, projectId) => {
+      set({ mode: "popup", view: viewForSection(section), popup: { section, tab, projectId } })
       markVisited(section)
     },
 
-    closePopup: () => set({ mode: "zoom", popup: null }),
+    closePopup: () => {
+      const { popup } = get()
+      set({ mode: "zoom", popup: null, ...(popup && { view: SECTION_ZONE[popup.section] }) })
+    },
 
     setPopupTab: (tab) => {
       const { popup } = get()
@@ -102,23 +108,23 @@ export const useRoomStore = create<RoomState>((set, get) => {
     back: () => {
       const { sequence, popup, mode } = get()
       if (sequence) return get().skipSequence()
-      if (popup?.projectId) return get().openProject(undefined)
       if (mode === "popup") return get().closePopup()
       if (mode === "zoom") return set({ mode: "roam", view: "main" })
     },
 
     travelTo: (target) => {
       const { view } = get()
+      const finalView = target.section ? viewForSection(target.section) : target.zone
       set({ popup: null, mode: "zoom", sequence: { target, stage: "camera" } })
-      // Already framed on the zone: nothing to animate, finish right away.
-      if (view === target.zone) finishSequence(target)
+      // Already framed on the zone (or the target's close-up): nothing to animate.
+      if (view === target.zone || view === finalView) finishSequence(target)
       else set({ view: target.zone })
     },
 
     skipSequence: () => set((state) => ({ skipToken: state.skipToken + 1 })),
 
     cameraSettled: (view) => {
-      if (!get().ready) set({ ready: true })
+      set({ ready: true, settledView: view })
       const { sequence } = get()
       if (sequence && sequence.target.zone === view) finishSequence(sequence.target)
     },

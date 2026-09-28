@@ -1,4 +1,5 @@
-import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from "react"
+import { useId, useRef, type KeyboardEvent, type ReactNode } from "react"
+import { useFocusTrap } from "./useFocusTrap"
 
 export interface TabDef {
   id: string
@@ -15,41 +16,13 @@ interface PopupProps {
   children: ReactNode
 }
 
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
-
 export default function Popup({ title, onClose, tabs, activeTab, onTab, headerAction, children }: PopupProps) {
   const dialog = useRef<HTMLDivElement>(null)
   const titleId = useId()
   const panelId = useId()
 
-  useEffect(() => {
-    const previous = document.activeElement as HTMLElement | null
-    dialog.current?.focus()
-    return () => {
-      if (previous?.isConnected) previous.focus()
-    }
-  }, [])
-
   // Content changes (tabs, project detail) keep focus inside the dialog.
-  useEffect(() => {
-    if (!dialog.current?.contains(document.activeElement)) dialog.current?.focus()
-  }, [activeTab, children])
-
-  const trapFocus = (event: KeyboardEvent) => {
-    if (event.key !== "Tab" || !dialog.current) return
-    const items = [...dialog.current.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((el) => el.offsetParent !== null)
-    if (items.length === 0) return event.preventDefault()
-    const first = items[0]
-    const last = items[items.length - 1]
-    if (event.shiftKey && (document.activeElement === first || document.activeElement === dialog.current)) {
-      event.preventDefault()
-      last.focus()
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault()
-      first.focus()
-    }
-  }
+  const trapFocus = useFocusTrap(dialog, [activeTab, children])
 
   const onTabKey = (event: KeyboardEvent, index: number) => {
     if (!tabs || !onTab) return

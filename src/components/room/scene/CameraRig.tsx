@@ -45,6 +45,7 @@ export default function CameraRig({ presets }: { presets: Partial<Record<ViewId,
     }
     const to = poseOf(preset, view)
     const from = current.current
+    useRoomStore.setState({ settledView: null })
 
     tween.current?.kill()
     if (!from || reducedMotion) {

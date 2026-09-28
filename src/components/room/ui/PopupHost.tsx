@@ -6,7 +6,9 @@ import AboutContactPopup from "./popups/AboutContactPopup"
 import BlogTalksPopup from "./popups/BlogTalksPopup"
 import CollectionPopup from "./popups/CollectionPopup"
 import ProjectsPopup, { ProjectDetail } from "./popups/ProjectsPopup"
-import TechStackPopup from "./popups/TechStackPopup"
+import { useMediaQuery } from "../systems/useMediaQuery"
+import MonitorDesktop from "./MonitorDesktop"
+import RubikHud from "./RubikHud"
 
 const ABOUT_TABS: TabDef[] = [
   { id: "about", label: "About me" },
@@ -20,14 +22,17 @@ const BLOG_TABS: TabDef[] = [
 
 export default function PopupHost() {
   const popup = useRoomStore((state) => state.popup)
-  const back = useRoomStore((state) => state.back)
   const setPopupTab = useRoomStore((state) => state.setPopupTab)
   const closePopup = useRoomStore((state) => state.closePopup)
   const data = useRoomData()
+  // The monitor close-up is only readable on wide screens; small screens keep the popup.
+  const wide = useMediaQuery("(min-width: 768px) and (min-height: 480px)")
 
   if (!popup) return null
   const { section } = popup
   const close = closePopup
+
+  if (section === "about-contact" && wide) return <MonitorDesktop tab={popup.tab} />
 
   if (section === "about-contact" || section === "blog-talks") {
     const tabs = section === "about-contact" ? ABOUT_TABS : BLOG_TABS
@@ -43,34 +48,13 @@ export default function PopupHost() {
   if (section === "projects") {
     const project = data.projects.find((p) => p.id === popup.projectId)
     return (
-      <Popup
-        title={project ? project.title : labels.projects}
-        onClose={close}
-        headerAction={
-          project && (
-            <button
-              type="button"
-              onClick={back}
-              className="cursor-pointer rounded-sm px-2 py-1 text-sm font-semibold hover:bg-gray-100 dark:hover:bg-gray-700"
-              aria-label="Back to projects"
-            >
-              ←
-            </button>
-          )
-        }
-      >
+      <Popup title={project ? project.title : labels.projects} onClose={close}>
         {project ? <ProjectDetail project={project} /> : <ProjectsPopup />}
       </Popup>
     )
   }
 
-  if (section === "techstack") {
-    return (
-      <Popup title={labels.techstack} onClose={close}>
-        <TechStackPopup />
-      </Popup>
-    )
-  }
+  if (section === "techstack") return <RubikHud />
 
   const tabs = data.collections[section]
   const active = tabs.find((t) => t.id === popup.tab) ?? tabs[0]

@@ -7,19 +7,10 @@ function Chip({ children }: { children: string }) {
   return <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs dark:bg-gray-700">{children}</span>
 }
 
-const linkLabel = (url: string) => {
-  try {
-    return new URL(url).hostname.replace(/^www\./, "")
-  } catch {
-    return url
-  }
-}
-
 export function ProjectDetail({ project }: { project: RoomProject }) {
   const links = [
     project.demo && { label: "Live demo", url: project.demo },
-    project.repo && { label: "Repository", url: project.repo },
-    ...project.links.map((url) => ({ label: linkLabel(url), url }))
+    project.repo && { label: "Repository", url: project.repo }
   ].filter((link): link is { label: string; url: string } => !!link)
 
   return (
@@ -41,12 +32,22 @@ export function ProjectDetail({ project }: { project: RoomProject }) {
           </div>
         </section>
       )}
+      {project.related.length > 0 && (
+        <section>
+          <h3 className="mb-1 text-sm font-semibold text-gray-900 dark:text-gray-100">Related</h3>
+          <div className="flex flex-wrap gap-2">
+            {project.related.map((title) => (
+              <Chip key={title}>{title}</Chip>
+            ))}
+          </div>
+        </section>
+      )}
       {links.length > 0 && (
         <ul className="flex flex-wrap gap-3">
           {links.map((link) => (
             <li key={link.url}>
               <a href={link.url} {...externalLink} className="text-sm font-semibold hover:underline">
-                {link.label} ↗
+                {link.label}
               </a>
             </li>
           ))}
@@ -77,7 +78,7 @@ export default function ProjectsPopup() {
         ))}
       </ul>
       <a href="/projects" className="self-end text-sm font-semibold hover:underline">
-        See all →
+        See all projects
       </a>
     </div>
   )

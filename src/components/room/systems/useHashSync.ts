@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { hashFor, targetFromHash } from "../sections"
+import { SECTION_ZONE, hashFor, targetFromHash, type ZoneId } from "../sections"
 import { useRoomStore } from "../store"
 
 // Deep links (#projects, #talks, #games, …) run the navigation sequence once the scene is
@@ -22,7 +22,7 @@ export function useHashSync() {
 
     const unsubscribe = useRoomStore.subscribe((state) => {
       if (state.sequence) return
-      const zone = state.view === "main" ? null : state.view
+      const zone: ZoneId | null = state.popup ? SECTION_ZONE[state.popup.section] : state.view === "main" || state.view === "monitor" ? null : state.view
       const hash = hashFor(state.popup?.section ?? null, state.popup?.tab, zone)
       const url = hash ? `#${hash}` : window.location.pathname + window.location.search
       if (`#${hash}` !== window.location.hash && (hash || window.location.hash)) {

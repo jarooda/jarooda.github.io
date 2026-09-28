@@ -2,10 +2,8 @@ import { useEffect, useId, useState } from "react"
 import { labels } from "../labels"
 import { NAV_TARGETS, QUICK_MENU, SECTIONS, SECTION_ZONE, navTarget, type NavTarget } from "../sections"
 import { useRoomStore } from "../store"
+import { buttonClass } from "./buttons"
 import PopupHost from "./PopupHost"
-
-const buttonClass =
-  "pointer-events-auto cursor-pointer whitespace-nowrap rounded-sm bg-white/90 px-3 py-2 text-sm font-semibold text-gray-700 shadow-md backdrop-blur transition-colors hover:bg-white dark:bg-gray-800/90 dark:text-gray-200 dark:hover:bg-gray-700"
 
 function isVisited(target: NavTarget, visited: string[]) {
   if (target.section) return visited.includes(target.section)
@@ -22,7 +20,7 @@ function QuickMenu() {
           key={item.target}
           type="button"
           onClick={() => travelTo(navTarget(item.target))}
-          className="pointer-events-auto cursor-pointer whitespace-nowrap rounded-sm bg-gray-900 px-3 py-2 text-sm font-bold text-white md:px-4 shadow-lg transition-colors hover:bg-gray-700 md:text-base dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white"
+          className={buttonClass}
         >
           {item.label}
         </button>
@@ -83,8 +81,10 @@ function QuickNav() {
 function StatusBar() {
   const mode = useRoomStore((state) => state.mode)
   const view = useRoomStore((state) => state.view)
+  const popup = useRoomStore((state) => state.popup)
   const sequence = useRoomStore((state) => state.sequence)
   const back = useRoomStore((state) => state.back)
+  const zone = popup ? SECTION_ZONE[popup.section] : view
 
   if (sequence) return null
   if (mode === "roam") {
@@ -92,7 +92,7 @@ function StatusBar() {
   }
   return (
     <button type="button" onClick={back} className={buttonClass}>
-      ← Back {mode === "popup" ? `to ${labels[view as keyof typeof labels] ?? "room"}` : "to room"}
+      ← Back {mode === "popup" ? `to ${labels[zone as keyof typeof labels] ?? "room"}` : "to room"}
       <span className="ml-2 hidden text-xs font-normal opacity-70 md:inline">Esc</span>
     </button>
   )
@@ -131,11 +131,12 @@ export default function Overlay() {
   useEscape()
   return (
     <div className="pointer-events-none fixed inset-0 z-10 flex flex-col justify-between p-3 md:p-4">
-      <div className="flex flex-wrap items-start justify-between gap-2">
+      {/* Quick menu and quick nav form one group on the right, clear of the monitor's status bar. */}
+      <div className="relative z-40 flex flex-wrap items-start justify-end gap-2">
         <QuickMenu />
         <QuickNav />
       </div>
-      <div className="flex justify-center md:justify-start">
+      <div className="relative z-40 flex justify-center md:justify-start">
         <StatusBar />
       </div>
       <SequenceSkip />

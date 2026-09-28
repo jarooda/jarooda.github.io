@@ -6,10 +6,11 @@ const HIGHLIGHT = new THREE.Color("#ffffff")
 const HIGHLIGHT_STRENGTH = 0.12
 
 const originals = new WeakMap<THREE.Mesh, THREE.Material | THREE.Material[]>()
-const highlighted = new WeakMap<THREE.Material, THREE.Material>()
 
-function highlightMaterial(material: THREE.Material): THREE.Material {
-  let clone = highlighted.get(material)
+// Clones are made per hover, never cached: textures assigned after load (screens, whiteboard,
+// Rubik logos) must show up in the highlighted copy too.
+function highlightMaterial(material: THREE.Material, clones: Map<THREE.Material, THREE.Material>): THREE.Material {
+  let clone = clones.get(material)
   if (!clone) {
     clone = material.clone()
     if (clone instanceof THREE.MeshStandardMaterial) {
@@ -17,25 +18,27 @@ function highlightMaterial(material: THREE.Material): THREE.Material {
       clone.emissive.multiplyScalar(clone.emissiveIntensity).add(HIGHLIGHT.clone().multiplyScalar(HIGHLIGHT_STRENGTH))
       clone.emissiveIntensity = 1
     }
-    highlighted.set(material, clone)
+    clones.set(material, clone)
   }
   return clone
 }
 
 // Materials such as mat_palette are shared by most of the room, so a highlight swaps in
-// per-material clones instead of mutating the shared instance.
+// clones instead of mutating the shared instance.
 export function setHighlight(root: THREE.Object3D, on: boolean) {
+  const clones = new Map<THREE.Material, THREE.Material>()
   root.traverse((object) => {
-    if (!(object instanceof THREE.Mesh) || !object.visible) return
+    if (!(object instanceof THREE.Mesh)) return
     if (on) {
-      if (originals.has(object)) return
+      if (!object.visible || originals.has(object)) return
       originals.set(object, object.material)
       object.material = Array.isArray(object.material)
-        ? object.material.map(highlightMaterial)
-        : highlightMaterial(object.material)
+        ? object.material.map((m) => highlightMaterial(m, clones))
+        : highlightMaterial(object.material, clones)
     } else {
       const original = originals.get(object)
       if (!original) return
+      for (const clone of [object.material].flat()) clone.dispose()
       object.material = original
       originals.delete(object)
     }

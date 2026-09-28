@@ -1,6 +1,7 @@
 import * as THREE from "three"
 
-export type ViewId = "main" | "desk" | "tv" | "whiteboard"
+// "monitor" is derived from the monitor screen mesh (About & Contact close-up), not a Blender camera.
+export type ViewId = "main" | "desk" | "tv" | "whiteboard" | "monitor"
 
 // Extra zoom per view on top of the camera presets from the model: 1 = frame exactly like
 // the Blender camera, >1 = closer, <1 = wider. Tune framing here without re-exporting assets.
@@ -8,7 +9,8 @@ export const VIEW_ZOOM: Record<ViewId, number> = {
   main: 1,
   desk: 1,
   tv: 1,
-  whiteboard: 1
+  whiteboard: 1,
+  monitor: 1
 }
 
 export interface ViewPreset {

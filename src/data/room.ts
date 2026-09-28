@@ -15,7 +15,8 @@ export interface RoomProject {
   heroImage?: string
   repo?: string
   demo?: string
-  links: string[]
+  // Titles of linked projects (ProjectC graph edges, both directions, abandoned excluded).
+  related: string[]
   pubDate?: string
   updatedDate?: string
   html: string
@@ -72,6 +73,10 @@ export interface RoomData {
   collections: Record<CollectionSectionId, CollectionTab[]>
 }
 
+// Markdown headings carry autolink anchors (rehype-autolink-headings); the 2D /about page removes
+// them client-side, the room strips them once here for every HTML it receives.
+const stripHeadingAnchors = (html: string) => html.replace(/<a class="anchor-link"[^>]*>[\s\S]*?<\/a>/g, "")
+
 const isValid = (date?: Date): date is Date => !!date && !Number.isNaN(date.valueOf())
 
 // Frontmatter dates are calendar dates; format from local fields so the build timezone can't shift the day.
@@ -96,9 +101,18 @@ async function safeCollection<C extends keyof DataEntryMap>(name: C): Promise<Co
 }
 
 async function getProjects(): Promise<RoomProject[]> {
-  const entries = await getCollection("project", ({ data }) => data.status === "completed")
+  const all = await getCollection("project", ({ data }) => data.status !== "abandoned")
+  const titles = new Set(all.map(({ data }) => data.title))
+  const related = new Map<string, Set<string>>()
+  const connect = (a: string, b: string) => {
+    if (a === b || !titles.has(a) || !titles.has(b)) return
+    related.set(a, (related.get(a) ?? new Set()).add(b))
+    related.set(b, (related.get(b) ?? new Set()).add(a))
+  }
+  for (const { data } of all) for (const link of data.links ?? []) connect(data.title, link)
 
-  return entries
+  return all
+    .filter(({ data }) => data.status === "completed")
     .sort(
       (a, b) =>
         (time(b.data.updatedDate) || time(b.data.pubDate)) -
@@ -116,10 +130,10 @@ async function getProjects(): Promise<RoomProject[]> {
       heroImage: data.heroImage,
       repo: data.repo,
       demo: data.demo,
-      links: data.links ?? [],
+      related: [...(related.get(data.title) ?? [])],
       pubDate: toDay(data.pubDate),
       updatedDate: toDay(data.updatedDate),
-      html: rendered?.html ?? ""
+      html: stripHeadingAnchors(rendered?.html ?? "")
     }))
 }
 
@@ -292,5 +306,5 @@ export async function getRoomData(): Promise<RoomData> {
     aboutHtml()
   ])
 
-  return { about: { html: about }, projects, blog, talks: getTalks(), collections }
+  return { about: { html: stripHeadingAnchors(about) }, projects, blog, talks: getTalks(), collections }
 }

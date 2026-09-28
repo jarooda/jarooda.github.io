@@ -1,6 +1,6 @@
 import type { ViewId } from "./scene/viewPresets"
 
-export type ZoneId = Exclude<ViewId, "main">
+export type ZoneId = "desk" | "tv" | "whiteboard"
 
 export type SectionId =
   | "about-contact"
@@ -39,6 +39,13 @@ export const SECTION_ZONE: Record<SectionId, ZoneId> = {
   music: "tv",
   gadgets: "tv"
 }
+
+// Sections whose open state uses a closer camera than their zone view.
+export const SECTION_VIEW: Partial<Record<SectionId, ViewId>> = {
+  "about-contact": "monitor"
+}
+
+export const viewForSection = (section: SectionId): ViewId => SECTION_VIEW[section] ?? SECTION_ZONE[section]
 
 export const isSection = (value: unknown): value is SectionId =>
   typeof value === "string" && (SECTIONS as string[]).includes(value)

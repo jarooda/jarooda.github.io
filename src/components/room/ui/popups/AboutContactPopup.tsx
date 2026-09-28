@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react"
 import { socials } from "../../../../data/socials"
 import { sendContact } from "../../../../utils/contact"
 import { useRoomData } from "../../roomData"
+import { buttonClass } from "../buttons"
 import { externalLink } from "../format"
 
 type Status = { kind: "idle" | "sending" } | { kind: "success" | "error"; message: string }
@@ -54,7 +55,7 @@ function ContactForm() {
         <button
           type="submit"
           disabled={status.kind === "sending"}
-          className="shrink-0 cursor-pointer rounded-sm bg-gray-100 px-4 py-2 font-semibold shadow-md transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-600 dark:hover:bg-gray-500"
+          className={`shrink-0 ${buttonClass}`}
         >
           {status.kind === "sending" ? "Sending…" : "Send message"}
         </button>
@@ -63,11 +64,8 @@ function ContactForm() {
   )
 }
 
-export default function AboutContactPopup({ tab }: { tab: string }) {
-  const { about } = useRoomData()
-
-  if (tab === "contact") {
-    return (
+export function ContactContent() {
+  return (
       <div className="flex flex-col gap-6">
         <section>
           <h3 className="mb-2 font-semibold text-gray-900 dark:text-gray-100">Find me on</h3>
@@ -90,8 +88,14 @@ export default function AboutContactPopup({ tab }: { tab: string }) {
           <ContactForm />
         </section>
       </div>
-    )
-  }
+  )
+}
 
+export function AboutContent() {
+  const { about } = useRoomData()
   return <div className="blog room-prose" dangerouslySetInnerHTML={{ __html: about.html }} />
+}
+
+export default function AboutContactPopup({ tab }: { tab: string }) {
+  return tab === "contact" ? <ContactContent /> : <AboutContent />
 }

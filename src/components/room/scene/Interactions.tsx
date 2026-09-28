@@ -14,11 +14,13 @@ type Target =
   | { kind: "section"; section: SectionId; key: THREE.Object3D; nodes: THREE.Object3D[] }
 
 // Walks up from the hit mesh: in Roam any part of a zone targets the whole zone,
-// in Zoom only interactive objects of the framed zone are targets.
+// in Zoom only interactive objects of the framed zone are targets. Zone roots are never
+// targets in Zoom: the whiteboard's content is its sticky notes, not the board itself.
 function resolveTarget(hit: THREE.Object3D, mode: string, view: string, groups: ZoneGroups): Target | null {
   for (let node: THREE.Object3D | null = hit; node; node = node.parent) {
     const zone = groups.zoneOf.get(node)
     if (mode === "roam" && zone) return { kind: "zone", zone, key: zone, nodes: groups.members.get(zone) ?? [node] }
+    if (mode === "zoom" && node.userData.zone_root) return null
     if (mode === "zoom" && isSection(node.userData.section) && SECTION_ZONE[node.userData.section] === view) {
       return { kind: "section", section: node.userData.section, key: node, nodes: [node] }
     }
@@ -26,7 +28,8 @@ function resolveTarget(hit: THREE.Object3D, mode: string, view: string, groups: 
   return null
 }
 
-const labelOf = (target: Target) => (target.kind === "zone" ? labels[target.zone] : labels[target.section])
+const labelOf = (target: Target) =>
+  target.kind === "zone" ? labels[target.zone] : (target.key.userData.label as string | undefined) ?? labels[target.section]
 
 export default function Interactions({ scene }: { scene: THREE.Object3D }) {
   const mode = useRoomStore((state) => state.mode)
@@ -56,8 +59,11 @@ export default function Interactions({ scene }: { scene: THREE.Object3D }) {
 
   const activate = (target: Target) => {
     setHovered(null)
-    if (target.kind === "zone") enterZoom(target.zone)
-    else openPopup(target.section)
+    if (target.kind === "zone") return enterZoom(target.zone)
+    const { projectId, seeAll } = target.key.userData
+    // Sticky notes: a project note opens its detail, the last note goes to the full list page.
+    if (seeAll) window.location.assign("/projects")
+    else openPopup(target.section, undefined, projectId)
   }
 
   const onPointerMove = (event: ThreeEvent<PointerEvent>) => {

@@ -12,7 +12,7 @@ export default function CollectionPopup({ tab }: { tab: CollectionTab | undefine
             <h3 className="font-semibold text-gray-900 dark:text-gray-100">
               {item.url ? (
                 <a href={item.url} {...externalLink} className="hover:underline">
-                  {item.title} <span aria-hidden="true">↗</span>
+                  {item.title}
                 </a>
               ) : (
                 item.title
