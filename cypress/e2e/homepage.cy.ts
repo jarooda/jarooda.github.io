@@ -3,7 +3,8 @@ import { baseUrl, getElement } from "../helper"
 
 describe("Homepage", () => {
   beforeEach(() => {
-    cy.visit("/")
+    // The 2D homepage lives at /classic since the 3D room became the homepage.
+    cy.visit("/classic")
   })
 
   it("ensure hero text animation is working", () => {
@@ -21,7 +22,7 @@ describe("Homepage", () => {
 
   it("ensure hero links working", () => {
     cy.get(getElement("hero-link-blog")).click({ force: true })
-    cy.url().should("eq", `${baseUrl}/#blog`)
+    cy.url().should("eq", `${baseUrl}/classic#blog`)
 
     cy.get(getElement("hero-link-about")).click({ force: true })
     cy.url().should("eq", `${baseUrl}/about`)

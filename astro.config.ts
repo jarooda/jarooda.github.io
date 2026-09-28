@@ -26,14 +26,16 @@ const { SENTRY_DSN, SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT } = loadEnv(
 export default defineConfig({
   site: "https://jaluwibowo.id",
 
+  // The 3D room was developed under /room before it became the homepage.
+  redirects: {
+    "/room": "/"
+  },
+
   integrations: [
     icon(),
     mdx(),
     react(),
-    sitemap({
-      // The 3D room is still in development under /room; it moves to / at launch.
-      filter: (page) => !page.endsWith("/room/")
-    }),
+    sitemap(),
     sentry({
       sourceMapsUploadOptions: {
         org: SENTRY_ORG,

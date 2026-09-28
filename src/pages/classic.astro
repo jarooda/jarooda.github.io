@@ -1,0 +1,22 @@
+---
+import { ClientRouter } from "astro:transitions"
+import BaseHead from '../components/shared/BaseHead.astro';
+import HomePage from '../layouts/HomePage.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import '../styles/index.css';
+import '../styles/base.css';
+
+const title = SITE_TITLE + ' - Frontend Developer'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<BaseHead title={ title } description={SITE_DESCRIPTION} />
+    <ClientRouter />
+	</head>
+	<body class="bg-gray-200 dark:bg-gray-900 transition-colors duration-200">
+    <HomePage />
+	</body>
+  <script is:inline async src="/scripts/matter.min.js" />
+</html>

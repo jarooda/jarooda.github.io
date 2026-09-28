@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { hasSeparator = true } = Astro.props
-const isHomePage = Astro.url.pathname === '/';
+const isHomePage = Astro.url.pathname.replace(/\/$/, '') === '/classic';
 
 function getLinks (hasHome: boolean) {
   const links = [
@@ -22,7 +22,8 @@ function getLinks (hasHome: boolean) {
   ]
 
   if (hasHome) {
-    links.unshift({ href: '/', label: 'Home' });
+    // The 2D home; the 3D room (/) is reached with "Enter the room".
+    links.unshift({ href: '/classic', label: 'Home' });
   }
 
   return links;
@@ -60,7 +61,7 @@ function getLinks (hasHome: boolean) {
     const hamburger = document.getElementById('hamburger-btn');
     const closeMenu = document.getElementById('close-menu-btn');
     const mobileMenuLinks = document.querySelectorAll('#mobile-menu a');
-    const isHomePage = window.location.pathname === '/';
+    const isHomePage = window.location.pathname.replace(/\/$/, '') === '/classic';
     const isMobile = window.innerWidth < 768;
     
     // Remove inline style once JS takes over
@@ -123,7 +124,7 @@ function getLinks (hasHome: boolean) {
     
     // Show/hide header based on scroll position and show separator after scrolling
     window.headerScrollListener = () => {
-      const isHomePage = window.location.pathname === '/';
+      const isHomePage = window.location.pathname.replace(/\/$/, '') === '/classic';
       const isMobile = window.innerWidth < 768;
       
       if (isHomePage && isMobile) {
@@ -181,7 +182,7 @@ function getLinks (hasHome: boolean) {
 	<nav class="flex items-center justify-between px-4 py-4 w-full h-16">
 		<!-- Desktop Navigation -->
 		<div class="hidden md:flex gap-9 items-center">
-			<a href="/" class="inline-flex items-center text-gray-900 dark:text-white" aria-label="Home">
+			<a href="/classic" class="inline-flex items-center text-gray-900 dark:text-white" aria-label="Home">
 				<JaluLogoIcon class="h-8 w-8" />
 			</a>
       {getLinks(false).map(link => (
@@ -201,7 +202,7 @@ function getLinks (hasHome: boolean) {
 			</button>
 			
 			<!-- Mobile Logo (centered) -->
-			<a href="/" class="absolute left-1/2 -translate-x-1/2 text-gray-900 dark:text-white" aria-label="Home">
+			<a href="/classic" class="absolute left-1/2 -translate-x-1/2 text-gray-900 dark:text-white" aria-label="Home">
 				<JaluLogoIcon class="h-8 w-8" />
 			</a>
 			

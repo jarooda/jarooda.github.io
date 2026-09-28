@@ -6,7 +6,7 @@ My journey into tech kicked off at [Hacktiv8 Bootcamp](https://www.hacktiv8.com/
 
 When I’m not coding, you’ll probably find me diving into [games](/collections?for=games), [movies](/collections?for=movies), [musics](/collections?for=musics), [anime](/collections?for=anime), or browsing for new [figures](/collections?for=figures) to add to my collection. Basically anything that sparks a bit of creativity or fun.
 
-If you ever wanna build something cool or just chat about frontend stuff, feel free to [reach me out](/#contactme). I’m always open to fun projects and collaborations. You’ll probably have a chance to meet me at tech meetups around [Semarang](https://maps.app.goo.gl/D7UBcVQWcuhYKisJA).
+If you ever wanna build something cool or just chat about frontend stuff, feel free to [reach me out](/classic#contactme). I’m always open to fun projects and collaborations. You’ll probably have a chance to meet me at tech meetups around [Semarang](https://maps.app.goo.gl/D7UBcVQWcuhYKisJA).
 
 Oh and if you're wondering, here’s the [gear](/collections?for=gadgets) I currently use for work, studying, and chilling:
 

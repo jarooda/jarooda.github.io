@@ -1,7 +1,6 @@
-// 2D ↔ 3D routing (decisions 1–2). Until launch (K39) the room lives at /room and the classic
-// 2D homepage at /; at launch these become / and /classic.
-export const ROOM_URL = "/room"
-export const CLASSIC_URL = "/"
+// 2D ↔ 3D routing (decisions 1–2): the room is the homepage, the 2D homepage is /classic.
+export const ROOM_URL = "/"
+export const CLASSIC_URL = "/classic"
 
 // Manual choice ("room" | "classic"), kept across visits.
 export const EXPERIENCE_KEY = "experience"
