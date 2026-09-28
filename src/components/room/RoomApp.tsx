@@ -1,18 +1,14 @@
 import { Canvas } from "@react-three/fiber"
-import { createContext, useContext, useMemo } from "react"
+import { useMemo } from "react"
 import type { RoomData } from "../../data/room"
+import { RoomDataContext } from "./roomData"
 import CameraRig from "./scene/CameraRig"
-import Placeholder, { usePlaceholderRoom } from "./scene/Placeholder"
+import Interactions from "./scene/Interactions"
+import { usePlaceholderRoom } from "./scene/Placeholder"
 import { prepareRoomScene } from "./scene/prepareRoom"
 import { readViewPresets } from "./scene/viewPresets"
-
-const RoomDataContext = createContext<RoomData | null>(null)
-
-export function useRoomData() {
-  const data = useContext(RoomDataContext)
-  if (!data) throw new Error("useRoomData must be used inside RoomApp")
-  return data
-}
+import { useHashSync } from "./systems/useHashSync"
+import Overlay from "./ui/Overlay"
 
 function Scene() {
   const room = usePlaceholderRoom()
@@ -23,17 +19,20 @@ function Scene() {
 
   return (
     <>
-      {presets.main && <CameraRig preset={presets.main} />}
+      <CameraRig presets={presets} />
       <hemisphereLight args={["#fff4e0", "#6b5a4a", 1.2]} />
       <directionalLight position={[3, 6, 4]} intensity={1.6} color="#fff1dc" />
-      <Placeholder room={room} />
+      <Interactions scene={room.scene} />
     </>
   )
 }
 
 export default function RoomApp({ data }: { data: RoomData }) {
+  useHashSync()
+
   return (
     <RoomDataContext.Provider value={data}>
+      <Overlay />
       <div className="room-canvas">
         <Canvas
           orthographic

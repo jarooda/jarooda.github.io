@@ -1,0 +1,107 @@
+import { Html } from "@react-three/drei"
+import type { ThreeEvent } from "@react-three/fiber"
+import { useEffect, useMemo, useRef, useState } from "react"
+import * as THREE from "three"
+import { labels } from "../labels"
+import { SECTION_ZONE, isSection, type SectionId, type ZoneId } from "../sections"
+import { useRoomStore } from "../store"
+import { setHighlight } from "../systems/highlight"
+import { buildZoneGroups, type ZoneGroups } from "../systems/zoneGroups"
+
+// `nodes` are highlighted together; `key` identifies the target for hover/tap comparisons.
+type Target =
+  | { kind: "zone"; zone: ZoneId; key: ZoneId; nodes: THREE.Object3D[] }
+  | { kind: "section"; section: SectionId; key: THREE.Object3D; nodes: THREE.Object3D[] }
+
+// Walks up from the hit mesh: in Roam any part of a zone targets the whole zone,
+// in Zoom only interactive objects of the framed zone are targets.
+function resolveTarget(hit: THREE.Object3D, mode: string, view: string, groups: ZoneGroups): Target | null {
+  for (let node: THREE.Object3D | null = hit; node; node = node.parent) {
+    const zone = groups.zoneOf.get(node)
+    if (mode === "roam" && zone) return { kind: "zone", zone, key: zone, nodes: groups.members.get(zone) ?? [node] }
+    if (mode === "zoom" && isSection(node.userData.section) && SECTION_ZONE[node.userData.section] === view) {
+      return { kind: "section", section: node.userData.section, key: node, nodes: [node] }
+    }
+  }
+  return null
+}
+
+const labelOf = (target: Target) => (target.kind === "zone" ? labels[target.zone] : labels[target.section])
+
+export default function Interactions({ scene }: { scene: THREE.Object3D }) {
+  const mode = useRoomStore((state) => state.mode)
+  const view = useRoomStore((state) => state.view)
+  const sequence = useRoomStore((state) => state.sequence)
+  const enterZoom = useRoomStore((state) => state.enterZoom)
+  const openPopup = useRoomStore((state) => state.openPopup)
+
+  const groups = useMemo(() => buildZoneGroups(scene), [scene])
+  const [hovered, setHovered] = useState<Target | null>(null)
+  const pointerType = useRef("mouse")
+  const locked = sequence !== null || (mode !== "roam" && mode !== "zoom")
+
+  useEffect(() => {
+    if (!hovered) return
+    hovered.nodes.forEach((node) => setHighlight(node, true))
+    document.body.style.cursor = "pointer"
+    return () => {
+      hovered.nodes.forEach((node) => setHighlight(node, false))
+      document.body.style.cursor = ""
+    }
+  }, [hovered])
+
+  useEffect(() => setHovered(null), [mode, view, locked])
+
+  const sameTarget = (a: Target | null, b: Target | null) => !!a && !!b && a.key === b.key
+
+  const activate = (target: Target) => {
+    setHovered(null)
+    if (target.kind === "zone") enterZoom(target.zone)
+    else openPopup(target.section)
+  }
+
+  const onPointerMove = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation()
+    if (locked || event.pointerType === "touch") return
+    const target = resolveTarget(event.object, mode, view, groups)
+    setHovered((current) => (sameTarget(current, target) ? current : target))
+  }
+
+  const onPointerDown = (event: ThreeEvent<PointerEvent>) => {
+    pointerType.current = event.pointerType
+  }
+
+  const onClick = (event: ThreeEvent<MouseEvent>) => {
+    event.stopPropagation()
+    if (locked) return
+    const target = resolveTarget(event.object, mode, view, groups)
+    if (!target) return setHovered(null)
+    // Touch: first tap shows the label, second tap on the same object opens it.
+    if (pointerType.current === "touch" && !sameTarget(hovered, target)) return setHovered(target)
+    activate(target)
+  }
+
+  const labelPosition = useMemo(() => {
+    if (!hovered) return null
+    const box = new THREE.Box3()
+    hovered.nodes.forEach((node) => box.expandByObject(node))
+    return new THREE.Vector3((box.min.x + box.max.x) / 2, box.max.y, (box.min.z + box.max.z) / 2)
+  }, [hovered])
+
+  return (
+    <>
+      <primitive
+        object={scene}
+        onPointerMove={onPointerMove}
+        onPointerOut={() => pointerType.current !== "touch" && setHovered(null)}
+        onPointerDown={onPointerDown}
+        onClick={onClick}
+      />
+      {hovered && labelPosition && (
+        <Html position={labelPosition} center zIndexRange={[5, 0]} style={{ pointerEvents: "none" }}>
+          <span className="room-label">{labelOf(hovered)}</span>
+        </Html>
+      )}
+    </>
+  )
+}

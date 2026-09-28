@@ -2,6 +2,15 @@ import * as THREE from "three"
 
 export type ViewId = "main" | "desk" | "tv" | "whiteboard"
 
+// Extra zoom per view on top of the camera presets from the model: 1 = frame exactly like
+// the Blender camera, >1 = closer, <1 = wider. Tune framing here without re-exporting assets.
+export const VIEW_ZOOM: Record<ViewId, number> = {
+  main: 1,
+  desk: 1,
+  tv: 1,
+  whiteboard: 1
+}
+
 export interface ViewPreset {
   position: THREE.Vector3
   quaternion: THREE.Quaternion
@@ -39,11 +48,16 @@ export function readViewPresets(cameras: THREE.Camera[]): Partial<Record<ViewId,
   return presets
 }
 
-// Keeps the preset's framed area fully visible: wide screens extend horizontally,
+export interface Frame {
+  halfWidth: number
+  halfHeight: number
+}
+
+// Keeps the framed area fully visible: wide screens extend horizontally,
 // portrait screens extend vertically.
-export function fitFrustum(preset: ViewPreset, aspect: number) {
-  const presetAspect = preset.halfWidth / preset.halfHeight
-  return aspect >= presetAspect
-    ? { halfWidth: preset.halfHeight * aspect, halfHeight: preset.halfHeight }
-    : { halfWidth: preset.halfWidth, halfHeight: preset.halfWidth / aspect }
+export function fitFrustum(frame: Frame, aspect: number): Frame {
+  const frameAspect = frame.halfWidth / frame.halfHeight
+  return aspect >= frameAspect
+    ? { halfWidth: frame.halfHeight * aspect, halfHeight: frame.halfHeight }
+    : { halfWidth: frame.halfWidth, halfHeight: frame.halfWidth / aspect }
 }

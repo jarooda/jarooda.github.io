@@ -363,7 +363,3 @@ export type RoomAsset = ReturnType<typeof buildPlaceholderScene>
 export function usePlaceholderRoom(): RoomAsset {
   return useMemo(buildPlaceholderScene, [])
 }
-
-export default function Placeholder({ room }: { room: RoomAsset }) {
-  return <primitive object={room.scene} />
-}
