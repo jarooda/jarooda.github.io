@@ -3,6 +3,7 @@ import type { ViewId } from "./scene/viewPresets"
 import { SECTION_ZONE, isSection, viewForSection, type NavTarget, type SectionId, type ZoneId } from "./sections"
 import type { PoseTarget } from "./systems/poses"
 import { readJSON, writeJSON } from "./systems/storage"
+import type { WeatherState } from "./systems/weather"
 
 export type Mode = "loading" | "intro" | "roam" | "zoom" | "popup"
 export type PhaseId = "dawn" | "morning" | "noon" | "afternoon" | "dusk" | "night" | "latenight"
@@ -56,6 +57,8 @@ interface RoomState {
   curtainsOpen: boolean
   tier: Tier
   runtimeIssue: RuntimeIssue | null
+  // Live weather (V3); null until the first successful fetch, and whenever a fetch fails.
+  weather: WeatherState | null
   // Intro pan (K35): index of the zone being shown, null when not running.
   introStep: number | null
   // Incremented to make the avatar wave (end of the intro).
@@ -141,6 +144,7 @@ export const useRoomStore = create<RoomState>((set, get) => {
     curtainsOpen: true,
     tier: "high",
     runtimeIssue: null,
+    weather: null,
     introStep: null,
     waveToken: 0,
     visited: loadVisited(),

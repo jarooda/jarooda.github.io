@@ -153,7 +153,6 @@ export default function Overlay() {
       <Intro />
       <PopupHost />
       <FallbackOffer />
-      {showFps && <FpsMeter />}
-    </div>
+      {showFps && <FpsMeter />}    </div>
   )
 }

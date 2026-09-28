@@ -86,6 +86,8 @@ const project = defineCollection({
     updatedDate: optionalDateTransform,
     stacks: z.array(z.string()),
     links:z.array(z.string()).optional(),
+    // Whiteboard shows featured projects first (room-3d V3); unset/false falls back to the old rule.
+    featured: z.boolean().optional(),
   })
 })
 

@@ -2,6 +2,7 @@ import { useEffect, useId, useState } from "react"
 import { useRoomStore } from "../store"
 import { PHASES, semarangClock } from "../systems/timePhases"
 import { buttonClass } from "./buttons"
+import { WeatherDetails, WeatherSummary } from "./WeatherWidgets"
 
 const NIGHT_PHASES = new Set(["dusk", "night", "latenight", "dawn"])
 
@@ -95,14 +96,14 @@ export default function TimeControl() {
         <span>
           Semarang, <time>{time}</time>
         </span>
+        <WeatherSummary />
         {phaseOverride && <span className="rounded-sm bg-white/20 px-1.5 text-xs">{label}</span>}
       </button>
       {open && (
-        <PhasePicker
-          id={panelId}
-          onDone={() => setOpen(false)}
-          className="absolute left-0 mt-2 w-56 rounded-md bg-white/95 p-2 shadow-lg backdrop-blur dark:bg-gray-800/95"
-        />
+        <div className="absolute left-0 mt-2 w-56 rounded-md bg-white/95 p-2 shadow-lg backdrop-blur dark:bg-gray-800/95">
+          <WeatherDetails className="px-3 pb-2 pt-1" />
+          <PhasePicker id={panelId} onDone={() => setOpen(false)} />
+        </div>
       )}
     </div>
   )

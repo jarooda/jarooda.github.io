@@ -2,7 +2,9 @@ import { useFrame } from "@react-three/fiber"
 import { useEffect, useMemo, useRef } from "react"
 import * as THREE from "three"
 import { useRoomStore, type Tier } from "../store"
+import { lightning } from "../systems/lightning"
 import { presetById, toAtmosphere } from "../systems/timePhases"
+import { weatherDarken } from "../systems/weatherVisual"
 import { live } from "./Atmosphere"
 import { meshMaterial } from "./canvasTexture"
 
@@ -25,6 +27,14 @@ const GLASS_OPACITY = 0.08
 
 const NIGHT = toAtmosphere(presetById("night"))
 
+// Weather dimming (V3 W5, `weatherDarken`): clouds/rain/storm/mist cut sunlight and window light,
+// capped at −60%; the ceiling lamp, switch and curtains are untouched. Ambient only cools.
+const COOL_MULTIPLY = new THREE.Color(0.82, 0.9, 1)
+const coolTint = new THREE.Color()
+const FLASH_COLOR = new THREE.Color("#ffffff")
+const FLASH_LIGHT_BOOST = 5
+const FLASH_GLASS_BOOST = 2.5
+
 // Meshes that cast/receive shadows: everything solid, not glowing screens or glass.
 const NO_SHADOW = /^(glass_window|emit_)/
 
@@ -35,6 +45,7 @@ export default function Lighting({ scene }: { scene: THREE.Object3D }) {
   const tier = useRoomStore((state) => state.tier)
   const castShadows = tier !== "low"
   const lightOn = useRoomStore((state) => state.lightOn)
+  const weather = useRoomStore((state) => state.weather)
 
   const hemisphere = useRef<THREE.HemisphereLight>(null)
   const sun = useRef<THREE.DirectionalLight>(null)
@@ -99,25 +110,31 @@ export default function Lighting({ scene }: { scene: THREE.Object3D }) {
     const exposure = live.exposure
     lampLevel.current += ((lightOn ? 1 : 0) - lampLevel.current) * Math.min(1, delta * LAMP_EASE_PER_SECOND)
 
+    const darken = weatherDarken(weather)
+    const weatherFactor = 1 - darken
+    const flash = lightning.strength
+
     if (hemisphere.current) {
-      hemisphere.current.color.copy(NIGHT.ambientColor).lerp(live.ambientColor, c)
+      // Cooler ambient under bad weather: a multiply, so it can only cool/darken, never brighten.
+      coolTint.setRGB(1, 1, 1).lerp(COOL_MULTIPLY, darken)
+      hemisphere.current.color.copy(NIGHT.ambientColor).lerp(live.ambientColor, c).multiply(coolTint)
       hemisphere.current.groundColor.copy(NIGHT.ground).lerp(live.ground, c)
       hemisphere.current.intensity = THREE.MathUtils.lerp(NIGHT.ambient, live.ambient, c) * exposure
     }
     if (sun.current) {
       sun.current.color.copy(live.sunColor)
-      sun.current.intensity = live.sun * c * exposure
+      sun.current.intensity = live.sun * c * exposure * weatherFactor
       sun.current.position.copy(center).addScaledVector(live.sunDirection, SUN_DISTANCE)
     }
     if (windowLight.current) {
-      windowLight.current.color.copy(live.windowColor)
-      windowLight.current.intensity = live.window * c * WINDOW_LIGHT_INTENSITY * exposure
+      windowLight.current.color.copy(live.windowColor).lerp(FLASH_COLOR, flash)
+      windowLight.current.intensity = live.window * c * WINDOW_LIGHT_INTENSITY * exposure * weatherFactor + flash * FLASH_LIGHT_BOOST
     }
     if (lamp.current) lamp.current.intensity = LAMP_INTENSITY * lampLevel.current * exposure
 
     if (materials.glass instanceof THREE.MeshStandardMaterial) {
-      materials.glass.emissive.copy(live.windowColor)
-      materials.glass.emissiveIntensity = live.glass * c * GLASS_GLOW
+      materials.glass.emissive.copy(live.windowColor).lerp(FLASH_COLOR, flash)
+      materials.glass.emissiveIntensity = live.glass * c * GLASS_GLOW * weatherFactor + flash * FLASH_GLASS_BOOST
     }
     if (materials.bulb instanceof THREE.MeshStandardMaterial) {
       materials.bulb.emissiveIntensity = THREE.MathUtils.lerp(BULB_OFF, BULB_ON, lampLevel.current)

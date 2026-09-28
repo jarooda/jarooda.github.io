@@ -98,6 +98,11 @@ async function safeCollection<C extends keyof DataEntryMap>(name: C): Promise<Co
   }
 }
 
+// Newest first: updatedDate, then pubDate (same rule the whiteboard has always used).
+const byRecency = (a: CollectionEntry<"project">, b: CollectionEntry<"project">) =>
+  (time(b.data.updatedDate) || time(b.data.pubDate)) - (time(a.data.updatedDate) || time(a.data.pubDate)) ||
+  time(b.data.pubDate) - time(a.data.pubDate)
+
 async function getProjects(): Promise<RoomProject[]> {
   const all = await getCollection("project", ({ data }) => data.status !== "abandoned")
   const titles = new Set(all.map(({ data }) => data.title))
@@ -109,15 +114,18 @@ async function getProjects(): Promise<RoomProject[]> {
   }
   for (const { data } of all) for (const link of data.links ?? []) connect(data.title, link)
 
-  return all
-    .filter(({ data }) => data.status === "completed")
-    .sort(
-      (a, b) =>
-        (time(b.data.updatedDate) || time(b.data.pubDate)) -
-          (time(a.data.updatedDate) || time(a.data.pubDate)) ||
-        time(b.data.pubDate) - time(a.data.pubDate)
-    )
-    .slice(0, WHITEBOARD_PROJECTS)
+  // V3 (decision 3, F1/F2): featured projects only (any status but abandoned), newest first, up
+  // to 8. Nothing featured yet → fall back to the old rule so the board is never empty.
+  const featured = all.filter(({ data }) => data.featured).sort(byRecency).slice(0, WHITEBOARD_PROJECTS)
+  const selected =
+    featured.length > 0
+      ? featured
+      : all
+          .filter(({ data }) => data.status === "completed")
+          .sort(byRecency)
+          .slice(0, WHITEBOARD_PROJECTS)
+
+  return selected
     .map(({ id, data, rendered }) => ({
       id,
       title: data.title,

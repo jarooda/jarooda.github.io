@@ -6,6 +6,7 @@ import { buttonClass } from "./buttons"
 import ExploreList from "./ExploreList"
 import { isNightPhase, MoonIcon, PhasePicker, SunIcon, useSemarangClock } from "./TimeControl"
 import { useFocusTrap } from "./useFocusTrap"
+import { WeatherDetails, WeatherSummary } from "./WeatherWidgets"
 
 // Collapsed by default so the menu stays compact on small screens.
 function Collapsible({ title, children }: { title: ReactNode; children: ReactNode }) {
@@ -81,11 +82,15 @@ export default function MobileMenu() {
             onClick={(event) => event.stopPropagation()}
             className="absolute inset-y-0 right-0 flex w-72 max-w-[85vw] flex-col gap-3 overflow-y-auto bg-white p-4 text-gray-700 shadow-2xl outline-none dark:bg-gray-900 dark:text-gray-200"
           >
-            <div className="flex items-center justify-between">
-              <p className="flex items-center gap-2 text-sm font-semibold">
-                {isNightPhase(phase) ? <MoonIcon /> : <SunIcon />}
-                Semarang, <time>{time}</time>
-              </p>
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="flex items-center gap-2 text-sm font-semibold">
+                  {isNightPhase(phase) ? <MoonIcon /> : <SunIcon />}
+                  Semarang, <time>{time}</time>
+                  <WeatherSummary />
+                </p>
+                <WeatherDetails className="mt-0.5" />
+              </div>
               <button type="button" onClick={() => setOpen(false)} className={buttonClass} aria-label="Close menu">
                 ✕
               </button>

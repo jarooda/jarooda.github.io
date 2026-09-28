@@ -17,12 +17,15 @@ import { usePlaceholderRoom } from "./scene/Placeholder"
 import Rubik from "./scene/Rubik"
 import { useRoomModel, type RoomAsset } from "./scene/roomAsset"
 import Screens from "./scene/Screens"
+import Weather from "./scene/Weather"
 import Whiteboard from "./scene/Whiteboard"
 import { frameContent, readViewPresets } from "./scene/viewPresets"
 import { ZONE_MEMBERS } from "./sections"
 import { useRoomStore } from "./store"
 import { useHashSync } from "./systems/useHashSync"
+import { useWeatherPolling } from "./systems/weather"
 import Overlay from "./ui/Overlay"
+import PageRain from "./ui/PageRain"
 
 // `?placeholder` renders the contract box scene instead of room.glb (development aid).
 const usePlaceholder = new URLSearchParams(window.location.search).has("placeholder")
@@ -52,6 +55,7 @@ function RoomContent({ room, withOutside = false }: { room: RoomAsset; withOutsi
       <Lighting scene={room.scene} />
       <Interactions scene={room.scene} />
       {withOutside && <Outside room={room.scene} />}
+      {withOutside && <Weather room={room.scene} />}
       <Rubik scene={room.scene} view={presets.desk} />
       <Whiteboard scene={room.scene} />
       <Journal scene={room.scene} />
@@ -94,6 +98,7 @@ const announceReady = () => void window.dispatchEvent(new Event("room:ready"))
 
 export default function RoomApp({ data }: { data: RoomData }) {
   useHashSync()
+  useWeatherPolling()
   useEffect(() => useRoomStore.getState().setTier(initialTier()), [])
 
   // The splash (RoomSplash.astro) fades out once the first view is framed, or on failure.
@@ -108,6 +113,7 @@ export default function RoomApp({ data }: { data: RoomData }) {
   return (
     <RoomDataContext.Provider value={data}>
       <Overlay />
+      <PageRain />
       <div className="room-canvas">
         <Canvas
           orthographic
