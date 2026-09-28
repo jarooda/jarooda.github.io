@@ -1,6 +1,8 @@
 import { useMemo } from "react"
 import * as THREE from "three"
 import { fromBlender, sizeFromBlender, vecFromBlender, type Vec3 } from "../systems/coords"
+import { prepareRoomScene } from "./prepareRoom"
+import type { RoomAsset } from "./roomAsset"
 
 // Stand-in for room.glb built from the asset contract (01-kontrak-aset.md §5, §6, §9).
 // It exposes the same { scene, cameras } shape, node names, userData and material names
@@ -344,7 +346,7 @@ function buildCamera({ view, target, direction, orthoScale, near }: CameraSpec):
   return camera
 }
 
-export function buildPlaceholderScene() {
+export function buildPlaceholderScene(): RoomAsset & { cameras: THREE.OrthographicCamera[] } {
   const scene = new THREE.Group()
   scene.name = "Scene"
 
@@ -358,8 +360,10 @@ export function buildPlaceholderScene() {
   return { scene, cameras }
 }
 
-export type RoomAsset = ReturnType<typeof buildPlaceholderScene>
-
 export function usePlaceholderRoom(): RoomAsset {
-  return useMemo(buildPlaceholderScene, [])
+  return useMemo(() => {
+    const room = buildPlaceholderScene()
+    prepareRoomScene(room.scene)
+    return room
+  }, [])
 }

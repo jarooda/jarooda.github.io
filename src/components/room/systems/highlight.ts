@@ -1,7 +1,9 @@
 import * as THREE from "three"
 
-const HIGHLIGHT = new THREE.Color("#ffb347")
-const HIGHLIGHT_INTENSITY = 0.35
+// Hover tint: a soft glow added on top of each material's own emission.
+// Raise HIGHLIGHT_STRENGTH for a stronger glow, lower it for a subtler one.
+const HIGHLIGHT = new THREE.Color("#ffffff")
+const HIGHLIGHT_STRENGTH = 0.12
 
 const originals = new WeakMap<THREE.Mesh, THREE.Material | THREE.Material[]>()
 const highlighted = new WeakMap<THREE.Material, THREE.Material>()
@@ -11,8 +13,9 @@ function highlightMaterial(material: THREE.Material): THREE.Material {
   if (!clone) {
     clone = material.clone()
     if (clone instanceof THREE.MeshStandardMaterial) {
-      clone.emissive.lerp(HIGHLIGHT, 0.6)
-      clone.emissiveIntensity = Math.max(clone.emissiveIntensity, HIGHLIGHT_INTENSITY)
+      // Bake the original intensity in so the tint is additive, whatever the asset's emission strength.
+      clone.emissive.multiplyScalar(clone.emissiveIntensity).add(HIGHLIGHT.clone().multiplyScalar(HIGHLIGHT_STRENGTH))
+      clone.emissiveIntensity = 1
     }
     highlighted.set(material, clone)
   }
