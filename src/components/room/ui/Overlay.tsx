@@ -5,6 +5,7 @@ import { useRoomStore } from "../store"
 import { buttonClass } from "./buttons"
 import MovePad from "./MovePad"
 import PopupHost from "./PopupHost"
+import TimeControl from "./TimeControl"
 
 function isVisited(target: NavTarget, visited: string[]) {
   if (target.section) return visited.includes(target.section)
@@ -131,9 +132,12 @@ export default function Overlay() {
   return (
     <div className="pointer-events-none fixed inset-0 z-10 flex flex-col justify-between p-3 md:p-4">
       {/* Quick menu and quick nav form one group on the right, clear of the monitor's status bar. */}
-      <div className="relative z-40 flex flex-wrap items-start justify-end gap-2">
-        <QuickMenu />
-        <QuickNav />
+      <div className="relative z-40 flex flex-wrap items-start justify-between gap-2">
+        <TimeControl />
+        <div className="flex flex-wrap items-start justify-end gap-2">
+          <QuickMenu />
+          <QuickNav />
+        </div>
       </div>
       <div className="relative z-40 flex flex-col items-start gap-2">
         <MovePad />

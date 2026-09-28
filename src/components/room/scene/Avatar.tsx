@@ -196,7 +196,12 @@ export default function Avatar({ scene, presets }: { scene: THREE.Object3D; pres
     if (target === "switch" || target === "window") {
       const trigger = triggers.find((t) => t.target === target)!
       task.current = null
-      interact(trigger.face, () => (target === "switch" ? state.toggleLight() : state.toggleCurtains()))
+      // The window also opens the time-of-day picker (00 §6).
+      interact(trigger.face, () => {
+        if (target === "switch") return state.toggleLight()
+        state.toggleCurtains()
+        state.setTimeControlOpen(true)
+      })
       return
     }
     state.travelTo(zoneTarget(target))

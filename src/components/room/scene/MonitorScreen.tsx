@@ -1,5 +1,5 @@
 import { useFrame, useThree } from "@react-three/fiber"
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import * as THREE from "three"
 import { useRoomStore } from "../store"
 import { placeMonitorElement } from "../systems/monitorOverlay"
@@ -32,11 +32,30 @@ function drawWallpaper(ctx: CanvasRenderingContext2D) {
 }
 
 const LOGO_SIZE = 170
+const SAVER_LOGO = 110
+const SAVER_SPEED = 60
 
-// The site logo (same SVG as JaluLogoIcon.astro) in white, above the domain name.
+// Late-night screensaver (00 §5): dark screen with the logo drifting and bouncing slowly.
+function drawScreensaver(ctx: CanvasRenderingContext2D, logo: HTMLImageElement | null, time: number) {
+  ctx.fillStyle = "#05070d"
+  ctx.fillRect(0, 0, WALLPAPER_WIDTH, WALLPAPER_HEIGHT)
+  if (!logo) return
+  const bounce = (span: number, t: number) => {
+    const period = span * 2
+    const p = (t * SAVER_SPEED) % period
+    return p < span ? p : period - p
+  }
+  ctx.globalAlpha = 0.55
+  ctx.drawImage(logo, bounce(WALLPAPER_WIDTH - SAVER_LOGO, time), bounce(WALLPAPER_HEIGHT - SAVER_LOGO, time * 0.8), SAVER_LOGO, SAVER_LOGO)
+  ctx.globalAlpha = 1
+}
+
+// The site logo (same SVG as JaluLogoIcon.astro) in white.
+const whiteLogo = () => loadImage(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(logoSvg.replaceAll("currentColor", "#ffffff"))}`)
+
+// Logo above the domain name.
 async function drawLogo(ctx: CanvasRenderingContext2D) {
-  const white = logoSvg.replaceAll("currentColor", "#ffffff")
-  const image = await loadImage(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(white)}`)
+  const image = await whiteLogo()
   ctx.globalAlpha = 0.92
   ctx.drawImage(image, 64, WALLPAPER_HEIGHT - 110 - LOGO_SIZE, LOGO_SIZE, LOGO_SIZE)
   ctx.globalAlpha = 1
@@ -82,16 +101,38 @@ export default function MonitorScreen({ scene }: { scene: THREE.Object3D }) {
   const camera = useThree((state) => state.camera)
   const size = useThree((state) => state.size)
 
+  const wallpaper = useMemo(() => {
+    const surface = createCanvasSurface(WALLPAPER_WIDTH, WALLPAPER_HEIGHT)
+    drawWallpaper(surface.ctx)
+    drawLogo(surface.ctx)
+      .then(() => (surface.texture.needsUpdate = true))
+      .catch(() => console.warn("[room] monitor: logo could not be drawn"))
+    return surface
+  }, [])
+  const saver = useMemo(() => createCanvasSurface(WALLPAPER_WIDTH, WALLPAPER_HEIGHT), [])
+  const saverLogo = useRef<HTMLImageElement | null>(null)
+  useEffect(() => {
+    whiteLogo().then((image) => (saverLogo.current = image)).catch(() => {})
+    return () => {
+      wallpaper.texture.dispose()
+      saver.texture.dispose()
+    }
+  }, [wallpaper, saver])
+
+  // Screensaver in the late-night phase while nobody is at the desk.
+  const screensaver = useRoomStore((state) => state.phase === "latenight" && state.view !== "monitor")
   useEffect(() => {
     if (!(screen instanceof THREE.Mesh)) return
-    const { ctx, texture } = createCanvasSurface(WALLPAPER_WIDTH, WALLPAPER_HEIGHT)
-    drawWallpaper(ctx)
-    applyScreenTexture(screen.material as THREE.Material, texture, 0.9)
-    drawLogo(ctx)
-      .then(() => (texture.needsUpdate = true))
-      .catch(() => console.warn("[room] monitor: logo could not be drawn"))
-    return () => texture.dispose()
-  }, [screen])
+    applyScreenTexture(screen.material as THREE.Material, screensaver ? saver.texture : wallpaper.texture, 0.9)
+  }, [screen, screensaver, wallpaper, saver])
+
+  const lastSaverDraw = useRef(0)
+  useFrame(({ clock }) => {
+    if (!screensaver || clock.elapsedTime - lastSaverDraw.current < 0.1) return
+    lastSaverDraw.current = clock.elapsedTime
+    drawScreensaver(saver.ctx, saverLogo.current, clock.elapsedTime)
+    saver.texture.needsUpdate = true
+  })
 
   // Keeps the DOM mini desktop glued to the projected screen once the close-up has settled.
   useFrame(() => {

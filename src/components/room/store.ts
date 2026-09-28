@@ -6,6 +6,7 @@ import { readJSON, writeJSON } from "./systems/storage"
 export type Mode = "loading" | "intro" | "roam" | "zoom" | "popup"
 export type PhaseId = "dawn" | "morning" | "noon" | "afternoon" | "dusk" | "night" | "latenight"
 export type TriggerTarget = ZoneId | "switch" | "window"
+export type Tier = "high" | "medium" | "low"
 
 export interface PopupState {
   section: SectionId
@@ -41,7 +42,11 @@ interface RoomState {
   avatarSnap: { zone: ZoneId; token: number } | null
   lightOn: boolean
   phaseOverride: PhaseId | null
+  // Phase currently shown (Semarang time or the override).
+  phase: PhaseId
+  timeControlOpen: boolean
   curtainsOpen: boolean
+  tier: Tier
   visited: SectionId[]
   // True once the camera has framed the first view; deep links wait for it so they animate.
   ready: boolean
@@ -64,6 +69,8 @@ interface RoomState {
   toggleLight(): void
   toggleCurtains(): void
   setPhaseOverride(phase: PhaseId | null): void
+  setTimeControlOpen(open: boolean): void
+  setTier(tier: Tier): void
 }
 
 const loadVisited = () => readJSON<unknown[]>(VISITED_KEY, []).filter(isSection)
@@ -107,7 +114,10 @@ export const useRoomStore = create<RoomState>((set, get) => {
     avatarSnap: null,
     lightOn: false,
     phaseOverride: null,
+    phase: "morning",
+    timeControlOpen: false,
     curtainsOpen: true,
+    tier: "high",
     visited: loadVisited(),
     ready: false,
     settledView: null,
@@ -179,6 +189,8 @@ export const useRoomStore = create<RoomState>((set, get) => {
 
     toggleLight: () => set((state) => ({ lightOn: !state.lightOn })),
     toggleCurtains: () => set((state) => ({ curtainsOpen: !state.curtainsOpen })),
-    setPhaseOverride: (phaseOverride) => set({ phaseOverride })
+    setPhaseOverride: (phaseOverride) => set({ phaseOverride }),
+    setTimeControlOpen: (timeControlOpen) => set({ timeControlOpen }),
+    setTier: (tier) => set({ tier })
   }
 })

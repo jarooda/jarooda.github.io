@@ -3,15 +3,11 @@ import { useEffect, useMemo } from "react"
 import * as THREE from "three"
 import { useRoomStore } from "../store"
 import { useReducedMotion } from "../systems/useReducedMotion"
-import { meshMaterial } from "./canvasTexture"
 
 const CURTAIN_SECONDS = 0.6
 const SWITCH_TILT = THREE.MathUtils.degToRad(14)
-const BULB_ON = 1
-const BULB_OFF = 0.12
 
-// Direct feedback for the light switch and curtains (K24). Room lighting per time phase,
-// including what the curtains and lamp do to the light, comes with K27.
+// Light switch lever and curtain morph; what they do to the light is handled by Lighting.
 export default function Fixtures({ scene }: { scene: THREE.Object3D }) {
   const lightOn = useRoomStore((state) => state.lightOn)
   const curtainsOpen = useRoomStore((state) => state.curtainsOpen)
@@ -19,7 +15,6 @@ export default function Fixtures({ scene }: { scene: THREE.Object3D }) {
 
   const toggle = useMemo(() => scene.getObjectByName("int_switch_toggle") ?? null, [scene])
   const toggleRest = useMemo(() => toggle?.rotation.z ?? 0, [toggle])
-  const bulb = useMemo(() => meshMaterial(scene, "emit_bulb_ceiling"), [scene])
   const curtains = useMemo(
     () =>
       ["int_window_curtain_l", "int_window_curtain_r"].flatMap((name) => {
@@ -36,8 +31,7 @@ export default function Fixtures({ scene }: { scene: THREE.Object3D }) {
 
   useEffect(() => {
     if (toggle) toggle.rotation.z = toggleRest + (lightOn ? -SWITCH_TILT : SWITCH_TILT)
-    if (bulb instanceof THREE.MeshStandardMaterial) bulb.emissiveIntensity = lightOn ? BULB_ON : BULB_OFF
-  }, [lightOn, toggle, toggleRest, bulb])
+  }, [lightOn, toggle, toggleRest])
 
   useEffect(() => {
     const target = curtainsOpen ? 0 : 1

@@ -27,6 +27,19 @@ const title = `Room - ${SITE_TITLE}`
 </html>
 
 <style is:global>
+  /* Registered so the phase-driven gradient transitions smoothly. */
+  @property --room-bg-top {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: #f6e7cf;
+  }
+
+  @property --room-bg-bottom {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: #e8c9a0;
+  }
+
   html,
   body {
     margin: 0;
@@ -39,7 +52,10 @@ const title = `Room - ${SITE_TITLE}`
     position: fixed;
     inset: 0;
     z-index: 0;
-    background: linear-gradient(180deg, var(--room-bg-top, #f6e7cf) 0%, var(--room-bg-bottom, #e8c9a0) 100%);
+    background: linear-gradient(180deg, var(--room-bg-top) 0%, var(--room-bg-bottom) 100%);
+    transition:
+      --room-bg-top 1.2s ease,
+      --room-bg-bottom 1.2s ease;
   }
 
   .room-canvas {
