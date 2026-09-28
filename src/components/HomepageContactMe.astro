@@ -1,50 +1,15 @@
 ---
 import { Icon } from "astro-icon/components"
 import AnimatedButton from "./shared/AnimatedButton.astro"
+import { socials } from "../data/socials"
 
 const url = import.meta.env.PUBLIC_CONTACT_ME_API
-const socials = [
-  {
-    label: "github",
-    icon: "logos:github-icon",
-    url: "https://github.com/jarooda"
-  },
-  {
-    label: "linkedin",
-    icon: "logos:linkedin-icon",
-    url: "https://linkedin.com/in/jaluwibowoaji"
-  },
-  {
-    label: "upwork",
-    icon: "logos:upwork",
-    url: "https://www.upwork.com/freelancers/~010774d4112be0d77f?mp_source=share"
-  },
-  {
-    label: "stackoverflow",
-    icon: "logos:stackoverflow-icon",
-    url: "https://stackoverflow.com/users/14604582/jalu-wibowo"
-  },
-  {
-    label: "google developers",
-    icon: "logos:google-developers",
-    url: "https://g.dev/jaluwibowo"
-  },
-  {
-    label: "twitter",
-    icon: "logos:twitter",
-    url: "https://twitter.com/jaluwibowoaji"
-  },
-  {
-    label: "bluesky",
-    icon: "logos:bluesky",
-    url: "https://bsky.app/profile/jaluwibowo.id"
-  }
-]
 ---
 
 <script>
   import Toastify from "toastify-js"
   import "toastify-js/src/toastify.css"
+  import { sendContact } from "../utils/contact"
   class ContactMe extends HTMLElement {
     constructor() {
       super()
@@ -69,57 +34,31 @@ const socials = [
             document.getElementById("message") as HTMLInputElement
           )?.value
 
-          if (!email) {
-            throw new Error("Email is required!")
-          }
-          if (!name) {
-            throw new Error("Name is required!")
-          }
-          if (!message) {
-            throw new Error("Message is required!")
-          }
-
-          if (!url) {
-            throw new Error("API is not ready")
-          }
-
-          const response = await fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              email,
-              name,
-              message
-            })
+          const successMessage = await sendContact(url, {
+            email,
+            name,
+            message
           })
-          const data = await response.json()
 
-          if (response.status === 200) {
-            const emailElement = document.getElementById("email")
-            const nameElement = document.getElementById("name")
-            const messageElement = document.getElementById("message")
+          const emailElement = document.getElementById("email")
+          const nameElement = document.getElementById("name")
+          const messageElement = document.getElementById("message")
 
-            if (emailElement instanceof HTMLInputElement)
-              emailElement.value = ""
-            if (nameElement instanceof HTMLInputElement) nameElement.value = ""
-            if (messageElement instanceof HTMLTextAreaElement)
-              messageElement.value = ""
+          if (emailElement instanceof HTMLInputElement) emailElement.value = ""
+          if (nameElement instanceof HTMLInputElement) nameElement.value = ""
+          if (messageElement instanceof HTMLTextAreaElement)
+            messageElement.value = ""
 
-            Toastify({
-              text: data.message,
-              duration: 2000,
-              close: true,
-              gravity: "top",
-              position: "right",
-              style: {
-                background: "#22c55e"
-              }
-            }).showToast()
-          } else {
-            throw new Error(data.message)
-          }
+          Toastify({
+            text: successMessage,
+            duration: 2000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            style: {
+              background: "#22c55e"
+            }
+          }).showToast()
         } catch (error: any) {
           Toastify({
             text: error.message,

@@ -1,9 +1,54 @@
 ---
 import Anchor from "./shared/Anchor.astro"
 import AnimatedButton from "./shared/AnimatedButton.astro"
+import { allTechItems } from "../data/techstack"
+
+// matter.js body shape per tech stack item, tuned to each logo's silhouette.
+const shapes: Record<string, { shape: string; options: Record<string, number> }> = {
+  JavaScript: { shape: "rectangle", options: { width: 48, height: 48 } },
+  TypeScript: { shape: "rectangle", options: { width: 48, height: 48 } },
+  HTML: { shape: "rectangle", options: { width: 30, height: 48 } },
+  CSS: { shape: "rectangle", options: { width: 30, height: 48 } },
+  Sass: { shape: "rectangle", options: { width: 55, height: 45 } },
+  PHP: { shape: "rectangle", options: { width: 68, height: 40 } },
+  Ruby: { shape: "rectangle", options: { width: 48, height: 48 } },
+  Vue: { shape: "trapezoid", options: { width: 6, height: 50, slope: -10 } },
+  React: { shape: "polygon", options: { sides: 12, radius: 32 } },
+  Astro: { shape: "trapezoid", options: { width: 40, height: 50, slope: 0.3 } },
+  Remix: { shape: "rectangle", options: { width: 38, height: 45 } },
+  Pinia: { shape: "rectangle", options: { width: 40, height: 45 } },
+  Tailwind: { shape: "rectangle", options: { width: 55, height: 35, scale: 2 } },
+  Bootstrap: { shape: "rectangle", options: { width: 57, height: 48 } },
+  WordPress: { shape: "circle", options: { radius: 20 } },
+  "Node.js": { shape: "polygon", options: { sides: 6, radius: 25 } },
+  Express: { shape: "rectangle", options: { width: 110, height: 35, scale: 2 } },
+  GraphQL: { shape: "polygon", options: { sides: 6, radius: 25 } },
+  MongoDB: { shape: "rectangle", options: { width: 25, height: 45 } },
+  PostgreSQL: { shape: "polygon", options: { sides: 12, radius: 25 } },
+  Redis: { shape: "rectangle", options: { width: 60, height: 48 } },
+  Firebase: { shape: "polygon", options: { sides: 4, radius: 29 } },
+  AWS: { shape: "rectangle", options: { width: 55, height: 40, scale: 2 } },
+  "Google Cloud": { shape: "trapezoid", options: { width: 70, height: 45, slope: 0.5 } },
+  Cloudflare: { shape: "trapezoid", options: { width: 70, height: 35, slope: 0.5, scale: 2 } },
+  Vercel: { shape: "trapezoid", options: { width: 60, height: 50, slope: 1 } },
+  Git: { shape: "polygon", options: { sides: 6, radius: 28 } },
+  GitHub: { shape: "circle", options: { radius: 25 } },
+  GitLab: { shape: "circle", options: { radius: 28 } },
+  "VS Code": { shape: "rectangle", options: { width: 48, height: 48 } },
+  Figma: { shape: "rectangle", options: { width: 35, height: 50 } },
+  npm: { shape: "rectangle", options: { width: 48, height: 48 } },
+  Yarn: { shape: "circle", options: { radius: 25 } },
+  pnpm: { shape: "rectangle", options: { width: 70, height: 50 } },
+  Jest: { shape: "rectangle", options: { width: 48, height: 48 } }
+}
+
+const icons = allTechItems().map((item) => ({
+  url: item.logo,
+  ...(shapes[item.name] ?? { shape: "rectangle", options: {} })
+}))
 ---
 
-<script is:inline>
+<script is:inline define:vars={{ icons }}>
   document.addEventListener(
     "astro:page-load",
     () => {
@@ -87,7 +132,7 @@ import AnimatedButton from "./shared/AnimatedButton.astro"
         const options = {
           render: {
             sprite: {
-              texture: generateUrl(texture),
+              texture,
               xScale: getOption(scale, scale).scale,
               yScale: getOption(scale, scale).scale
             }
@@ -130,192 +175,6 @@ import AnimatedButton from "./shared/AnimatedButton.astro"
         }
       }
 
-      function generateUrl(filename) {
-        return `https://res.cloudinary.com/dpcjjs0wg/image/upload/v1731991834/${filename}.svg`
-      }
-      const icons = [
-        {
-          url: "logos--vue_xvrlr9",
-          shape: "trapezoid",
-          options: { width: 6, height: 50, slope: -10 }
-        },
-        {
-          url: "logos--react_bl3k6d",
-          shape: "polygon",
-          options: { sides: 12, radius: 32 }
-        },
-        {
-          url: "logos--astro-icon_vjwx9z",
-          shape: "trapezoid",
-          options: { width: 40, height: 50, slope: 0.3 }
-        },
-        {
-          url: "logos--aws_fgyb8m",
-          shape: "rectangle",
-          options: { width: 55, height: 40, scale: 2 }
-        },
-        {
-          url: "logos--cloudflare-icon_mdfvde",
-          shape: "trapezoid",
-          options: { width: 70, height: 35, slope: 0.5, scale: 2 }
-        },
-        {
-          url: "logos--css-3_ldlex2",
-          shape: "rectangle",
-          options: { width: 30, height: 48 }
-        },
-        {
-          url: "logos--html-5_syoy4b",
-          shape: "rectangle",
-          options: { width: 30, height: 48 }
-        },
-        {
-          url: "logos--javascript_kpeloj",
-          shape: "rectangle",
-          options: { width: 48, height: 48 }
-        },
-        {
-          url: "logos--typescript-icon_jey5r1",
-          shape: "rectangle",
-          options: { width: 48, height: 48 }
-        },
-        {
-          url: "logos--tailwindcss-icon_kmcoki",
-          shape: "rectangle",
-          options: { width: 55, height: 35, scale: 2 }
-        },
-        {
-          url: "logos--firebase_i9whnq",
-          shape: "polygon",
-          options: { sides: 4, radius: 29 }
-        },
-        {
-          url: "logos--google-cloud_gtpb5b",
-          shape: "trapezoid",
-          options: { width: 70, height: 45, slope: 0.5 }
-        },
-        {
-          url: "logos--mongodb-icon_ja5hur",
-          shape: "rectangle",
-          options: { width: 25, height: 45 }
-        },
-        {
-          url: "logos--postgresql_olcugm",
-          shape: "polygon",
-          options: { sides: 12, radius: 25 }
-        },
-        {
-          url: "logos--remix-icon_v8fk6t",
-          shape: "rectangle",
-          options: { width: 38, height: 45 }
-        },
-        // {
-        //   url: "logos--rust_qyuou3",
-        //   shape: "circle",
-        //   options: { radius: 25 }
-        // },
-        {
-          url: "logos--php_m0tm9q",
-          shape: "rectangle",
-          options: { width: 68, height: 40 }
-        },
-        {
-          url: "logos--wordpress_bml2jm",
-          shape: "circle",
-          options: { radius: 20 }
-        },
-        {
-          url: "logos--express_agc18f",
-          shape: "rectangle",
-          options: { width: 110, height: 35, scale: 2 }
-        },
-        {
-          url: "logos--pinia_jdqmfc",
-          shape: "rectangle",
-          options: { width: 40, height: 45 }
-        },
-        {
-          url: "logos--nodejs-icon_oywclz",
-          shape: "polygon",
-          options: { sides: 6, radius: 25 }
-        },
-        {
-          url: "logos--npm-icon_me451n",
-          shape: "rectangle",
-          options: { width: 48, height: 48 }
-        },
-        {
-          url: "logos--yarn_qwtrtq",
-          shape: "circle",
-          options: { radius: 25 }
-        },
-        {
-          url: "logos--visual-studio-code_lhvv6b",
-          shape: "rectangle",
-          options: { width: 48, height: 48 }
-        },
-        {
-          url: "logos--jest_rbzrdy",
-          shape: "rectangle",
-          options: { width: 48, height: 48 }
-        },
-        {
-          url: "logos--graphql_k5yi7x",
-          shape: "polygon",
-          options: { sides: 6, radius: 25 }
-        },
-        {
-          url: "logos--vercel-icon_imodls",
-          shape: "trapezoid",
-          options: { width: 60, height: 50, slope: 1 }
-        },
-        {
-          url: "logos--sass_zljcvh",
-          shape: "rectangle",
-          options: { width: 55, height: 45 }
-        },
-        {
-          url: "logos--gitlab_dbhr4c",
-          shape: "circle",
-          options: { radius: 28 }
-        },
-        {
-          url: "logos--ruby_ur5lpa",
-          shape: "rectangle",
-          options: { width: 48, height: 48 }
-        },
-        {
-          url: "logos--github-icon_vdzn05",
-          shape: "circle",
-          options: { radius: 25 }
-        },
-        {
-          url: "logos--redis_ixfulj",
-          shape: "rectangle",
-          options: { width: 60, height: 48 }
-        },
-        {
-          url: "logos--bootstrap_plhgmx",
-          shape: "rectangle",
-          options: { width: 57, height: 48 }
-        },
-        {
-          url: "logos--git-icon_gtlej6",
-          shape: "polygon",
-          options: { sides: 6, radius: 28 }
-        },
-        {
-          url: "logos--figma_x8aqqc",
-          shape: "rectangle",
-          options: { width: 35, height: 50 }
-        },
-        {
-          url: "logos--pnpm_ayeayi",
-          shape: "rectangle",
-          options: { width: 70, height: 50 }
-        }
-      ]
-
       const stack = Composite.create()
 
       function shuffle(array) {
@@ -336,8 +195,7 @@ import AnimatedButton from "./shared/AnimatedButton.astro"
 
       shuffle(icons)
 
-      function loadImg(url, onSuccess) {
-        const imgUrl = generateUrl(url)
+      function loadImg(imgUrl, onSuccess) {
         const img = new Image()
         img.crossOrigin = "anonymous"
         img.onload = () => {
