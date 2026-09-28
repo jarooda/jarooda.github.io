@@ -2,7 +2,9 @@ import { Canvas } from "@react-three/fiber"
 import { Suspense, useMemo } from "react"
 import type { RoomData } from "../../data/room"
 import { RoomDataContext } from "./roomData"
+import Avatar from "./scene/Avatar"
 import CameraRig from "./scene/CameraRig"
+import Fixtures from "./scene/Fixtures"
 import Interactions from "./scene/Interactions"
 import Journal from "./scene/Journal"
 import MonitorScreen, { monitorPreset } from "./scene/MonitorScreen"
@@ -37,6 +39,8 @@ function RoomContent({ room }: { room: RoomAsset }) {
       <Journal scene={room.scene} />
       <MonitorScreen scene={room.scene} />
       <Screens scene={room.scene} />
+      <Fixtures scene={room.scene} />
+      <Avatar scene={room.scene} presets={presets} />
     </>
   )
 }

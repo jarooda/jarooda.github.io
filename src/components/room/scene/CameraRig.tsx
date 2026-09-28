@@ -29,7 +29,6 @@ const poseOf = (preset: ViewPreset, view: ViewId): Pose => ({
 export default function CameraRig({ presets }: { presets: Partial<Record<ViewId, ViewPreset>> }) {
   const camera = useThree((state) => state.camera)
   const view = useRoomStore((state) => state.view)
-  const skipToken = useRoomStore((state) => state.skipToken)
   const cameraSettled = useRoomStore((state) => state.cameraSettled)
   const reducedMotion = useReducedMotion()
 
@@ -48,7 +47,9 @@ export default function CameraRig({ presets }: { presets: Partial<Record<ViewId,
     useRoomStore.setState({ settledView: null })
 
     tween.current?.kill()
-    if (!from || reducedMotion) {
+    const instant = useRoomStore.getState().instantCamera
+    if (instant) useRoomStore.setState({ instantCamera: false })
+    if (!from || reducedMotion || instant) {
       current.current = to
       cameraSettled(view)
       return
@@ -79,10 +80,6 @@ export default function CameraRig({ presets }: { presets: Partial<Record<ViewId,
       }
     })
   }, [view, presets, reducedMotion, cameraSettled])
-
-  useEffect(() => {
-    if (skipToken) tween.current?.progress(1)
-  }, [skipToken])
 
   useEffect(() => () => void tween.current?.kill(), [])
 

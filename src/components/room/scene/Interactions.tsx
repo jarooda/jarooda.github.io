@@ -3,7 +3,7 @@ import type { ThreeEvent } from "@react-three/fiber"
 import { useEffect, useMemo, useRef, useState } from "react"
 import * as THREE from "three"
 import { labels } from "../labels"
-import { SECTION_ZONE, isSection, type SectionId, type ZoneId } from "../sections"
+import { SECTION_ZONE, isSection, zoneTarget, type SectionId, type ZoneId } from "../sections"
 import { useRoomStore } from "../store"
 import { setHighlight } from "../systems/highlight"
 import { buildZoneGroups, type ZoneGroups } from "../systems/zoneGroups"
@@ -35,7 +35,8 @@ export default function Interactions({ scene }: { scene: THREE.Object3D }) {
   const mode = useRoomStore((state) => state.mode)
   const view = useRoomStore((state) => state.view)
   const sequence = useRoomStore((state) => state.sequence)
-  const enterZoom = useRoomStore((state) => state.enterZoom)
+  const travelTo = useRoomStore((state) => state.travelTo)
+  const walkTo = useRoomStore((state) => state.walkTo)
   const openPopup = useRoomStore((state) => state.openPopup)
 
   const groups = useMemo(() => buildZoneGroups(scene), [scene])
@@ -55,11 +56,26 @@ export default function Interactions({ scene }: { scene: THREE.Object3D }) {
 
   useEffect(() => setHovered(null), [mode, view, locked])
 
+  // While the camera zooms in at the end of a navigation sequence, the target object is highlighted.
+  const zoomTarget = sequence?.stage === "zoomIn" ? sequence.target.section : undefined
+  useEffect(() => {
+    if (!zoomTarget) return
+    let node: THREE.Object3D | null = null
+    scene.traverse((object) => {
+      if (!node && object.userData.section === zoomTarget && !object.userData.projectId && !object.userData.seeAll) node = object
+    })
+    const target = node as THREE.Object3D | null
+    if (!target) return
+    setHighlight(target, true)
+    return () => setHighlight(target, false)
+  }, [zoomTarget, scene])
+
   const sameTarget = (a: Target | null, b: Target | null) => !!a && !!b && a.key === b.key
 
   const activate = (target: Target) => {
     setHovered(null)
-    if (target.kind === "zone") return enterZoom(target.zone)
+    // A zone clicked in the room: the avatar walks there first (decision 7).
+    if (target.kind === "zone") return travelTo(zoneTarget(target.zone))
     const { projectId, seeAll } = target.key.userData
     // Sticky notes: a project note opens its detail, the last note goes to the full list page.
     if (seeAll) window.location.assign("/projects")
@@ -81,7 +97,12 @@ export default function Interactions({ scene }: { scene: THREE.Object3D }) {
     event.stopPropagation()
     if (locked) return
     const target = resolveTarget(event.object, mode, view, groups)
-    if (!target) return setHovered(null)
+    if (!target) {
+      setHovered(null)
+      // Anything else in the room (floor, rug, bed…): walk to that spot.
+      if (mode === "roam") walkTo(event.point.x, event.point.z)
+      return
+    }
     // Touch: first tap shows the label, second tap on the same object opens it.
     if (pointerType.current === "touch" && !sameTarget(hovered, target)) return setHovered(target)
     activate(target)

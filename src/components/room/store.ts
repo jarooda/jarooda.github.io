@@ -5,6 +5,7 @@ import { readJSON, writeJSON } from "./systems/storage"
 
 export type Mode = "loading" | "intro" | "roam" | "zoom" | "popup"
 export type PhaseId = "dawn" | "morning" | "noon" | "afternoon" | "dusk" | "night" | "latenight"
+export type TriggerTarget = ZoneId | "switch" | "window"
 
 export interface PopupState {
   section: SectionId
@@ -12,8 +13,10 @@ export interface PopupState {
   projectId?: string
 }
 
-// Animated navigation (decision 7). Until K25 adds walking, the only stage is the camera move.
-export type SequenceStage = "camera"
+// Animated navigation (decision 7, 03 §5.3):
+// toMain (camera back to the room view) → walk (avatar walks, faces the object, plays interact)
+// → zoomIn (camera to the zone, target highlighted) → popup.
+export type SequenceStage = "toMain" | "walk" | "zoomIn"
 
 export interface Sequence {
   target: NavTarget
@@ -22,14 +25,20 @@ export interface Sequence {
 
 const VISITED_KEY = "room-visited"
 
+const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
 interface RoomState {
   mode: Mode
   view: ViewId
   popup: PopupState | null
   sequence: Sequence | null
-  // Incremented to ask CameraRig to finish the current transition immediately.
-  skipToken: number
-  nearbyTarget: string | null
+  // Next view change jumps instead of animating (skip, reduced motion).
+  instantCamera: boolean
+  nearbyTarget: TriggerTarget | null
+  // Requests for the avatar; tokens make repeated requests distinct.
+  walkRequest: { x: number; z: number; token: number } | null
+  interactRequest: number
+  avatarSnap: { zone: ZoneId; token: number } | null
   lightOn: boolean
   phaseOverride: PhaseId | null
   curtainsOpen: boolean
@@ -47,12 +56,19 @@ interface RoomState {
   back(): void
   travelTo(target: NavTarget): void
   skipSequence(): void
+  avatarArrived(): void
   cameraSettled(view: ViewId): void
+  walkTo(x: number, z: number): void
+  requestInteract(): void
+  setNearbyTarget(target: TriggerTarget | null): void
   toggleLight(): void
+  toggleCurtains(): void
   setPhaseOverride(phase: PhaseId | null): void
 }
 
 const loadVisited = () => readJSON<unknown[]>(VISITED_KEY, []).filter(isSection)
+
+const finalViewOf = (target: NavTarget): ViewId => (target.section ? viewForSection(target.section) : target.zone)
 
 export const useRoomStore = create<RoomState>((set, get) => {
   const markVisited = (section: SectionId) => {
@@ -69,13 +85,26 @@ export const useRoomStore = create<RoomState>((set, get) => {
     else set({ mode: "zoom", view: target.zone, popup: null })
   }
 
+  // Skip / reduced motion: the avatar jumps to the trigger and the camera jumps to the end view.
+  const jumpToEnd = (target: NavTarget) => {
+    const { view, avatarSnap } = get()
+    set({
+      avatarSnap: { zone: target.zone, token: (avatarSnap?.token ?? 0) + 1 },
+      instantCamera: finalViewOf(target) !== view
+    })
+    finishSequence(target)
+  }
+
   return {
     mode: "roam",
     view: "main",
     popup: null,
     sequence: null,
-    skipToken: 0,
+    instantCamera: false,
     nearbyTarget: null,
+    walkRequest: null,
+    interactRequest: 0,
+    avatarSnap: null,
     lightOn: false,
     phaseOverride: null,
     curtainsOpen: true,
@@ -106,30 +135,50 @@ export const useRoomStore = create<RoomState>((set, get) => {
     },
 
     back: () => {
-      const { sequence, popup, mode } = get()
+      const { sequence, mode } = get()
       if (sequence) return get().skipSequence()
       if (mode === "popup") return get().closePopup()
       if (mode === "zoom") return set({ mode: "roam", view: "main" })
     },
 
     travelTo: (target) => {
-      const { view } = get()
-      const finalView = target.section ? viewForSection(target.section) : target.zone
-      set({ popup: null, mode: "zoom", sequence: { target, stage: "camera" } })
-      // Already framed on the zone (or the target's close-up): nothing to animate.
-      if (view === target.zone || view === finalView) finishSequence(target)
-      else set({ view: target.zone })
+      const { view, settledView, popup } = get()
+      // Already at the zone (its view, a close-up, or a popup of the same zone): open it in place.
+      const currentZone = popup ? SECTION_ZONE[popup.section] : view
+      if (currentZone === target.zone || view === finalViewOf(target)) return finishSequence(target)
+      if (prefersReducedMotion()) return jumpToEnd(target)
+      set({ popup: null, mode: "roam", sequence: { target, stage: "toMain" } })
+      if (view === "main" && settledView === "main") set({ sequence: { target, stage: "walk" } })
+      else set({ view: "main" })
     },
 
-    skipSequence: () => set((state) => ({ skipToken: state.skipToken + 1 })),
+    skipSequence: () => {
+      const { sequence } = get()
+      if (sequence) jumpToEnd(sequence.target)
+    },
+
+    avatarArrived: () => {
+      const { sequence } = get()
+      if (sequence?.stage !== "walk") return
+      set({ sequence: { ...sequence, stage: "zoomIn" }, mode: "zoom", view: sequence.target.zone })
+    },
 
     cameraSettled: (view) => {
       set({ ready: true, settledView: view })
       const { sequence } = get()
-      if (sequence && sequence.target.zone === view) finishSequence(sequence.target)
+      if (!sequence) return
+      if (sequence.stage === "toMain" && view === "main") set({ sequence: { ...sequence, stage: "walk" } })
+      else if (sequence.stage === "zoomIn" && view === sequence.target.zone) finishSequence(sequence.target)
+    },
+
+    walkTo: (x, z) => set((state) => ({ walkRequest: { x, z, token: (state.walkRequest?.token ?? 0) + 1 } })),
+    requestInteract: () => set((state) => ({ interactRequest: state.interactRequest + 1 })),
+    setNearbyTarget: (nearbyTarget) => {
+      if (get().nearbyTarget !== nearbyTarget) set({ nearbyTarget })
     },
 
     toggleLight: () => set((state) => ({ lightOn: !state.lightOn })),
+    toggleCurtains: () => set((state) => ({ curtainsOpen: !state.curtainsOpen })),
     setPhaseOverride: (phaseOverride) => set({ phaseOverride })
   }
 })

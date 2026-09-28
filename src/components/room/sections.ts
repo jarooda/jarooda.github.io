@@ -72,7 +72,7 @@ export const ZONE_MEMBERS: Record<ZoneId, string[]> = {
 export type NavTargetId = "about" | "techstack" | "projects" | "blog" | "talks" | "collections" | "contact"
 
 export interface NavTarget {
-  id: NavTargetId | SectionId
+  id: NavTargetId | SectionId | ZoneId
   label: string
   zone: ZoneId
   section?: SectionId
@@ -97,6 +97,9 @@ export const QUICK_MENU: { target: NavTargetId; label: string }[] = [
 ]
 
 export const navTarget = (id: NavTargetId) => NAV_TARGETS.find((t) => t.id === id)!
+
+// Walking to a zone and zooming in, without opening a section (click on a zone, E at a trigger).
+export const zoneTarget = (zone: ZoneId): NavTarget => ({ id: zone, label: zone, zone })
 
 // Deep links accept quick nav ids (#projects, #talks) and raw section ids (#games).
 export function targetFromHash(hash: string): NavTarget | null {

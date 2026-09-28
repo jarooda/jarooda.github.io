@@ -3,6 +3,7 @@ import { labels } from "../labels"
 import { NAV_TARGETS, QUICK_MENU, SECTIONS, SECTION_ZONE, navTarget, type NavTarget } from "../sections"
 import { useRoomStore } from "../store"
 import { buttonClass } from "./buttons"
+import MovePad from "./MovePad"
 import PopupHost from "./PopupHost"
 
 function isVisited(target: NavTarget, visited: string[]) {
@@ -86,10 +87,8 @@ function StatusBar() {
   const back = useRoomStore((state) => state.back)
   const zone = popup ? SECTION_ZONE[popup.section] : view
 
-  if (sequence) return null
-  if (mode === "roam") {
-    return <p className="rounded-sm bg-white/80 px-3 py-1 text-sm text-gray-700 shadow backdrop-blur dark:bg-gray-800/80 dark:text-gray-200">Click the desk, TV corner or whiteboard to take a closer look</p>
-  }
+  // The room itself needs no hint: the pad, the prompt and hover labels explain the controls.
+  if (sequence || mode === "roam") return null
   return (
     <button type="button" onClick={back} className={buttonClass}>
       ← Back {mode === "popup" ? `to ${labels[zone as keyof typeof labels] ?? "room"}` : "to room"}
@@ -136,7 +135,8 @@ export default function Overlay() {
         <QuickMenu />
         <QuickNav />
       </div>
-      <div className="relative z-40 flex justify-center md:justify-start">
+      <div className="relative z-40 flex flex-col items-start gap-2">
+        <MovePad />
         <StatusBar />
       </div>
       <SequenceSkip />
