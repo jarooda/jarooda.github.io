@@ -30,7 +30,10 @@ export default defineConfig({
     icon(),
     mdx(),
     react(),
-    sitemap(),
+    sitemap({
+      // The 3D room is still in development under /room; it moves to / at launch.
+      filter: (page) => !page.endsWith("/room/")
+    }),
     sentry({
       sourceMapsUploadOptions: {
         org: SENTRY_ORG,

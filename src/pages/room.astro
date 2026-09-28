@@ -1,0 +1,57 @@
+---
+import BaseHead from "../components/shared/BaseHead.astro"
+import RoomApp from "../components/room/RoomApp"
+import { getRoomData } from "../data/room"
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts"
+
+// No ClientRouter here: leaving the page must be a full reload so the WebGL context is released.
+const data = await getRoomData()
+const title = `Room - ${SITE_TITLE}`
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={SITE_DESCRIPTION} />
+    <meta name="robots" content="noindex, nofollow" />
+  </head>
+  <body>
+    <div class="room-background" aria-hidden="true"></div>
+    <RoomApp client:only="react" data={data}>
+      <p slot="fallback" class="room-loading">Loading room…</p>
+    </RoomApp>
+  </body>
+</html>
+
+<style is:global>
+  html,
+  body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: "Lato", sans-serif;
+  }
+
+  .room-background {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(180deg, var(--room-bg-top, #f6e7cf) 0%, var(--room-bg-bottom, #e8c9a0) 100%);
+  }
+
+  .room-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .room-loading {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    color: #374151;
+  }
+</style>
