@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber"
-import { Suspense, useEffect, useMemo } from "react"
+import { Component, Suspense, useEffect, useMemo, type ReactNode } from "react"
 import type { RoomData } from "../../data/room"
 import { RoomDataContext } from "./roomData"
 import Atmosphere from "./scene/Atmosphere"
@@ -59,9 +59,38 @@ function PlaceholderRoom() {
   return <RoomContent room={usePlaceholderRoom()} />
 }
 
+// A model that fails to load (or any scene error) offers the classic site instead of a blank page.
+class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false }
+
+  static getDerivedStateFromError() {
+    return { failed: true }
+  }
+
+  componentDidCatch(error: unknown) {
+    console.error("[room] scene failed", error)
+    useRoomStore.getState().reportIssue("load-failed")
+  }
+
+  render() {
+    return this.state.failed ? null : this.props.children
+  }
+}
+
+const announceReady = () => void window.dispatchEvent(new Event("room:ready"))
+
 export default function RoomApp({ data }: { data: RoomData }) {
   useHashSync()
   useEffect(() => useRoomStore.getState().setTier(initialTier()), [])
+
+  // The splash (RoomSplash.astro) fades out once the first view is framed, or on failure.
+  useEffect(() => {
+    const done = (state: ReturnType<typeof useRoomStore.getState>) => state.ready || state.runtimeIssue !== null
+    if (done(useRoomStore.getState())) return announceReady()
+    return useRoomStore.subscribe((state) => {
+      if (done(state)) announceReady()
+    })
+  }, [])
 
   return (
     <RoomDataContext.Provider value={data}>
@@ -74,10 +103,18 @@ export default function RoomApp({ data }: { data: RoomData }) {
           gl={{ alpha: true, antialias: true, stencil: true }}
           camera={{ manual: true }}
           aria-label="Jalu's room"
+          onCreated={({ gl }) => {
+            gl.domElement.addEventListener("webglcontextlost", (event) => {
+              event.preventDefault()
+              useRoomStore.getState().reportIssue("context-lost")
+            })
+          }}
         >
-          <Suspense fallback={null}>
-            {usePlaceholder ? <PlaceholderRoom /> : <ModelRoom />}
-          </Suspense>
+          <SceneBoundary>
+            <Suspense fallback={null}>
+              {usePlaceholder ? <PlaceholderRoom /> : <ModelRoom />}
+            </Suspense>
+          </SceneBoundary>
         </Canvas>
       </div>
     </RoomDataContext.Provider>

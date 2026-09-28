@@ -1,0 +1,95 @@
+---
+// Semantic HTML version of the room (K34) for crawlers and screen readers; visually hidden
+// because the 3D scene presents the same content.
+import type { RoomData } from "../../data/room"
+import { socials } from "../../data/socials"
+import { techStack } from "../../data/techstack"
+import { CLASSIC_URL } from "../../utils/experience"
+
+interface Props {
+  data: RoomData
+}
+
+const { data } = Astro.props
+---
+
+<main class="sr-only" id="room-content">
+  <h1>Jalu Wibowo Aji — Frontend Developer from Semarang</h1>
+  <p><a href={CLASSIC_URL}>Simple view of this website</a></p>
+
+  <section aria-labelledby="room-about">
+    <h2 id="room-about">About me</h2>
+    <Fragment set:html={data.about.html} />
+  </section>
+
+  <section aria-labelledby="room-stack">
+    <h2 id="room-stack">Tech stack</h2>
+    {
+      techStack.map((category) => (
+        <>
+          <h3>{category.category}</h3>
+          <ul>{category.items.map((item) => <li>{item.name}</li>)}</ul>
+        </>
+      ))
+    }
+  </section>
+
+  <section aria-labelledby="room-projects">
+    <h2 id="room-projects">Projects</h2>
+    <ul>
+      {
+        data.projects.map((project) => (
+          <li>
+            <h3>{project.title}</h3>
+            <p>{project.stacks.join(", ")}</p>
+            {project.demo && <a href={project.demo}>{project.title} live demo</a>}
+            {project.repo && <a href={project.repo}>{project.title} repository</a>}
+          </li>
+        ))
+      }
+    </ul>
+    <a href="/projects">All projects</a>
+  </section>
+
+  <section aria-labelledby="room-blog">
+    <h2 id="room-blog">Blog</h2>
+    <ul>
+      {
+        data.blog.map((post) => (
+          <li>
+            <a href={post.url}>{post.title}</a>
+            <p>{post.description}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section aria-labelledby="room-talks">
+    <h2 id="room-talks">Talks</h2>
+    <ul>
+      {
+        data.talks.map((talk) => (
+          <li>
+            <h3>{talk.title}</h3>
+            <p>{talk.description}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <a href="/talks">All talks</a>
+  </section>
+
+  <section aria-labelledby="room-contact">
+    <h2 id="room-contact">Contact</h2>
+    <ul>{socials.map((social) => <li><a href={social.url}>{social.label}</a></li>)}</ul>
+    <a href={`${CLASSIC_URL}#contactme`}>Send me a message</a>
+  </section>
+</main>
+
+<noscript>
+  <div class="room-noscript">
+    <p>The 3D room needs JavaScript.</p>
+    <a href={CLASSIC_URL}>Go to the simple view</a>
+  </div>
+</noscript>

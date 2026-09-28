@@ -4,7 +4,9 @@ import { NAV_TARGETS, QUICK_MENU, SECTIONS, SECTION_ZONE, navTarget, type NavTar
 import { useRoomStore } from "../store"
 import { buttonClass } from "./buttons"
 import MovePad from "./MovePad"
+import FallbackOffer from "./FallbackOffer"
 import PopupHost from "./PopupHost"
+import SimpleViewLink from "./SimpleViewLink"
 import TimeControl from "./TimeControl"
 
 function isVisited(target: NavTarget, visited: string[]) {
@@ -139,12 +141,16 @@ export default function Overlay() {
           <QuickNav />
         </div>
       </div>
-      <div className="relative z-40 flex flex-col items-start gap-2">
-        <MovePad />
-        <StatusBar />
+      <div className="relative z-40 flex items-end justify-between gap-2">
+        <div className="flex flex-col items-start gap-2">
+          <MovePad />
+          <StatusBar />
+        </div>
+        <SimpleViewLink />
       </div>
       <SequenceSkip />
       <PopupHost />
+      <FallbackOffer />
     </div>
   )
 }

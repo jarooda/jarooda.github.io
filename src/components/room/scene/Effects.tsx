@@ -32,7 +32,15 @@ export default function Effects() {
 
   return (
     <>
-      <PerformanceMonitor onDecline={() => setTier(LOWER[useRoomStore.getState().tier])} flipflops={3} />
+      <PerformanceMonitor
+        onDecline={() => {
+          const current = useRoomStore.getState().tier
+          // Still too slow on the lowest tier: offer the classic site (K32).
+          if (current === "low") useRoomStore.getState().reportIssue("slow")
+          else setTier(LOWER[current])
+        }}
+        flipflops={3}
+      />
       {tier !== "low" && (
         <EffectComposer stencilBuffer multisampling={tier === "high" ? 4 : 0} frameBufferType={THREE.HalfFloatType}>
           {tier === "high" ? <N8AO aoRadius={0.45} distanceFalloff={0.6} intensity={1.4} halfRes quality="medium" /> : <></>}

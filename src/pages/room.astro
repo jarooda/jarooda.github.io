@@ -1,6 +1,9 @@
 ---
 import BaseHead from "../components/shared/BaseHead.astro"
 import RoomApp from "../components/room/RoomApp"
+import RoomContent from "../components/room/RoomContent.astro"
+import RoomGate from "../components/room/RoomGate.astro"
+import RoomSplash from "../components/room/RoomSplash.astro"
 import { getRoomData } from "../data/room"
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts"
 import "../styles/index.css"
@@ -15,14 +18,15 @@ const title = `Room - ${SITE_TITLE}`
 <!doctype html>
 <html lang="en">
   <head>
+    <RoomGate />
     <BaseHead title={title} description={SITE_DESCRIPTION} />
     <meta name="robots" content="noindex, nofollow" />
   </head>
   <body>
+    <RoomSplash />
+    <RoomContent data={data} />
     <div class="room-background" aria-hidden="true"></div>
-    <RoomApp client:only="react" data={data}>
-      <p slot="fallback" class="room-loading">Loading room…</p>
-    </RoomApp>
+    <RoomApp client:only="react" data={data} />
   </body>
 </html>
 
@@ -85,13 +89,15 @@ const title = `Room - ${SITE_TITLE}`
     margin-top: 0;
   }
 
-  .room-loading {
+  .room-noscript {
     position: fixed;
     inset: 0;
-    z-index: 1;
+    z-index: 100;
     display: grid;
-    place-items: center;
-    margin: 0;
+    place-content: center;
+    gap: 0.5rem;
+    background: #f3f4f6;
     color: #374151;
+    text-align: center;
   }
 </style>

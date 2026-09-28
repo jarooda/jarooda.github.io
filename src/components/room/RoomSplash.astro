@@ -1,0 +1,255 @@
+---
+// Layer 2 of the slow-connection fallback (decision 2) and the loading screen: a dependency-free
+// script downloads the models with progress, estimates the remaining time, and offers the classic
+// site on slow connections. Downloads are handed to the scene as object URLs (never fetched twice).
+import { statSync } from "node:fs"
+import { join } from "node:path"
+import logoSvg from "../../assets/jalu-logo.svg?raw"
+import { CLASSIC_URL, EXPERIENCE_KEY, FALLBACK_KEY } from "../../utils/experience"
+
+const MODELS = ["/models/room.glb", "/models/outside.glb", "/models/avatar.glb"]
+// Sizes are read at build time so progress works even without a Content-Length header.
+const files = MODELS.map((url) => ({ url, size: statSync(join(process.cwd(), "public", url)).size }))
+
+const config = {
+  files,
+  classicUrl: CLASSIC_URL,
+  experienceKey: EXPERIENCE_KEY,
+  fallbackKey: FALLBACK_KEY,
+  etaAfterMs: 1500,
+  slowEtaMs: 8000,
+  hardLimitMs: 15000,
+  countdownSeconds: 3
+}
+---
+
+<div id="room-splash" class="room-splash" role="status" aria-live="polite">
+  <div class="room-splash__card">
+    <div class="room-splash__logo" set:html={logoSvg.replace("<svg", '<svg aria-hidden="true"')} />
+    <p class="room-splash__title">Entering Jalu's room…</p>
+    <div class="room-splash__track" aria-hidden="true"><div id="room-splash-bar" class="room-splash__bar"></div></div>
+    <p id="room-splash-status" class="room-splash__status">Loading 0%</p>
+    <div id="room-splash-slow" class="room-splash__slow" hidden>
+      <p id="room-splash-count">Slow connection — switching to simple view in 3…</p>
+      <button id="room-splash-keep" type="button" class="room-splash__button">Keep waiting</button>
+    </div>
+    <a class="room-splash__link" href={CLASSIC_URL} data-room-simple>Simple view</a>
+  </div>
+</div>
+<noscript><style>#room-splash { display: none; }</style></noscript>
+
+<script is:inline define:vars={{ config }}>
+  ;(function () {
+    var splash = document.getElementById("room-splash")
+    var bar = document.getElementById("room-splash-bar")
+    var status = document.getElementById("room-splash-status")
+    var slow = document.getElementById("room-splash-slow")
+    var count = document.getElementById("room-splash-count")
+    var keep = document.getElementById("room-splash-keep")
+    var total = config.files.reduce(function (sum, f) { return sum + f.size }, 0)
+    var loaded = config.files.map(function () { return 0 })
+    var start = performance.now()
+    var finished = false
+    var failed = false
+    var keepWaiting = false
+    var countdown = null
+
+    function received() {
+      return loaded.reduce(function (a, b) { return a + b }, 0)
+    }
+    function render() {
+      var ratio = Math.min(1, received() / total)
+      bar.style.width = (ratio * 100).toFixed(1) + "%"
+      if (!failed) status.textContent = finished ? "Setting up the room…" : "Loading " + Math.round(ratio * 100) + "%"
+    }
+
+    function download(file, index) {
+      return fetch(file.url).then(function (response) {
+        if (!response.ok) throw new Error(file.url + " " + response.status)
+        if (!response.body) {
+          return response.blob().then(function (blob) {
+            loaded[index] = file.size
+            render()
+            return blob
+          })
+        }
+        var reader = response.body.getReader()
+        var chunks = []
+        function pump() {
+          return reader.read().then(function (step) {
+            if (step.done) return new Blob(chunks, { type: "model/gltf-binary" })
+            chunks.push(step.value)
+            loaded[index] = Math.min(file.size, loaded[index] + step.value.length)
+            render()
+            return pump()
+          })
+        }
+        return pump()
+      })
+    }
+
+    // The scene awaits this map ({ "/models/room.glb": "blob:…" }) instead of fetching again.
+    window.__roomPreload = Promise.all(config.files.map(download)).then(
+      function (blobs) {
+        finished = true
+        stopCountdown()
+        render()
+        var map = {}
+        config.files.forEach(function (file, i) { map[file.url] = URL.createObjectURL(blobs[i]) })
+        return map
+      },
+      function (error) {
+        failed = true
+        stopCountdown()
+        status.textContent = "The room could not be loaded."
+        throw error
+      }
+    )
+    window.__roomPreload.catch(function () {})
+
+    function toClassic() {
+      try { sessionStorage.setItem(config.fallbackKey, "slow") } catch (e) {}
+      location.replace(config.classicUrl)
+    }
+    function stopCountdown() {
+      if (countdown) clearInterval(countdown)
+      countdown = null
+      slow.hidden = true
+    }
+    function startCountdown() {
+      if (countdown || keepWaiting) return
+      var seconds = config.countdownSeconds
+      slow.hidden = false
+      count.textContent = "Slow connection — switching to simple view in " + seconds + "…"
+      keep.focus()
+      countdown = setInterval(function () {
+        seconds -= 1
+        if (seconds <= 0) {
+          clearInterval(countdown)
+          return toClassic()
+        }
+        count.textContent = "Slow connection — switching to simple view in " + seconds + "…"
+      }, 1000)
+    }
+    // Choosing simple view here is a manual choice, remembered across visits.
+    document.querySelectorAll("[data-room-simple]").forEach(function (link) {
+      link.addEventListener("click", function () {
+        try { localStorage.setItem(config.experienceKey, "classic") } catch (e) {}
+      })
+    })
+    keep.addEventListener("click", function () {
+      keepWaiting = true
+      stopCountdown()
+    })
+
+    var watch = setInterval(function () {
+      if (finished || failed) return clearInterval(watch)
+      if (keepWaiting) return
+      var elapsed = performance.now() - start
+      if (elapsed > config.hardLimitMs) return startCountdown()
+      if (elapsed < config.etaAfterMs) return
+      var rate = received() / elapsed
+      var eta = rate > 0 ? elapsed + (total - received()) / rate : Infinity
+      if (eta > config.slowEtaMs) startCountdown()
+    }, 250)
+
+    // The scene dispatches room:ready once the first view is framed.
+    window.addEventListener("room:ready", function () {
+      splash.classList.add("room-splash--done")
+      setTimeout(function () { splash.remove() }, 500)
+    }, { once: true })
+    render()
+  })()
+</script>
+
+<style is:global>
+  .room-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    background: #f3f4f6;
+    color: #374151;
+    font-family: "Lato", sans-serif;
+    transition: opacity 0.45s ease;
+  }
+  .dark .room-splash {
+    background: #111827;
+    color: #d1d5db;
+  }
+  .room-splash--done {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .room-splash__card {
+    display: flex;
+    width: min(20rem, 80vw);
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: center;
+  }
+  .room-splash__logo {
+    width: 4rem;
+    height: 4rem;
+    color: #111827;
+  }
+  .dark .room-splash__logo {
+    color: #fff;
+  }
+  .room-splash__logo svg {
+    width: 100%;
+    height: 100%;
+  }
+  .room-splash__title {
+    margin: 0;
+    font-weight: 700;
+  }
+  .room-splash__track {
+    width: 100%;
+    height: 0.4rem;
+    overflow: hidden;
+    border-radius: 9999px;
+    background: #d1d5db;
+  }
+  .dark .room-splash__track {
+    background: #374151;
+  }
+  .room-splash__bar {
+    width: 0;
+    height: 100%;
+    background: #15803d;
+    transition: width 0.2s ease;
+  }
+  .room-splash__status,
+  .room-splash__slow p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+  .room-splash__slow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .room-splash__slow[hidden] {
+    display: none;
+  }
+  .room-splash__button {
+    cursor: pointer;
+    border: 0;
+    border-radius: 0.125rem;
+    background: #111827;
+    padding: 0.5rem 0.75rem;
+    color: #fff;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .room-splash__link {
+    color: inherit;
+    font-size: 0.8rem;
+    text-decoration: underline;
+  }
+</style>

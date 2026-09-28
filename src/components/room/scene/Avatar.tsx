@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react"
 import * as THREE from "three"
 import { ZONE_MEMBERS, zoneTarget, type ZoneId } from "../sections"
 import { useRoomStore, type TriggerTarget } from "../store"
+import { useAssetUrl } from "../systems/assets"
 import { isHeld, useControls, type MoveKey } from "../systems/controls"
 import { buildNavGrid, pathLength, type NavGrid, type Point } from "../systems/navGrid"
 import { sweepBoxes } from "../systems/occluders"
@@ -78,7 +79,7 @@ function readTriggers(scene: THREE.Object3D): Trigger[] {
 }
 
 export default function Avatar({ scene, presets }: { scene: THREE.Object3D; presets: Partial<Record<ViewId, ViewPreset>> }) {
-  const gltf = useGLTF(AVATAR_URL)
+  const gltf = useGLTF(useAssetUrl(AVATAR_URL))
   const root = useRef<THREE.Group>(null)
   const { actions } = useAnimations(gltf.animations, root)
 
@@ -331,5 +332,3 @@ export default function Avatar({ scene, presets }: { scene: THREE.Object3D; pres
     </group>
   )
 }
-
-useGLTF.preload(AVATAR_URL)

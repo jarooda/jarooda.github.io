@@ -7,6 +7,8 @@ export type Mode = "loading" | "intro" | "roam" | "zoom" | "popup"
 export type PhaseId = "dawn" | "morning" | "noon" | "afternoon" | "dusk" | "night" | "latenight"
 export type TriggerTarget = ZoneId | "switch" | "window"
 export type Tier = "high" | "medium" | "low"
+// Runtime reasons to offer the classic site (K32).
+export type RuntimeIssue = "context-lost" | "load-failed" | "slow"
 
 export interface PopupState {
   section: SectionId
@@ -47,6 +49,7 @@ interface RoomState {
   timeControlOpen: boolean
   curtainsOpen: boolean
   tier: Tier
+  runtimeIssue: RuntimeIssue | null
   visited: SectionId[]
   // True once the camera has framed the first view; deep links wait for it so they animate.
   ready: boolean
@@ -71,6 +74,7 @@ interface RoomState {
   setPhaseOverride(phase: PhaseId | null): void
   setTimeControlOpen(open: boolean): void
   setTier(tier: Tier): void
+  reportIssue(issue: RuntimeIssue | null): void
 }
 
 const loadVisited = () => readJSON<unknown[]>(VISITED_KEY, []).filter(isSection)
@@ -118,6 +122,7 @@ export const useRoomStore = create<RoomState>((set, get) => {
     timeControlOpen: false,
     curtainsOpen: true,
     tier: "high",
+    runtimeIssue: null,
     visited: loadVisited(),
     ready: false,
     settledView: null,
@@ -191,6 +196,7 @@ export const useRoomStore = create<RoomState>((set, get) => {
     toggleCurtains: () => set((state) => ({ curtainsOpen: !state.curtainsOpen })),
     setPhaseOverride: (phaseOverride) => set({ phaseOverride }),
     setTimeControlOpen: (timeControlOpen) => set({ timeControlOpen }),
-    setTier: (tier) => set({ tier })
+    setTier: (tier) => set({ tier }),
+    reportIssue: (runtimeIssue) => set({ runtimeIssue })
   }
 })

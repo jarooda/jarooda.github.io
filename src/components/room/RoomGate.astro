@@ -1,0 +1,70 @@
+---
+// Layer 1 of the slow-connection fallback (decision 2): runs in <head> before first paint and
+// sends the visitor to the classic site when the room cannot or should not load.
+// Order: ?view= override → manual choice (localStorage) → fallback earlier in this visit
+// (sessionStorage) → WebGL2 support → Network Information API (Chromium only).
+import { CLASSIC_URL, EXPERIENCE_KEY, FALLBACK_KEY } from "../../utils/experience"
+---
+
+<script is:inline define:vars={{ classicUrl: CLASSIC_URL, experienceKey: EXPERIENCE_KEY, fallbackKey: FALLBACK_KEY }}>
+  ;(function () {
+    function storage(kind) {
+      try {
+        return window[kind]
+      } catch (e) {
+        return null
+      }
+    }
+    function read(kind, key) {
+      try {
+        var s = storage(kind)
+        return s ? s.getItem(key) : null
+      } catch (e) {
+        return null
+      }
+    }
+    function write(kind, key, value) {
+      try {
+        var s = storage(kind)
+        if (!s) return
+        if (value === null) s.removeItem(key)
+        else s.setItem(key, value)
+      } catch (e) {}
+    }
+    function toClassic(reason) {
+      if (reason) write("sessionStorage", fallbackKey, reason)
+      window.__roomGate = "classic:" + (reason || "choice")
+      location.replace(classicUrl)
+    }
+
+    var view = new URLSearchParams(location.search).get("view")
+    if (view === "classic") {
+      write("localStorage", experienceKey, "classic")
+      return toClassic()
+    }
+    if (view === "3d") {
+      write("localStorage", experienceKey, "room")
+      write("sessionStorage", fallbackKey, null)
+    }
+
+    var choice = read("localStorage", experienceKey)
+    if (choice === "classic") return toClassic()
+    var chosenRoom = choice === "room"
+    if (!chosenRoom && read("sessionStorage", fallbackKey)) return toClassic()
+
+    var webgl2 = false
+    try {
+      webgl2 = !!document.createElement("canvas").getContext("webgl2")
+    } catch (e) {}
+    if (!webgl2) return toClassic("webgl")
+
+    // A manual "room" choice skips the connection check; the splash still watches real speed.
+    var connection = navigator.connection
+    if (!chosenRoom && connection) {
+      var slowType = /^(slow-2g|2g|3g)$/.test(connection.effectiveType || "")
+      var slowLink = typeof connection.downlink === "number" && connection.downlink > 0 && connection.downlink < 1.5
+      if (connection.saveData || slowType || slowLink) return toClassic("connection")
+    }
+    window.__roomGate = "room"
+  })()
+</script>
