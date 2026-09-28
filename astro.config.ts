@@ -1,6 +1,7 @@
 import { defineConfig } from "astro/config"
 import { loadEnv } from "vite"
 import mdx from "@astrojs/mdx"
+import react from "@astrojs/react"
 import icon from "astro-icon"
 import sitemap from "@astrojs/sitemap"
 import autolinkHeadings from "rehype-autolink-headings"
@@ -28,6 +29,7 @@ export default defineConfig({
   integrations: [
     icon(),
     mdx(),
+    react(),
     sitemap(),
     sentry({
       sourceMapsUploadOptions: {

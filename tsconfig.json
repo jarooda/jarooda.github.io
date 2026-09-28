@@ -2,7 +2,8 @@
   "extends": "astro/tsconfigs/base",
   "compilerOptions": {
     "strictNullChecks": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "types": ["cypress"]
   },
   "include": [".astro/types.d.ts", "**/*"],
