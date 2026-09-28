@@ -1,23 +1,25 @@
 import { Canvas } from "@react-three/fiber"
 import { Component, Suspense, useEffect, useMemo, type ReactNode } from "react"
+import * as THREE from "three"
 import type { RoomData } from "../../data/room"
 import { RoomDataContext } from "./roomData"
 import Atmosphere from "./scene/Atmosphere"
 import Avatar from "./scene/Avatar"
 import CameraRig from "./scene/CameraRig"
-import Effects, { initialTier } from "./scene/Effects"
 import Fixtures from "./scene/Fixtures"
 import Interactions from "./scene/Interactions"
 import Journal from "./scene/Journal"
 import Lighting from "./scene/Lighting"
 import MonitorScreen, { monitorPreset } from "./scene/MonitorScreen"
 import Outside from "./scene/Outside"
+import Quality, { initialTier } from "./scene/Quality"
 import { usePlaceholderRoom } from "./scene/Placeholder"
 import Rubik from "./scene/Rubik"
 import { useRoomModel, type RoomAsset } from "./scene/roomAsset"
 import Screens from "./scene/Screens"
 import Whiteboard from "./scene/Whiteboard"
-import { readViewPresets } from "./scene/viewPresets"
+import { frameContent, readViewPresets } from "./scene/viewPresets"
+import { ZONE_MEMBERS } from "./sections"
 import { useRoomStore } from "./store"
 import { useHashSync } from "./systems/useHashSync"
 import Overlay from "./ui/Overlay"
@@ -28,6 +30,17 @@ const usePlaceholder = new URLSearchParams(window.location.search).has("placehol
 function RoomContent({ room, withOutside = false }: { room: RoomAsset; withOutside?: boolean }) {
   const presets = useMemo(() => {
     const fromCameras = readViewPresets(room.cameras)
+    // Zone views framed on their objects; the desk chair stands in front and is left out.
+    for (const zone of ["desk", "tv", "whiteboard"] as const) {
+      const preset = fromCameras[zone]
+      if (!preset) continue
+      const content = new THREE.Box3()
+      for (const name of ZONE_MEMBERS[zone]) {
+        const node = room.scene.getObjectByName(name)
+        if (node && name !== "deco_desk_chair" && name !== "int_sticky_note_template") content.expandByObject(node)
+      }
+      fromCameras[zone] = frameContent(preset, content)
+    }
     const monitor = monitorPreset(room.scene, fromCameras.desk)
     return monitor ? { ...fromCameras, monitor } : fromCameras
   }, [room])
@@ -46,7 +59,7 @@ function RoomContent({ room, withOutside = false }: { room: RoomAsset; withOutsi
       <Screens scene={room.scene} />
       <Fixtures scene={room.scene} />
       <Avatar scene={room.scene} presets={presets} />
-      <Effects />
+      <Quality />
     </>
   )
 }

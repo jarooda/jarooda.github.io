@@ -1,8 +1,6 @@
-import { PerformanceMonitor } from "@react-three/drei"
+import { AdaptiveDpr, PerformanceMonitor } from "@react-three/drei"
 import { useThree } from "@react-three/fiber"
-import { Bloom, EffectComposer, N8AO, ToneMapping } from "@react-three/postprocessing"
-import { ToneMappingMode } from "postprocessing"
-import { useEffect } from "react"
+import { lazy, Suspense, useEffect } from "react"
 import * as THREE from "three"
 import { useRoomStore, type Tier } from "../store"
 
@@ -20,9 +18,11 @@ export function initialTier(): Tier {
 
 const LOWER: Record<Tier, Tier> = { high: "medium", medium: "low", low: "low" }
 
-export default function Effects() {
+// Post-processing (postprocessing + N8AO) is its own chunk, never downloaded on the low tier.
+const PostEffects = lazy(() => import("./PostEffects"))
+
+export default function Quality() {
   const tier = useRoomStore((state) => state.tier)
-  const setTier = useRoomStore((state) => state.setTier)
   const gl = useThree((state) => state.gl)
 
   // With the composer the ToneMapping effect maps the image; without it the renderer does.
@@ -34,19 +34,19 @@ export default function Effects() {
     <>
       <PerformanceMonitor
         onDecline={() => {
-          const current = useRoomStore.getState().tier
+          const { tier: current, setTier, reportIssue } = useRoomStore.getState()
           // Still too slow on the lowest tier: offer the classic site (K32).
-          if (current === "low") useRoomStore.getState().reportIssue("slow")
+          if (current === "low") reportIssue("slow")
           else setTier(LOWER[current])
         }}
         flipflops={3}
       />
+      {/* Lowers the pixel ratio while the scene is under load (camera moves, drags). */}
+      <AdaptiveDpr />
       {tier !== "low" && (
-        <EffectComposer stencilBuffer multisampling={tier === "high" ? 4 : 0} frameBufferType={THREE.HalfFloatType}>
-          {tier === "high" ? <N8AO aoRadius={0.45} distanceFalloff={0.6} intensity={1.4} halfRes quality="medium" /> : <></>}
-          <Bloom mipmapBlur luminanceThreshold={0.95} luminanceSmoothing={0.2} intensity={0.55} />
-          <ToneMapping mode={ToneMappingMode.AGX} />
-        </EffectComposer>
+        <Suspense fallback={null}>
+          <PostEffects tier={tier} />
+        </Suspense>
       )}
     </>
   )

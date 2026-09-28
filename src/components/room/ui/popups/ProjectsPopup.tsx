@@ -1,6 +1,4 @@
 import type { RoomProject } from "../../../../data/room"
-import { useRoomData } from "../../roomData"
-import { useRoomStore } from "../../store"
 import { externalLink, formatDay, PROJECT_CATEGORY_LABELS } from "../format"
 
 function Chip({ children }: { children: string }) {
@@ -54,32 +52,5 @@ export function ProjectDetail({ project }: { project: RoomProject }) {
         </ul>
       )}
     </article>
-  )
-}
-
-export default function ProjectsPopup() {
-  const { projects } = useRoomData()
-  const openProject = useRoomStore((state) => state.openProject)
-
-  return (
-    <div className="flex flex-col gap-4">
-      <ul className="grid gap-3 sm:grid-cols-2">
-        {projects.map((project) => (
-          <li key={project.id}>
-            <button
-              type="button"
-              onClick={() => openProject(project.id)}
-              className="h-full w-full cursor-pointer rounded-md bg-gray-50 p-3 text-left transition-colors hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600"
-            >
-              <span className="block font-semibold text-gray-900 dark:text-gray-100">{project.title}</span>
-              <span className="text-xs">{PROJECT_CATEGORY_LABELS[project.category] ?? project.category}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
-      <a href="/projects" className="self-end text-sm font-semibold hover:underline">
-        See all projects
-      </a>
-    </div>
   )
 }

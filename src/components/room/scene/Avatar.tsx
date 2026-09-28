@@ -5,9 +5,11 @@ import * as THREE from "three"
 import { ZONE_MEMBERS, zoneTarget, type ZoneId } from "../sections"
 import { useRoomStore, type TriggerTarget } from "../store"
 import { useAssetUrl } from "../systems/assets"
+import { avatarPosition } from "../systems/avatarState"
 import { isHeld, useControls, type MoveKey } from "../systems/controls"
 import { buildNavGrid, pathLength, type NavGrid, type Point } from "../systems/navGrid"
 import { sweepBoxes } from "../systems/occluders"
+import { useIsMobile } from "../systems/useIsMobile"
 import InteractPrompt from "../ui/InteractPrompt"
 import type { ViewId, ViewPreset } from "./viewPresets"
 
@@ -23,6 +25,8 @@ const MAX_SEQUENCE_SECONDS = 3
 const CROSSFADE_SECONDS = 0.2
 const TURN_RATE = 12
 const OCCLUSION_DISTANCE = 4
+// Extra reach around trigger radii, so standing right against the window or switch still counts.
+const TRIGGER_TOLERANCE = 0.25
 
 // Object each trigger faces when interacting.
 const FACE_NODE: Record<TriggerTarget, string> = {
@@ -83,6 +87,7 @@ export default function Avatar({ scene, presets }: { scene: THREE.Object3D; pres
   const root = useRef<THREE.Group>(null)
   const { actions } = useAnimations(gltf.animations, root)
 
+  const mobile = useIsMobile()
   const nav = useMemo<NavGrid>(() => buildNavGrid(scene), [scene])
   const triggers = useMemo(() => readTriggers(scene), [scene])
   const naturalSpeed = useMemo(() => {
@@ -117,20 +122,24 @@ export default function Avatar({ scene, presets }: { scene: THREE.Object3D; pres
     targetHeading.current = Math.atan2(point.x - avatar.position.x, point.z - avatar.position.z)
   }
 
-  // interact once, then back to idle.
-  const interact = (face: Point, onDone?: () => void) => {
-    const action = actions.interact
-    faceTowards(face)
+  // A one-shot clip (interact, wave), then back to idle.
+  const playOnce = (name: string, onDone?: () => void) => {
+    const action = actions[name]
     if (!action) return onDone?.()
     busy.current = true
     action.setLoop(THREE.LoopOnce, 1)
     action.clampWhenFinished = true
-    play("interact")
+    play(name)
     window.setTimeout(() => {
       busy.current = false
       play("idle")
       onDone?.()
     }, (action.getClip().duration * 1000) / action.timeScale)
+  }
+
+  const interact = (face: Point, onDone?: () => void) => {
+    faceTowards(face)
+    playOnce("interact", onDone)
   }
 
   const walk = (to: Point, speed: number, onArrive?: () => void) => {
@@ -165,6 +174,16 @@ export default function Avatar({ scene, presets }: { scene: THREE.Object3D; pres
     walk(trigger.position, speed, () => interact(trigger.face, () => useRoomStore.getState().avatarArrived()))
   }, [sequence?.stage, sequence?.target])
 
+  // End of the intro: turn toward the room camera and wave.
+  const waveToken = useRoomStore((state) => state.waveToken)
+  useEffect(() => {
+    const avatar = root.current
+    if (!waveToken || !avatar || !presets.main || busy.current || task.current) return
+    const toCamera = new THREE.Vector3(0, 0, 1).applyQuaternion(presets.main.quaternion)
+    faceTowards({ x: avatar.position.x + toCamera.x, z: avatar.position.z + toCamera.z })
+    playOnce("wave")
+  }, [waveToken])
+
   // Skip: jump straight to the trigger, facing the object.
   const avatarSnap = useRoomStore((state) => state.avatarSnap)
   useEffect(() => {
@@ -187,26 +206,40 @@ export default function Avatar({ scene, presets }: { scene: THREE.Object3D; pres
     walk(nav.nearestFree(walkRequest), normalSpeed)
   }, [walkRequest])
 
-  // E / Tap on the prompt: zones run the sequence (walk to the trigger, interact, zoom);
+  const useFixture = (target: "switch" | "window") => {
+    const trigger = triggers.find((t) => t.target === target)
+    if (!trigger) return
+    task.current = null
+    // Curtains only toggle; the time of day is picked from the clock / menu (user feedback).
+    interact(trigger.face, () => {
+      const state = useRoomStore.getState()
+      if (target === "switch") state.toggleLight()
+      else state.toggleCurtains()
+    })
+  }
+
+  // F / Tap on the prompt: zones run the sequence (walk to the trigger, interact, zoom);
   // the switch and window are used in place.
   const interactRequest = useRoomStore((state) => state.interactRequest)
   useEffect(() => {
     const state = useRoomStore.getState()
     const target = state.nearbyTarget
     if (!interactRequest || !target || state.mode !== "roam" || state.sequence || busy.current) return
-    if (target === "switch" || target === "window") {
-      const trigger = triggers.find((t) => t.target === target)!
-      task.current = null
-      // The window also opens the time-of-day picker (00 §6).
-      interact(trigger.face, () => {
-        if (target === "switch") return state.toggleLight()
-        state.toggleCurtains()
-        state.setTimeControlOpen(true)
-      })
-      return
-    }
+    if (target === "switch" || target === "window") return useFixture(target)
     state.travelTo(zoneTarget(target))
   }, [interactRequest])
+
+  // Tap / click on the switch or window itself: walk to its trigger first when far away.
+  const fixtureRequest = useRoomStore((state) => state.fixtureRequest)
+  useEffect(() => {
+    const avatar = root.current
+    const state = useRoomStore.getState()
+    const trigger = fixtureRequest && triggers.find((t) => t.target === fixtureRequest.target)
+    if (!avatar || !trigger || state.mode !== "roam" || state.sequence || busy.current) return
+    const distance = Math.hypot(trigger.position.x - avatar.position.x, trigger.position.z - avatar.position.z)
+    if (distance <= trigger.radius + TRIGGER_TOLERANCE) return useFixture(trigger.target as "switch" | "window")
+    walk(trigger.position, normalSpeed * SEQUENCE_SPEED_FACTOR, () => useFixture(trigger.target as "switch" | "window"))
+  }, [fixtureRequest])
 
   useEffect(() => {
     const down = (event: KeyboardEvent) => {
@@ -283,15 +316,17 @@ export default function Avatar({ scene, presets }: { scene: THREE.Object3D; pres
       }
     } else if (!busy.current && mode === "roam" && !sequence && presets.main) {
       // Screen-relative: up on screen is away from the room camera, projected on the floor.
-      const { pressed } = useControls.getState()
-      const right = Number(isHeld(pressed, "right")) - Number(isHeld(pressed, "left"))
-      const forward = Number(isHeld(pressed, "up")) - Number(isHeld(pressed, "down"))
+      const { pressed, analog } = useControls.getState()
+      // Keys give full speed; the joystick scales speed with how far the knob is pushed.
+      const right = analog ? analog.x : Number(isHeld(pressed, "right")) - Number(isHeld(pressed, "left"))
+      const forward = analog ? analog.y : Number(isHeld(pressed, "up")) - Number(isHeld(pressed, "down"))
+      const strength = analog ? Math.min(1, Math.hypot(analog.x, analog.y)) : 1
       const camForward = new THREE.Vector3(0, 0, -1).applyQuaternion(presets.main.quaternion).setY(0).normalize()
       const camRight = new THREE.Vector3(1, 0, 0).applyQuaternion(presets.main.quaternion).setY(0).normalize()
       const direction = camForward.multiplyScalar(forward).add(camRight.multiplyScalar(right))
       if (direction.lengthSq() > 0) {
         direction.normalize()
-        const step = normalSpeed * delta
+        const step = normalSpeed * strength * delta
         const x = avatar.position.x + direction.x * step
         const z = avatar.position.z + direction.z * step
         // Slide along obstacles: try the full move, then each axis on its own.
@@ -299,7 +334,7 @@ export default function Avatar({ scene, presets }: { scene: THREE.Object3D; pres
         else if (nav.isFree(x, avatar.position.z)) avatar.position.x = x
         else if (nav.isFree(avatar.position.x, z)) avatar.position.z = z
         targetHeading.current = Math.atan2(direction.x, direction.z)
-        speed = normalSpeed
+        speed = normalSpeed * strength
       }
     }
 
@@ -312,11 +347,12 @@ export default function Avatar({ scene, presets }: { scene: THREE.Object3D; pres
     const turn = Math.atan2(Math.sin(targetHeading.current - heading.current), Math.cos(targetHeading.current - heading.current))
     heading.current += turn * Math.min(1, TURN_RATE * delta)
     avatar.rotation.y = heading.current
+    avatarPosition.copy(avatar.position)
 
     if (mode === "roam" && !sequence) {
       const near = triggers
         .map((t) => ({ t, d: Math.hypot(t.position.x - avatar.position.x, t.position.z - avatar.position.z) }))
-        .filter(({ t, d }) => d <= t.radius)
+        .filter(({ t, d }) => d <= t.radius + TRIGGER_TOLERANCE)
         .sort((a, b) => a.d - b.d)[0]
       useRoomStore.getState().setNearbyTarget(near?.t.target ?? null)
     } else useRoomStore.getState().setNearbyTarget(null)
@@ -325,10 +361,12 @@ export default function Avatar({ scene, presets }: { scene: THREE.Object3D; pres
   return (
     <group ref={root}>
       <primitive object={gltf.scene} />
-      {/* Action prompt floats above the avatar's head (user decision). */}
-      <Html position={[0, PROMPT_HEIGHT, 0]} center zIndexRange={[15, 10]}>
-        <InteractPrompt />
-      </Html>
+      {/* Action prompt floats above the avatar's head on desktop; mobile shows it at the bottom. */}
+      {!mobile && (
+        <Html position={[0, PROMPT_HEIGHT, 0]} center zIndexRange={[15, 10]}>
+          <InteractPrompt />
+        </Html>
+      )}
     </group>
   )
 }

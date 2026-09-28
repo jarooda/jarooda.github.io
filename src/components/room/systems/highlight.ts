@@ -23,19 +23,29 @@ function highlightMaterial(material: THREE.Material, clones: Map<THREE.Material,
   return clone
 }
 
+// How many active highlights include each mesh: hover and "action available" can overlap,
+// and the original material only returns when the last one ends.
+const counts = new WeakMap<THREE.Mesh, number>()
+
 // Materials such as mat_palette are shared by most of the room, so a highlight swaps in
 // clones instead of mutating the shared instance.
 export function setHighlight(root: THREE.Object3D, on: boolean) {
   const clones = new Map<THREE.Material, THREE.Material>()
   root.traverse((object) => {
     if (!(object instanceof THREE.Mesh)) return
+    const count = counts.get(object) ?? 0
     if (on) {
-      if (!object.visible || originals.has(object)) return
+      if (count === 0 && !object.visible) return
+      counts.set(object, count + 1)
+      if (count > 0) return
       originals.set(object, object.material)
       object.material = Array.isArray(object.material)
         ? object.material.map((m) => highlightMaterial(m, clones))
         : highlightMaterial(object.material, clones)
     } else {
+      if (count === 0) return
+      counts.set(object, count - 1)
+      if (count > 1) return
       const original = originals.get(object)
       if (!original) return
       for (const clone of [object.material].flat()) clone.dispose()

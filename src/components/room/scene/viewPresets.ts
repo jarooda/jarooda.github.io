@@ -13,6 +13,45 @@ export const VIEW_ZOOM: Record<ViewId, number> = {
   monitor: 1
 }
 
+// Extra zoom on portrait screens (aspect < 1), where fitting the whole preset width leaves the
+// room small. The main view zooms in close and follows the avatar there (CameraRig).
+export const PORTRAIT_ZOOM: Record<ViewId, number> = {
+  main: 2.6,
+  desk: 1,
+  tv: 1,
+  whiteboard: 1,
+  monitor: 1
+}
+
+// Zone views are framed on the zone's own objects (user feedback: the Blender cameras frame them
+// loosely): same camera angle, re-centered and sized to the content with a margin, plus room at
+// the bottom for the feature bar.
+const FRAME_MARGIN = 1.12
+const FRAME_BOTTOM_ROOM = 0.14
+
+export function frameContent(preset: ViewPreset, content: THREE.Box3): ViewPreset {
+  if (content.isEmpty()) return preset
+  const toCamera = preset.quaternion.clone().invert()
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity
+  for (const x of [content.min.x, content.max.x])
+    for (const y of [content.min.y, content.max.y])
+      for (const z of [content.min.z, content.max.z]) {
+        const p = new THREE.Vector3(x, y, z).sub(preset.position).applyQuaternion(toCamera)
+        minX = Math.min(minX, p.x)
+        maxX = Math.max(maxX, p.x)
+        minY = Math.min(minY, p.y)
+        maxY = Math.max(maxY, p.y)
+      }
+  minY -= (maxY - minY) * FRAME_BOTTOM_ROOM
+  const shift = new THREE.Vector3((minX + maxX) / 2, (minY + maxY) / 2, 0).applyQuaternion(preset.quaternion)
+  return {
+    ...preset,
+    position: preset.position.clone().add(shift),
+    halfWidth: ((maxX - minX) / 2) * FRAME_MARGIN,
+    halfHeight: ((maxY - minY) / 2) * FRAME_MARGIN
+  }
+}
+
 export interface ViewPreset {
   position: THREE.Vector3
   quaternion: THREE.Quaternion

@@ -6,6 +6,9 @@ export type MoveKey = "up" | "down" | "left" | "right"
 // so releasing a pad button never cancels a key that is still held (and vice versa).
 interface ControlsState {
   pressed: Record<string, MoveKey>
+  // On-screen joystick: x = screen right, y = screen up, each -1…1 (null when released).
+  analog: { x: number; y: number } | null
+  setAnalog(analog: { x: number; y: number } | null): void
   press(source: string, key: MoveKey): void
   release(source: string): void
   clear(): void
@@ -13,6 +16,8 @@ interface ControlsState {
 
 export const useControls = create<ControlsState>((set) => ({
   pressed: {},
+  analog: null,
+  setAnalog: (analog) => set({ analog }),
   press: (source, key) => set((state) => ({ pressed: { ...state.pressed, [source]: key } })),
   release: (source) =>
     set((state) => {
@@ -20,7 +25,7 @@ export const useControls = create<ControlsState>((set) => ({
       const { [source]: _, ...rest } = state.pressed
       return { pressed: rest }
     }),
-  clear: () => set({ pressed: {} })
+  clear: () => set({ pressed: {}, analog: null })
 }))
 
 export const isHeld = (pressed: Record<string, MoveKey>, key: MoveKey) => Object.values(pressed).includes(key)

@@ -83,7 +83,8 @@ export interface NavTarget {
 export const NAV_TARGETS: NavTarget[] = [
   { id: "about", label: "About", zone: "desk", section: "about-contact", tab: "about" },
   { id: "techstack", label: "Tech Stack", zone: "desk", section: "techstack" },
-  { id: "projects", label: "Projects", zone: "whiteboard", section: "projects" },
+  // The whiteboard itself is the project list (no list popup); notes open project details.
+  { id: "projects", label: "Projects", zone: "whiteboard" },
   { id: "blog", label: "Blog", zone: "desk", section: "blog-talks", tab: "blog" },
   { id: "talks", label: "Talks", zone: "desk", section: "blog-talks", tab: "talks" },
   { id: "collections", label: "Collections", zone: "tv" },
@@ -116,5 +117,13 @@ export function hashFor(section: SectionId | null, tab: string | undefined, zone
     const nav = NAV_TARGETS.find((t) => t.section === section && (t.tab === undefined || t.tab === tab))
     return nav ? nav.id : section
   }
-  return zone === "tv" ? "collections" : ""
+  if (zone === "tv") return "collections"
+  if (zone === "whiteboard") return "projects"
+  return ""
+}
+
+// Objects of a zone, listed in the feature bar while that zone is framed (user feedback).
+export const ZONE_FEATURES: Partial<Record<ZoneId, SectionId[]>> = {
+  desk: ["about-contact", "techstack", "blog-talks"],
+  tv: ["films", "games", "figures", "books", "music", "gadgets"]
 }

@@ -24,9 +24,10 @@ const title = `Room - ${SITE_TITLE}`
   </head>
   <body>
     <RoomSplash />
-    <RoomContent data={data} />
     <div class="room-background" aria-hidden="true"></div>
     <RoomApp client:only="react" data={data} />
+    <!-- After the island so the quick menu stays the first Tab stop (decision 6). -->
+    <RoomContent data={data} />
   </body>
 </html>
 
@@ -60,6 +61,13 @@ const title = `Room - ${SITE_TITLE}`
     transition:
       --room-bg-top 1.2s ease,
       --room-bg-bottom 1.2s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .room-background,
+    .room-splash {
+      transition: none;
+    }
   }
 
   .room-canvas {

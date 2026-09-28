@@ -5,7 +5,7 @@ import Popup, { type TabDef } from "./Popup"
 import AboutContactPopup from "./popups/AboutContactPopup"
 import BlogTalksPopup from "./popups/BlogTalksPopup"
 import CollectionPopup from "./popups/CollectionPopup"
-import ProjectsPopup, { ProjectDetail } from "./popups/ProjectsPopup"
+import { ProjectDetail } from "./popups/ProjectsPopup"
 import { useMediaQuery } from "../systems/useMediaQuery"
 import MonitorDesktop from "./MonitorDesktop"
 import RubikHud from "./RubikHud"
@@ -45,11 +45,13 @@ export default function PopupHost() {
     )
   }
 
+  // Projects only have detail popups; the whiteboard is the list.
   if (section === "projects") {
     const project = data.projects.find((p) => p.id === popup.projectId)
+    if (!project) return null
     return (
-      <Popup title={project ? project.title : labels.projects} onClose={close}>
-        {project ? <ProjectDetail project={project} /> : <ProjectsPopup />}
+      <Popup title={project.title} onClose={close}>
+        <ProjectDetail project={project} />
       </Popup>
     )
   }

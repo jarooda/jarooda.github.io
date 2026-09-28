@@ -37,7 +37,10 @@ export default function MovePad() {
             aria-label={name}
             aria-pressed={held}
             onPointerDown={(event: PointerEvent) => {
-              event.currentTarget.setPointerCapture(event.pointerId)
+              // Capture can fail if the pointer is already gone; holding still works without it.
+              try {
+                event.currentTarget.setPointerCapture(event.pointerId)
+              } catch {}
               press(source(key), key)
             }}
             onPointerUp={() => release(source(key))}

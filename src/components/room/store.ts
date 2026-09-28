@@ -41,6 +41,8 @@ interface RoomState {
   // Requests for the avatar; tokens make repeated requests distinct.
   walkRequest: { x: number; z: number; token: number } | null
   interactRequest: number
+  // Tap/click on the light switch or window: walk there, then use it.
+  fixtureRequest: { target: "switch" | "window"; token: number } | null
   avatarSnap: { zone: ZoneId; token: number } | null
   lightOn: boolean
   phaseOverride: PhaseId | null
@@ -50,6 +52,10 @@ interface RoomState {
   curtainsOpen: boolean
   tier: Tier
   runtimeIssue: RuntimeIssue | null
+  // Intro pan (K35): index of the zone being shown, null when not running.
+  introStep: number | null
+  // Incremented to make the avatar wave (end of the intro).
+  waveToken: number
   visited: SectionId[]
   // True once the camera has framed the first view; deep links wait for it so they animate.
   ready: boolean
@@ -68,6 +74,7 @@ interface RoomState {
   cameraSettled(view: ViewId): void
   walkTo(x: number, z: number): void
   requestInteract(): void
+  useFixture(target: "switch" | "window"): void
   setNearbyTarget(target: TriggerTarget | null): void
   toggleLight(): void
   toggleCurtains(): void
@@ -75,6 +82,10 @@ interface RoomState {
   setTimeControlOpen(open: boolean): void
   setTier(tier: Tier): void
   reportIssue(issue: RuntimeIssue | null): void
+  endIntro(skip: boolean): void
+  // Section hovered/focused in the feature bar; its object is highlighted.
+  hoverSection: SectionId | null
+  setHoverSection(section: SectionId | null): void
 }
 
 const loadVisited = () => readJSON<unknown[]>(VISITED_KEY, []).filter(isSection)
@@ -93,7 +104,7 @@ export const useRoomStore = create<RoomState>((set, get) => {
   const finishSequence = (target: NavTarget) => {
     set({ sequence: null })
     if (target.section) get().openPopup(target.section, target.tab)
-    else set({ mode: "zoom", view: target.zone, popup: null })
+    else get().enterZoom(target.zone)
   }
 
   // Skip / reduced motion: the avatar jumps to the trigger and the camera jumps to the end view.
@@ -115,6 +126,7 @@ export const useRoomStore = create<RoomState>((set, get) => {
     nearbyTarget: null,
     walkRequest: null,
     interactRequest: 0,
+    fixtureRequest: null,
     avatarSnap: null,
     lightOn: false,
     phaseOverride: null,
@@ -123,11 +135,20 @@ export const useRoomStore = create<RoomState>((set, get) => {
     curtainsOpen: true,
     tier: "high",
     runtimeIssue: null,
+    introStep: null,
+    waveToken: 0,
     visited: loadVisited(),
     ready: false,
     settledView: null,
 
-    enterZoom: (zone) => set({ mode: "zoom", view: zone, popup: null }),
+    enterZoom: (zone) => {
+      set({ mode: "zoom", view: zone, popup: null })
+      // The whiteboard is the project list, so arriving there counts as visiting Projects.
+      if (zone === "whiteboard") markVisited("projects")
+    },
+
+    hoverSection: null,
+    setHoverSection: (hoverSection) => set({ hoverSection }),
 
     openPopup: (section, tab, projectId) => {
       set({ mode: "popup", view: viewForSection(section), popup: { section, tab, projectId } })
@@ -151,6 +172,7 @@ export const useRoomStore = create<RoomState>((set, get) => {
 
     back: () => {
       const { sequence, mode } = get()
+      if (mode === "intro") return get().endIntro(true)
       if (sequence) return get().skipSequence()
       if (mode === "popup") return get().closePopup()
       if (mode === "zoom") return set({ mode: "roam", view: "main" })
@@ -162,7 +184,7 @@ export const useRoomStore = create<RoomState>((set, get) => {
       const currentZone = popup ? SECTION_ZONE[popup.section] : view
       if (currentZone === target.zone || view === finalViewOf(target)) return finishSequence(target)
       if (prefersReducedMotion()) return jumpToEnd(target)
-      set({ popup: null, mode: "roam", sequence: { target, stage: "toMain" } })
+      set({ popup: null, mode: "roam", introStep: null, sequence: { target, stage: "toMain" } })
       if (view === "main" && settledView === "main") set({ sequence: { target, stage: "walk" } })
       else set({ view: "main" })
     },
@@ -188,6 +210,7 @@ export const useRoomStore = create<RoomState>((set, get) => {
 
     walkTo: (x, z) => set((state) => ({ walkRequest: { x, z, token: (state.walkRequest?.token ?? 0) + 1 } })),
     requestInteract: () => set((state) => ({ interactRequest: state.interactRequest + 1 })),
+    useFixture: (target) => set((state) => ({ fixtureRequest: { target, token: (state.fixtureRequest?.token ?? 0) + 1 } })),
     setNearbyTarget: (nearbyTarget) => {
       if (get().nearbyTarget !== nearbyTarget) set({ nearbyTarget })
     },
@@ -197,6 +220,18 @@ export const useRoomStore = create<RoomState>((set, get) => {
     setPhaseOverride: (phaseOverride) => set({ phaseOverride }),
     setTimeControlOpen: (timeControlOpen) => set({ timeControlOpen }),
     setTier: (tier) => set({ tier }),
-    reportIssue: (runtimeIssue) => set({ runtimeIssue })
+    reportIssue: (runtimeIssue) => set({ runtimeIssue }),
+
+    // Back to the room view; skipping jumps the camera instead of flying back.
+    endIntro: (skip) => {
+      if (get().mode !== "intro") return
+      set((state) => ({
+        mode: "roam",
+        introStep: null,
+        view: "main",
+        instantCamera: skip && state.view !== "main",
+        waveToken: state.waveToken + 1
+      }))
+    }
   }
 })
